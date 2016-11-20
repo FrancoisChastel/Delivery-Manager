@@ -4,7 +4,7 @@
   router="FAN">  
   <class id="1" language="java" name="view.MessageFrame" project="Delivery-Manager" 
     file="/Delivery-Manager/src/view/MessageFrame.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="113" width="126" x="261" y="107"/>    
+    <position height="-1" width="-1" x="337" y="166"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
