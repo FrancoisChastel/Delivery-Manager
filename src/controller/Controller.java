@@ -4,6 +4,7 @@ import java.io.File;
 
 import model.Model;
 import view.View;
+import view.View.Page;
 
 public class Controller implements IController{
 
@@ -18,6 +19,8 @@ public class Controller implements IController{
 		model = new Model(this);
 		view  = new View(this);
 		model.addObserver(view);
+		
+		view.displayFrame(Page.Main, false);
 	}
 
 	/**
