@@ -16,7 +16,6 @@ public class Adapter {
 		
 	}
 	
-	
 	public ViewPoint getView(DeliveryPoint p)
 	{
 		

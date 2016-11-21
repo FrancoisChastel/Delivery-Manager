@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 import controller.Controller;
 
-public class View implements Observer {	
+public class View implements Observer, IView {	
 	
 	public static enum Page {Setting, Main};
 	private HashMap<Page,JFrame> pages;
@@ -37,7 +37,8 @@ public class View implements Observer {
 			this.controller = controller;
 			pages = new HashMap<Page,JFrame>();
 			pages.put(Page.Setting, new SettingFrame(this));
-			pages.put(Page.Main, new MainFrame(this));		
+			pages.put(Page.Main, new MainFrame(this));	
+			
 		}
 	
 	/**

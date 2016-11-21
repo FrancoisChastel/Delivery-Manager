@@ -4,12 +4,12 @@ package model;
 public class Node {
 	
 	private long idNode;
-	private Long x;
+	private long x;
 	private long y;
 	
 	
 	
-	public Node(long idNode, Long x, long y) {
+	public Node(long idNode, long x, long y) {
 		this.idNode = idNode;
 		this.x = x;
 		this.y = y;
@@ -39,7 +39,7 @@ public class Node {
 
 
 
-	public void setX(Long x) {
+	public void setX(long x) {
 		this.x = x;
 	}
 

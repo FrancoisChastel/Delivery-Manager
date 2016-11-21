@@ -18,7 +18,7 @@ public class Map extends JPanel {
 		this.setBackground(Color.BLACK);		
 		points = new ArrayList<IShape>();		
 		addPoint(new ViewPoint(0.5,0.5,0),0);
-		
+		addPoint(new ViewPoint(0.55,0.55,1),1);
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
 	}
