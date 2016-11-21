@@ -20,9 +20,8 @@ public class Controller implements IController{
 		view  = new View(this);
 		model.addObserver(view);
 		
-		view.displayFrame(Page.Main, false);
-		
-		view.update(null, null);
+		view.displayFrame(Page.Setting, false);
+
 	}
 
 	/**

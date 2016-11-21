@@ -8,7 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import model.Node;
+import model.MapNode;
+
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -54,7 +55,7 @@ public class MainFrame extends JFrame {
 		adapter = new Adapter(map);
 	}
 	
-	public void adapte(List<Node> nodes)
+	public void adapte(List<MapNode> nodes)
 	{
 		adapter.drawModel(nodes);
 	}

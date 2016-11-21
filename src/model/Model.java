@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import controller.Controller;
+import controller.Controller; 
 
 public class Model extends Observable implements IModel {
 
-	//private Graph<Section, Node> map;
+	Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
+	XmlParser xmlParser;
+	//private Graph<Section, MapNode> map;
 	
 	public Model(Controller controller) {
 		
@@ -17,33 +19,29 @@ public class Model extends Observable implements IModel {
 
 	public void parseMapFile(File currentFile) {
 		// TODO Auto-generated method stub
-		
+		xmlParser = new XmlParser(currentFile);
+		graph = xmlParser.getGraph();
+		setChanged();
+		notifyObservers();
 	}
 
-	@Override
-	public List<Node> getNodes() {
-		// TODO Auto-generated method stub
-		ArrayList<Node> liste = new ArrayList<Node>();
-		liste.add(new Node(0, 226, 240));
-		liste.add(new Node(1, 423, 127));
-		liste.add(new Node(2, 32, 164));
-		liste.add(new Node(3, 26, 210));
-		liste.add(new Node(4, 493, 15));
-		liste.add(new Node(5, 28, 69));
-		liste.add(new Node(6, 420, 410));
-		liste.add(new Node(7, 10, 237));
-		liste.add(new Node(8, 26, 48));
-		liste.add(new Node(9, 14, 320));
-		liste.add(new Node(10, 366, 240));
-		liste.add(new Node(11, 366, 366));
-		liste.add(new Node(12, 210, 25));
-		liste.add(new Node(13, 460, 500));
-		liste.add(new Node(14, 460, 450));
-		liste.add(new Node(15, 500, 490));
+	public List<MapNode> getMapNodes() {
+		if(xmlParser.getNodeList() != null)
+		{
+			return xmlParser.getNodeList();
+		}
+		return null;
 		
-		
-		return liste;
 	}	
+	
+	@Override
+	public List<Section> getSections() {
+		if(xmlParser.getSectionList() != null)
+		{
+			return xmlParser.getSectionList();
+		}
+		return null;
+	}
 	
 	public void parseDeliveriesFile(File currentFile)
 	{
@@ -54,4 +52,5 @@ public class Model extends Observable implements IModel {
 	{
 		
 	}
+
 }

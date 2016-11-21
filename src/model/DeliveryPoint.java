@@ -3,7 +3,7 @@ package model;
 import java.util.Date;
 
 
-public class DeliveryPoint extends Node{
+public class DeliveryPoint extends MapNode{
 
 	
 	public DeliveryPoint(int idNode, int x, int y) {

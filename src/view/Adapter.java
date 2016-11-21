@@ -4,7 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import model.DeliveryPoint;
-import model.Node;
+import model.MapNode;
+
 
 public class Adapter {
 	
@@ -15,7 +16,7 @@ public class Adapter {
 	/**
 	 * This method get the extremums of deliveryPoints in order to calibrate the size of the map.  
 	 */
-	public void calibration(List<Node> node)
+	public void calibration(List<MapNode> node)
 	{
 		minX = Integer.MAX_VALUE;
 		maxX = 0;
@@ -23,10 +24,10 @@ public class Adapter {
 		maxY = 0;
 		
 		// Iterate over the list to get extremum
-		Iterator<Node> i = node.iterator();		
+		Iterator<MapNode> i = node.iterator();		
 		while(i.hasNext())
 		{
-			Node curr = i.next();
+			MapNode curr = i.next();
 			
 			int currX =curr.getX();
 			int currY =curr.getY();
@@ -50,15 +51,15 @@ public class Adapter {
 	 * This method calibrate and create all ViewPoint from a liste of model.Node.
 	 * @param node
 	 */
-	public void drawModel(List<Node> node)
+	public void drawModel(List<MapNode> node)
 	{
 		calibration(node);
 		
-		Iterator<Node> i = node.iterator();
+		Iterator<MapNode> i = node.iterator();
 		
 		while(i.hasNext())
 		{
-			Node curr = i.next();
+			MapNode curr = i.next();
 			map.addPoint(getView(curr), curr.getidNode());
 		}
 		map.repaint();
@@ -69,7 +70,7 @@ public class Adapter {
 	 * @param p
 	 * @return The created ViewPoint
 	 */
-	public ViewPoint getView(Node p)
+	public ViewPoint getView(MapNode p)
 	{		
 		double x = ((double)(p.getX()-minX))/etendueX;
 		double y = ((double)(p.getY()-minY))/etendueY;
