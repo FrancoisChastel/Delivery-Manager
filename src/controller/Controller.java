@@ -21,6 +21,8 @@ public class Controller implements IController{
 		model.addObserver(view);
 		
 		view.displayFrame(Page.Main, false);
+		
+		view.update(null, null);
 	}
 
 	/**
@@ -41,4 +43,6 @@ public class Controller implements IController{
 	{
 		model.parseDeliveriesFile(currentFile);
 	}
+	
+	public Model getModel() { return model; }
 }

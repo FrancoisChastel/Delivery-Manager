@@ -3,55 +3,51 @@ package model;
 
 public class Node {
 	
-	private long idNode;
-	private long x;
-	private long y;
+	private int idNode;
+	private int x;
+	private int y;
 	
 	
 	
-	public Node(long idNode, long x, long y) {
+	public Node(int idNode, int x, int y) {
 		this.idNode = idNode;
 		this.x = x;
 		this.y = y;
 	}
-
-
-
 	
 	// Getters and Setters
 	
-	
-	public long getidNode() {
+	public int getidNode() {
 		return idNode;
 	}
 
 
 
-	public void setidNode(long idNode) {
+	public void setidNode(int idNode) {
 		this.idNode = idNode;
 	}
 
 
 
-	public Long getX() {
+	public int getX() {
 		return x;
 	}
 
 
 
-	public void setX(long x) {
+	public void setX(int x) {
 		this.x = x;
 	}
 
 
 
-	public long getY() {
+	public int getY() {
 		return y;
 	}
 
 
 
-	public void setY(long y) {
+	public void setY(int y) {
 		this.y = y;
 	}
 	

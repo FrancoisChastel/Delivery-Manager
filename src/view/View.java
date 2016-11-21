@@ -16,6 +16,7 @@ public class View implements Observer, IView {
 	private HashMap<Page,JFrame> pages;
 	private Controller controller;
 	
+	
 	/**
 	 * This methode display an alert using JOptionPane
 	 * @param message
@@ -38,7 +39,6 @@ public class View implements Observer, IView {
 			pages = new HashMap<Page,JFrame>();
 			pages.put(Page.Setting, new SettingFrame(this));
 			pages.put(Page.Main, new MainFrame(this));	
-			
 		}
 	
 	/**
@@ -73,6 +73,7 @@ public class View implements Observer, IView {
 	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+		// On model update, update view
+		((MainFrame) pages.get(Page.Main)).adapte(controller.getModel().getNodes());
 	}
 }

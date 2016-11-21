@@ -20,6 +20,7 @@ public class MapMouseListener implements MouseListener {
 		
 		if(shape != null)
 			View.displayMessage("Click on "+((ViewPoint)shape).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
+		
 	}
 
 	@Override
