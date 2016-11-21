@@ -9,6 +9,9 @@ public class DeliveryOrder {
 	private MapNode storeAdress;
 	private Time startingTime;
 	private LinkedList<Delivery> deliveryList;
+	private int maxIdNode;
+	private int[] times; 
+	
 	
 	
 	public DeliveryOrder(long idOrder, MapNode storeAdress, Time startingTime, LinkedList<Delivery> deliveryList) {
@@ -17,6 +20,14 @@ public class DeliveryOrder {
 		this.storeAdress = storeAdress;
 		this.startingTime = startingTime;
 		this.deliveryList = deliveryList;
+		for (int iter = 0; iter<deliveryList.size(); iter++){
+			int idNode = (int) deliveryList.get(iter).getAdress().getidNode();
+			if(idNode > this.maxIdNode){this.maxIdNode = idNode;}
+		}
+		this.times = new int[maxIdNode+1];
+		for (int iter = 0; iter<deliveryList.size(); iter++){
+			times[(int)deliveryList.get(iter).getAdress().getidNode()] = (int) deliveryList.get(iter).getLength();
+		}
 	}
 
 
@@ -59,6 +70,13 @@ public class DeliveryOrder {
 		this.deliveryList = deliveryList;
 	} 
 	
+	public int[] getTimes() {
+		return times;
+	}
 	
+	public int getmaxIdNode() {
+		return maxIdNode;
+		
+	}
 	
 }
