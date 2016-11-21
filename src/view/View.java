@@ -25,7 +25,7 @@ public class View implements Observer {
 		pages = new HashMap<Page,JFrame>();
 		pages.put(Page.Setting, new SettingFrame(this));
 		
-		displayFrame(Page.Setting, false);
+		displayFrame(Page.Setting, true);
 	}
 	
 	/**

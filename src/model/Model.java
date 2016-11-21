@@ -7,12 +7,19 @@ import controller.Controller;
 
 public class Model extends Observable implements IModel {
 
-	public Model(Controller controller) {
+	//private Graph<Section, Node> map;
 	
+	public Model(Controller controller) {
+		
 	}
 
 	public void parseMapFile(File currentFile) {
 		// TODO Auto-generated method stub
 		
-	}	
+	}
+	
+	public void getBestPath(Node origin, Node destination)
+	{
+	
+	}
 }

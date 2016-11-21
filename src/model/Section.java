@@ -1,6 +1,6 @@
 package model;
 
-public class Section {
+public class Section implements Comparable {
 
 	
 	private long idSection;
@@ -82,6 +82,15 @@ public class Section {
 
 	public void setSpeed(long speed) {
 		this.speed = speed;
+	}
+
+
+
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
