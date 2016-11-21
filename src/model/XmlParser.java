@@ -19,16 +19,22 @@ import java.util.ArrayList;
 
 public class XmlParser {
 	
+	Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
+	ArrayList <MapNode> nodeList= new ArrayList<MapNode>();
+	ArrayList <Section> sectionList= new ArrayList<Section>();
+	
+	
+	
+	public XmlParser(File currentFile) {
+		xmlMapParser(currentFile);
+	}
 	/**
 	 * Method used to parse Well-formed XML File
 	 */
-	public static Graph<MapNode, Section> xmlMapParser() {
+	public void xmlMapParser(File currentFile) {
 	      
-			Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
-			ArrayList <MapNode> nodeList= new ArrayList<MapNode>();
-    		ArrayList <Section> sectionList= new ArrayList<Section>();
 			try {	     	  
-	    	    final File fXmlFile = new File("src/plan5x5.xml");
+	    	    final File fXmlFile = currentFile;
 	    		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	    		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	    		Document document = dBuilder.parse(fXmlFile);
@@ -83,10 +89,27 @@ public class XmlParser {
 			// TODO Auto-generated catch block
 			// Error from Document doc = dBuilder.parse(fXmlFile);
 			e.printStackTrace();
-		}	
-		System.out.println(nodeList.size());
-		System.out.println(sectionList.size());
-		return graph; 
+		}
 	}
+	public Graph<MapNode, Section> getGraph() {
+		return graph;
+	}
+	public void setGraph(Graph<MapNode, Section> graph) {
+		this.graph = graph;
+	}
+	public ArrayList<MapNode> getNodeList() {
+		return nodeList;
+	}
+	public void setNodeList(ArrayList<MapNode> nodeList) {
+		this.nodeList = nodeList;
+	}
+	public ArrayList<Section> getSectionList() {
+		return sectionList;
+	}
+	public void setSectionList(ArrayList<Section> sectionList) {
+		this.sectionList = sectionList;
+	}
+	
+	
 
 }
