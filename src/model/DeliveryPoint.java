@@ -2,7 +2,7 @@ package model;
 
 import com.sun.jmx.snmp.Timestamp;
 
-public class DeliveryPoint extends Node{
+public class DeliveryPoint extends MapNode{
 
 	
 	public DeliveryPoint(long idNode, Long x, long y) {
