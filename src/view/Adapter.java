@@ -44,7 +44,6 @@ public class Adapter {
 		
 		etendueX = maxX-minX;
 		etendueY = maxY-minY;
-		System.out.println("MX"+maxX+"mX"+minX+"MY"+maxY+"mY"+minY);
 	}
 	
 	/**
@@ -74,7 +73,6 @@ public class Adapter {
 	{		
 		double x = ((double)(p.getX()-minX))/etendueX;
 		double y = ((double)(p.getY()-minY))/etendueY;
-		System.out.println("X:"+x+"Y:"+y);
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	

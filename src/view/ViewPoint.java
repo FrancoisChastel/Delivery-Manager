@@ -19,8 +19,9 @@ public class ViewPoint implements IShape{
 	 */
 	public ViewPoint(double x, double y, int id)
 	{
-		this.x=x;
-		this.y=y;
+		this.x	= x;
+		this.y	= y;
+		this.id = id;
 	}
 	@Override
 	public boolean contains(int x, int y) {
