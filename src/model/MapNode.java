@@ -1,7 +1,7 @@
 package model;
 
 
-public class Node {
+public class MapNode {
 	
 	private long idNode;
 	private Long x;
@@ -9,7 +9,7 @@ public class Node {
 	
 	
 	
-	public Node(long idNode, Long x, long y) {
+	public MapNode(long idNode, Long x, long y) {
 		this.idNode = idNode;
 		this.x = x;
 		this.y = y;
@@ -24,8 +24,6 @@ public class Node {
 	public long getidNode() {
 		return idNode;
 	}
-
-
 
 	public void setidNode(long idNode) {
 		this.idNode = idNode;
@@ -55,7 +53,29 @@ public class Node {
 		this.y = y;
 	}
 	
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (idNode ^ (idNode >>> 32));
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MapNode other = (MapNode) obj;
+		if (idNode != other.idNode)
+			return false;
+		return true;
+	}
+
 
 	
 	
