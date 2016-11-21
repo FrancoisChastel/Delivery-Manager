@@ -28,6 +28,17 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
         	System.out.println("Origin Undefined");;
         }
     }
+    
+    public HashMap<TVertex, TEdge> getDestinations(TVertex origin)
+    {
+    	CoreVertex TOrigin = null;
+    	if(nodes.containsKey(origin))
+    	{
+    		TOrigin = nodes.get(origin);
+    		return TOrigin.getOutgoing();
+    	}
+    	return null;
+    }
 
     private class CoreVertex {
         private HashMap<TVertex, TEdge> outgoing;
@@ -39,6 +50,15 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
         public void add(TVertex destination, TEdge edge) {
             this.outgoing.put(destination, edge);
         }
+
+		public HashMap<TVertex, TEdge> getOutgoing() {
+			return outgoing;
+		}
+
+		public void setOutgoing(HashMap<TVertex, TEdge> outgoing) {
+			this.outgoing = outgoing;
+		}
+        
     }
 }
 
