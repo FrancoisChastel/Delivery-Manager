@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
@@ -53,6 +54,8 @@ public class Model extends Observable implements IModel {
 	
 	public void generateTour()
 	{
+		//int[] reducedPath;
+		//LinkedList<MapNode> completePath;
 		//LowerCosts.generateCosts(graph, deliveryOrder);
 
 				//#DeliveryOrder est ‡ remplacer par l'objet DeliveryOrder correspondant ‡ la demande de livraison
@@ -63,12 +66,30 @@ public class Model extends Observable implements IModel {
 				
 				// Etape 2
 				// TSP.chercheSolution(2500, #DeliveryOrder.getDeliveryList().size(), couts, #DeliveryOrder.getTimes())
-				// TSP.getMeilleureSolution(int i) ‡ chaque Ètape i
+				// for( int i= 0 ; i < #DeliveryOrder.getDeliveryList().size();i++)
+				// {		
+				// 		reducedPath[i} = TSP.getMeilleureSolution(i);
+				// }
 				
 				// Etape 3
 				// On insËre les points intermÈdiaires (appel ‡ Dijkstra)
-				// 
+				// completePath =addIntermediatePoints(reducedGraph,#DeliveryOrder)
 	}
+	
+	/*public LinkedList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
+	{
+		LinkedList<MapNode>  path;
+		
+		for(int i=0;i< reducedGraph[i].length();i++)
+		{
+			path.add(deliveryOrder.getDeliveryList().[i].getAdress();
+			// still need to add the intermediates nodes
+		}
+		
+		
+		
+		return path;
+	}*/
 
 }
 
