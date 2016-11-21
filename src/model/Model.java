@@ -17,7 +17,7 @@ public class Model extends Observable implements IModel {
 
 	public void parseMapFile(File currentFile) {
 		// TODO Auto-generated method stub
-		
+		XmlParser.xmlMapParser();
 	}
 
 	public List<MapNode> getMapNodes() {

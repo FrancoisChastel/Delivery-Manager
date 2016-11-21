@@ -2,7 +2,7 @@ package model;
 
 import java.util.*;
 
-public class Graph<TEdge extends Comparable<TEdge>, TVertex> {
+public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     private Map<TVertex, CoreVertex> nodes;
 
     public Graph() {

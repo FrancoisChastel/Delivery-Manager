@@ -3,13 +3,13 @@ package model;
 
 public class MapNode {
 	
-	private long idNode;
-	private Long x;
-	private long y;
+	private int idNode;
+	private int x;
+	private int y;
 	
 	
 	
-	public MapNode(long idNode, Long x, long y) {
+	public MapNode(int idNode, int x, int y) {
 		this.idNode = idNode;
 		this.x = x;
 		this.y = y;
@@ -25,19 +25,19 @@ public class MapNode {
 		return idNode;
 	}
 
-	public void setidNode(long idNode) {
+	public void setidNode(int idNode) {
 		this.idNode = idNode;
 	}
 
 
 
-	public Long getX() {
+	public int getX() {
 		return x;
 	}
 
 
 
-	public void setX(Long x) {
+	public void setX(int x) {
 		this.x = x;
 	}
 
@@ -49,7 +49,7 @@ public class MapNode {
 
 
 
-	public void setY(long y) {
+	public void setY(int y) {
 		this.y = y;
 	}
 	

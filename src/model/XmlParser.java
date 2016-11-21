@@ -22,11 +22,13 @@ public class XmlParser {
 	/**
 	 * Method used to parse Well-formed XML File
 	 */
-	public static Graph<Section, MapNode> xmlMapParser() {
+	public static Graph<MapNode, Section> xmlMapParser() {
 	      
-			Graph<Section, MapNode>  graph = new Graph<Section, MapNode>();
+			Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
+			ArrayList <MapNode> nodeList= new ArrayList<MapNode>();
+    		ArrayList <Section> sectionList= new ArrayList<Section>();
 			try {	     	  
-	    	    final File fXmlFile = new File("plan.xml");
+	    	    final File fXmlFile = new File("src/plan5x5.xml");
 	    		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	    		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	    		Document document = dBuilder.parse(fXmlFile);
@@ -36,8 +38,7 @@ public class XmlParser {
 	    		
 	    		NodeIterator iterator = traversal.createNodeIterator(document.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null, true);
 	    		iterator.nextNode();
-	    		ArrayList <MapNode> nodeList= new ArrayList<MapNode>();
-	    		ArrayList <Section> sectionList= new ArrayList<Section>();
+	    		
 	    		Node n;
 	    		while((n = iterator.nextNode()) != null)
 	    		{
@@ -45,27 +46,25 @@ public class XmlParser {
 	    			switch(((Element) n).getTagName()){	    				
 	    				case "noeud":
 	    					
-	    					Long id = Long.parseLong(elem.getAttribute("id"));
-	    					Long x   = Long.parseLong(elem.getAttribute("x"));
-	    					Long y   = Long.parseLong(elem.getAttribute("y"));
+	    					int id = Integer.parseInt(elem.getAttribute("id"));
+	    					int x   = Integer.parseInt(elem.getAttribute("x"));
+	    					int y   = Integer.parseInt(elem.getAttribute("y"));
 	    					MapNode mapNode  = new MapNode(id,x,y);
 	    					graph.add(mapNode);
 	    					nodeList.add(mapNode);
 	    					
 	    	    			break;
 	    				case "troncon":
-	    					Long idDestination = Long.parseLong(elem.getAttribute("destination"));
-	    					Long idOrigin      = Long.parseLong(elem.getAttribute("origine"));
-	    					int idOriginTemp   = Integer.parseInt(elem.getAttribute("origine"));
-	    					int idDestinationTemp = Integer.parseInt(elem.getAttribute("destination"));
-	    					Long longueur    = Long.parseLong(elem.getAttribute("longueur"));
+	    					int idDestination = Integer.parseInt(elem.getAttribute("destination"));
+	    					int idOrigin      = Integer.parseInt(elem.getAttribute("origine"));
+	    					int longueur    = Integer.parseInt(elem.getAttribute("longueur"));
 	    					String nomRue    = elem.getAttribute("nomRue");
-	    					Long vitesse     = Long.parseLong(elem.getAttribute("vitesse"));
+	    					int vitesse     = Integer.parseInt(elem.getAttribute("vitesse"));
 	    					Section section  = new Section(idOrigin,idDestination,nomRue,longueur,vitesse);
 	    	
 	    					
-	    					MapNode origin = nodeList.get(idOriginTemp);
-	    					MapNode destination = nodeList.get(idDestinationTemp);
+	    					MapNode origin = nodeList.get(idOrigin);
+	    					MapNode destination = nodeList.get(idDestination);
 	    					graph.addDestination(origin, section, destination);
 	    					sectionList.add(section);    					
 	    	    			break;
@@ -85,7 +84,8 @@ public class XmlParser {
 			// Error from Document doc = dBuilder.parse(fXmlFile);
 			e.printStackTrace();
 		}	
-
+		System.out.println(nodeList.size());
+		System.out.println(sectionList.size());
 		return graph; 
 	}
 

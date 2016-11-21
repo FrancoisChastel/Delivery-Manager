@@ -21,6 +21,7 @@ public class Controller implements IController{
 		model.addObserver(view);
 		
 		view.displayFrame(Page.Main, false);
+		parseMapFile(null);
 	}
 
 	/**
