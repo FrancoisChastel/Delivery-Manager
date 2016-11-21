@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DeliveryOrder {
@@ -8,13 +9,13 @@ public class DeliveryOrder {
 	private long idOrder;
 	private MapNode storeAdress;
 	private Time startingTime;
-	private LinkedList<Delivery> deliveryList;
+	private ArrayList<Delivery> deliveryList;
 	private int maxIdNode;
 	private int[] times; 
 	
 	
 	
-	public DeliveryOrder(long idOrder, MapNode storeAdress, Time startingTime, LinkedList<Delivery> deliveryList) {
+	public DeliveryOrder(long idOrder, MapNode storeAdress, Time startingTime, ArrayList<Delivery> deliveryList) {
 		super();
 		this.idOrder = idOrder;
 		this.storeAdress = storeAdress;
@@ -61,12 +62,12 @@ public class DeliveryOrder {
 	}
 
 
-	public LinkedList<Delivery> getDeliveryList() {
+	public ArrayList<Delivery> getDeliveryList() {
 		return deliveryList;
 	}
 
 
-	public void setDeliveryList(LinkedList<Delivery> deliveryList) {
+	public void setDeliveryList(ArrayList<Delivery> deliveryList) {
 		this.deliveryList = deliveryList;
 	} 
 	

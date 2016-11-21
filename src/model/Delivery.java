@@ -4,14 +4,14 @@ import java.sql.Time;
 
 public class Delivery {
 
-	private long idDelivery;
+	private int idDelivery;
 	private MapNode adress;
-	private long length;
+	private int length;
 	private Time beginning;
 	private Time end;
 	
 	// Constructor for a delivery with time slot
-	public Delivery(long idDelivery, MapNode adress, long length, Time beginning, Time end) {
+	public Delivery(int idDelivery, MapNode adress, int length, Time beginning, Time end) {
 		this.idDelivery = idDelivery;
 		this.adress = adress;
 		this.length = length;
@@ -20,7 +20,7 @@ public class Delivery {
 	}
 
 	// Constructor for a delivery WITHOUT time slot
-	public Delivery(long idDelivery, MapNode adress, long length) {
+	public Delivery(int idDelivery, MapNode adress, int length) {
 		this.idDelivery = idDelivery;
 		this.adress = adress;
 		this.length = length;
@@ -35,7 +35,7 @@ public class Delivery {
 		return idDelivery;
 	}
 
-	public void setIdDelivery(long idDelivery) {
+	public void setIdDelivery(int idDelivery) {
 		this.idDelivery = idDelivery;
 	}
 
@@ -51,7 +51,7 @@ public class Delivery {
 		return length;
 	}
 
-	public void setLength(long length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 

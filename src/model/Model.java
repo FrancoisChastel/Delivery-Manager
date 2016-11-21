@@ -19,8 +19,11 @@ public class Model extends Observable implements IModel {
 
 	public void parseMapFile(File currentFile) {
 		// TODO Auto-generated method stub
-		XmlParser xmlParser = new XmlParser(currentFile);
+		xmlParser = new XmlParser(currentFile);
 		graph = xmlParser.getGraph();
+		File deliveries = new File("XML/livraisons5x5-4.xml");
+		xmlParser.xmlDeliveriesParser(deliveries);
+		LowerCosts.generateCosts(graph, xmlParser.getDelOrder());
 		setChanged();
 		notifyObservers();
 	}

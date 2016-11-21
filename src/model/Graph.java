@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     private Map<TVertex, CoreVertex> nodes;
@@ -27,6 +28,18 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
         {
         	System.out.println("Origin Undefined");;
         }
+    }
+    
+    public TVertex getNodeById(TVertex node)
+    {
+    	for(Entry<TVertex, CoreVertex> entry : nodes.entrySet())
+		{	
+			if(entry.getKey().equals(node))
+			{
+				return entry.getKey();
+			}
+		}
+    	return null;
     }
     
     public HashMap<TVertex, TEdge> getDestinations(TVertex origin)
