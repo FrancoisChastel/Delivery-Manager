@@ -6,27 +6,39 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-
+import javax.swing.JOptionPane;
 
 import controller.Controller;
 
 public class View implements Observer {	
 	
-	public static enum Page {Setting, Principale};
+	public static enum Page {Setting, Main};
 	private HashMap<Page,JFrame> pages;
 	private Controller controller;
 	
 	/**
-	 * Normal Contructor of View class. It instanciate all Frame pages and put it in its list of page.
+	 * This methode display an alert using JOptionPane
+	 * @param message
+	 * @param typeIcone use JOptionPane Options. Example : JOptionPane.ERROR_MESSAGE
+	 */
+	public static void displayMessage(String message, String title, int typeIcone)
+	{
+		
+		JOptionPane.showMessageDialog(null,
+				message,
+				title,
+				typeIcone);
+	}
+	/**
+	 * Normal Contructor of View class. It instanciate all Frame pages and put it in its list of pages.
 	 * @param controller
 	 */
 	public View(Controller controller) {
-		this.controller = controller;
-		pages = new HashMap<Page,JFrame>();
-		pages.put(Page.Setting, new SettingFrame(this));
-		
-		displayFrame(Page.Setting, true);
-	}
+			this.controller = controller;
+			pages = new HashMap<Page,JFrame>();
+			pages.put(Page.Setting, new SettingFrame(this));
+			pages.put(Page.Main, new MainFrame(this));		
+		}
 	
 	/**
 	 * Display the frame passed in parameter (setVisible). If the boolean only is true, all other pages will be set unvisible)

@@ -20,6 +20,6 @@ public class Model extends Observable implements IModel {
 	
 	public void getBestPath(Node origin, Node destination)
 	{
-	
+		
 	}
 }
