@@ -1,6 +1,7 @@
 package model;
 
-import com.sun.jmx.snmp.Timestamp;
+import java.util.Date;
+
 
 public class DeliveryPoint extends MapNode{
 
@@ -9,10 +10,10 @@ public class DeliveryPoint extends MapNode{
 		super(idNode, x, y);
 		// TODO Auto-generated constructor stub
 	}
-	private Timestamp inTime;
-	private Timestamp outTime;
+	private Date inTime;
+	private Date outTime;
 	
-	public DeliveryPoint(long idNode, Long x, long y, Timestamp inTime, Timestamp outTime) {
+	public DeliveryPoint(long idNode, Long x, long y, Date inTime, Date outTime) {
 		super(idNode, x, y);
 		this.inTime = inTime;
 		this.outTime = outTime;
@@ -20,19 +21,19 @@ public class DeliveryPoint extends MapNode{
 	
 	// Getters and Setters
 
-	public Timestamp getInTime() {
+	public Date getInTime() {
 		return inTime;
 	}
 
-	public void setInTime(Timestamp inTime) {
+	public void setInTime(Date inTime) {
 		this.inTime = inTime;
 	}
 
-	public Timestamp getOutTime() {
+	public Date getOutTime() {
 		return outTime;
 	}
 
-	public void setOutTime(Timestamp outTime) {
+	public void setOutTime(Date outTime) {
 		this.outTime = outTime;
 	}
 	

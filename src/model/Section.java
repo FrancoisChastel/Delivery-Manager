@@ -74,10 +74,15 @@ public class Section implements Comparable<Section>{
 
 
 
+<<<<<<< HEAD
 
 
 	@Override
 	public int compareTo(Section o) {
+=======
+	@Override
+	public int compareTo(Object o) {
+>>>>>>> 0cd19d096f71149fe4593df29c390aa91589d92c
 		// TODO Auto-generated method stub
 		return 0;
 	}
