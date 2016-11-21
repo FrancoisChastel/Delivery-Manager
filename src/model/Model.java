@@ -9,8 +9,10 @@ import controller.Controller;
 
 public class Model extends Observable implements IModel {
 
-	public Model(Controller controller) {
+	//private Graph<Section, Node> map;
 	
+	public Model(Controller controller) {
+		
 	}
 
 	public void parseMapFile(File currentFile) {
@@ -42,4 +44,14 @@ public class Model extends Observable implements IModel {
 		
 		return liste;
 	}	
+	
+	public void parseDeliveriesFile(File currentFile)
+	{
+		
+	}
+	
+	public void generateTour()
+	{
+		
+	}
 }

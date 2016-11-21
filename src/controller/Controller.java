@@ -29,6 +29,16 @@ public class Controller implements IController{
 	 * @param currentFile
 	 */
 	public void parseMapFile(File currentFile) {
-		model.parseMapFile(currentFile);		
+		model.parseMapFile(currentFile);
+	}
+	
+	/**
+	 * This method just call the parseDeliveriesFile method of the model. It called by the view when a click on 
+	 * Validate(SettingFrame) is caught.
+	 * @param currentFile
+	 */
+	public void parseDeliveriesFile(File currentFile)
+	{
+		model.parseDeliveriesFile(currentFile);
 	}
 }
