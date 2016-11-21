@@ -23,7 +23,7 @@ public class Model extends Observable implements IModel {
 		
 	}
 	
-	public void generateDelivery(Node origin, Node destination)
+	public void generateTour()
 	{
 		
 	}
