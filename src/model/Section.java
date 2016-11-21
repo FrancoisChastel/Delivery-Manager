@@ -2,14 +2,14 @@ package model;
 
 public class Section implements Comparable<Section>{
 
-	private long idOrigin;
-	private long idDestination;
+	private int idOrigin;
+	private int idDestination;
 	private String name;
-	private long length;
-	private long speed;
+	private int length;
+	private int speed;
 	
 	
-	public Section(long idOrigin,long idDestination, String name, long length, long speed) {
+	public Section(int idOrigin,int idDestination, String name, int length, int speed) {
 		this.idOrigin = idOrigin;
 		this.idDestination = idDestination;
 		this.name = name;
@@ -22,22 +22,22 @@ public class Section implements Comparable<Section>{
 	
 	// Getters and Setters
 
-	public long getIdOrigin() {
+	public int getIdOrigin() {
 		return idOrigin;
 	}
 
-	public void setIdOrigin(long idOrigin) {
+	public void setIdOrigin(int idOrigin) {
 		this.idOrigin = idOrigin;
 	}
 
 
 
 
-	public long getIdDestination() {
+	public int getIdDestination() {
 		return idDestination;
 	}
 
-	public void setIdDestination(long idDestination) {
+	public void setIdDestination(int idDestination) {
 		this.idDestination = idDestination;
 	}
 
@@ -52,22 +52,22 @@ public class Section implements Comparable<Section>{
 	}
 
 
-	public long getLength() {
+	public int getLength() {
 		return length;
 	}
 
 
-	public void setLength(long length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 
 
-	public long getSpeed() {
+	public int getSpeed() {
 		return speed;
 	}
 
 
-	public void setSpeed(long speed) {
+	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 

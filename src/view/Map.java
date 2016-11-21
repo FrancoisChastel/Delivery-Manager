@@ -10,15 +10,16 @@ import javax.swing.JPanel;
 public class Map extends JPanel {
 
 	private ArrayList<IShape> points;
+	private ArrayList<IShape> troncons;
 	
 	/**
 	 * Create the panel.
 	 */
 	public Map() {
-		this.setBackground(Color.BLACK);		
-		points = new ArrayList<IShape>();		
-		addPoint(new ViewPoint(0.5,0.5,0),0);
-		addPoint(new ViewPoint(0.55,0.55,1),1);
+				
+		points = new ArrayList<IShape>();
+		troncons = new ArrayList<IShape>();
+
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
 	}
@@ -28,20 +29,31 @@ public class Map extends JPanel {
 		points.add(id,s);
 	}
 	
+	public void addTroncon(IShape s, int id){
+		troncons.add(id,s);
+	}
+	
 	/**
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
 	 */
 	public void paintComponent(Graphics g) { 	
+		super.paintComponent(g);
+		g.setColor(getForeground());
 		Iterator<IShape> i = points.iterator();
+		Iterator<IShape> j = troncons.iterator();
 		
 		while(i.hasNext())
 			i.next().drawShape(g, getWidth(), getHeight());
+
+		while(j.hasNext())
+			j.next().drawShape(g, getWidth(), getHeight());
+	
 	}
 
 	/**
 	 * This method return the shape (if exists) that contains the (x,y) point passed in parameter.
 	 */
-	public IShape containsShape(int x, int y)
+	public IShape containsPoint(int x, int y)
 	{
 		Iterator<IShape> i = points.iterator();
 		while(i.hasNext())
@@ -54,4 +66,29 @@ public class Map extends JPanel {
 		
 		return null;
 	}
+
+	public ViewPoint getPoint(int id)
+	{
+		return (ViewPoint) points.get(id);
+	}
+	
+	public IShape containsTroncon(int x, int y)
+	{
+		Iterator<IShape> i = troncons.iterator();
+		while(i.hasNext())
+		{
+			IShape current = i.next();
+			if(current.contains(x, y))
+			{
+				return current;
+			}
+		}
+		
+		return null;
+	}
+
+	public void addTroncon(ViewTroncon view) {
+		troncons.add(view);
+	}
+	
 }

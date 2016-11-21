@@ -40,5 +40,9 @@ public class ViewPoint implements IShape{
 	}
 	
 	public int getId() { return id;}
+	
+	public int getCalculedX(){ return calculedX;}
+	
+	public int getCalculedY(){ return calculedY;}
 
 }

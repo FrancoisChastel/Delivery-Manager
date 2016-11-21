@@ -2,10 +2,15 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.MapNode;
+import model.Section;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -15,6 +20,7 @@ public class MainFrame extends JFrame {
 	private View hamecon;
 	private JPanel contentPane;
 	private Map map;
+	private Adapter adapter;
 	
 	public MainFrame(View view) {
 		// TODO Auto-generated constructor stub
@@ -42,8 +48,17 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
+		// Instanciate Map
 		map = new Map();
 		contentPane.add(map);
+		
+		adapter = new Adapter(map);
+	}
+	
+	public void adapte(List<MapNode> nodes, List<Section> troncons)
+	{
+		adapter.drawModel(nodes,troncons);
+		
 	}
 
 }

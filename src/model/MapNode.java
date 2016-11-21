@@ -21,7 +21,7 @@ public class MapNode {
 	// Getters and Setters
 	
 	
-	public long getidNode() {
+	public int getidNode() {
 		return idNode;
 	}
 
@@ -43,7 +43,7 @@ public class MapNode {
 
 
 
-	public long getY() {
+	public int getY() {
 		return y;
 	}
 
