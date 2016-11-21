@@ -18,7 +18,12 @@ public class Model extends Observable implements IModel {
 		
 	}
 	
-	public void getBestPath(Node origin, Node destination)
+	public void parseDeliveriesFile(File currentFile)
+	{
+		
+	}
+	
+	public void generateDelivery(Node origin, Node destination)
 	{
 		
 	}
