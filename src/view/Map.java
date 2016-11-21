@@ -16,8 +16,9 @@ public class Map extends JPanel {
 	 * Create the panel.
 	 */
 	public Map() {
-		this.setBackground(Color.BLACK);		
-		points = new ArrayList<IShape>();		
+				
+		points = new ArrayList<IShape>();
+		troncons = new ArrayList<IShape>();
 
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
@@ -36,14 +37,17 @@ public class Map extends JPanel {
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
 	 */
 	public void paintComponent(Graphics g) { 	
+		super.paintComponent(g);
+		g.setColor(getForeground());
 		Iterator<IShape> i = points.iterator();
 		Iterator<IShape> j = troncons.iterator();
 		
 		while(i.hasNext())
 			i.next().drawShape(g, getWidth(), getHeight());
-		
+
 		while(j.hasNext())
 			j.next().drawShape(g, getWidth(), getHeight());
+	
 	}
 
 	/**
@@ -63,6 +67,11 @@ public class Map extends JPanel {
 		return null;
 	}
 
+	public ViewPoint getPoint(int id)
+	{
+		return (ViewPoint) points.get(id);
+	}
+	
 	public IShape containsTroncon(int x, int y)
 	{
 		Iterator<IShape> i = troncons.iterator();
@@ -76,6 +85,10 @@ public class Map extends JPanel {
 		}
 		
 		return null;
+	}
+
+	public void addTroncon(ViewTroncon view) {
+		troncons.add(view);
 	}
 	
 }

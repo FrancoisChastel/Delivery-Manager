@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -16,10 +17,21 @@ public class MapMouseListener implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		IShape shape = map.containsShape(e.getX(), e.getY());
+		IShape point = map.containsPoint(e.getX(), e.getY());
+		IShape troncon = map.containsTroncon(e.getX(), e.getY());
 		
-		if(shape != null)
-			View.displayMessage("Click on "+((ViewPoint)shape).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);	
+		if(point != null)
+			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
+		
+
+		
+		if(troncon != null)
+		{
+			View.displayMessage("Click on "+((ViewTroncon)troncon).getName()+" - "+((ViewTroncon)troncon).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
+			((ViewTroncon)troncon).setColor(Color.red);
+			map.repaint();
+		}
+				
 	}
 
 	@Override

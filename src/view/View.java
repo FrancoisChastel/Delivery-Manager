@@ -74,7 +74,9 @@ public class View implements Observer, IView {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// On model update, update view
-		((MainFrame) pages.get(Page.Main)).adapte(controller.getModel().getMapNodes());
+		((MainFrame) pages.get(Page.Main)).adapte(controller.getModel().getMapNodes(),controller.getModel().getSections());
+	
+		
 		displayFrame(Page.Main,true);
 	}
 }

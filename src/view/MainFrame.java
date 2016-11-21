@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import model.MapNode;
-
+import model.Section;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -55,9 +55,10 @@ public class MainFrame extends JFrame {
 		adapter = new Adapter(map);
 	}
 	
-	public void adapte(List<MapNode> nodes)
+	public void adapte(List<MapNode> nodes, List<Section> troncons)
 	{
-		adapter.drawModel(nodes);
+		adapter.drawModel(nodes,troncons);
+		
 	}
 
 }

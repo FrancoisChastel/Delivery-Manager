@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.DeliveryPoint;
 import model.MapNode;
+import model.Section;
 
 
 public class Adapter {
@@ -50,7 +51,7 @@ public class Adapter {
 	 * This method calibrate and create all ViewPoint from a liste of model.Node.
 	 * @param node
 	 */
-	public void drawModel(List<MapNode> node)
+	public void drawModel(List<MapNode> node, List<Section> troncons)
 	{
 		calibration(node);
 		
@@ -61,6 +62,16 @@ public class Adapter {
 			MapNode curr = i.next();
 			map.addPoint(getView(curr), curr.getidNode());
 		}
+		
+		Iterator<Section> j = troncons.iterator();
+		
+		while(j.hasNext())
+		{
+			Section curr = j.next();
+			map.addTroncon(getView(curr));
+		}
+		
+		
 		map.repaint();
 	}
 	
@@ -75,6 +86,12 @@ public class Adapter {
 		double y = ((double)(p.getY()-minY))/etendueY;
 		return new ViewPoint(x,y,p.getidNode());		
 	}
+	
+	public ViewTroncon getView(Section troncons)
+	{		
+		return new ViewTroncon(map.getPoint(troncons.getIdOrigin()), map.getPoint(troncons.getIdDestination()), 0 , troncons.getName());		
+	}
+	
 	
 	public Adapter(Map map)
 	{
