@@ -6,12 +6,12 @@ import java.util.LinkedList;
 public class DeliveryOrder {
 
 	private long idOrder;
-	private Node storeAdress;
+	private MapNode storeAdress;
 	private Time startingTime;
 	private LinkedList<Delivery> deliveryList;
 	
 	
-	public DeliveryOrder(long idOrder, Node storeAdress, Time startingTime, LinkedList<Delivery> deliveryList) {
+	public DeliveryOrder(long idOrder, MapNode storeAdress, Time startingTime, LinkedList<Delivery> deliveryList) {
 		super();
 		this.idOrder = idOrder;
 		this.storeAdress = storeAdress;
@@ -30,12 +30,12 @@ public class DeliveryOrder {
 	}
 
 
-	public Node getStoreAdress() {
+	public MapNode getStoreAdress() {
 		return storeAdress;
 	}
 
 
-	public void setStoreAdress(Node storeAdress) {
+	public void setStoreAdress(MapNode storeAdress) {
 		this.storeAdress = storeAdress;
 	}
 

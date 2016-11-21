@@ -3,17 +3,17 @@ package model;
 import java.util.Date;
 
 
-public class DeliveryPoint extends Node{
+public class DeliveryPoint extends MapNode{
 
 	
-	public DeliveryPoint(long idNode, Long x, long y) {
+	public DeliveryPoint(int idNode, int x, int y) {
 		super(idNode, x, y);
 		// TODO Auto-generated constructor stub
 	}
 	private Date inTime;
 	private Date outTime;
 	
-	public DeliveryPoint(long idNode, Long x, long y, Date inTime, Date outTime) {
+	public DeliveryPoint(int idNode, int x, int y, Date inTime, Date outTime) {
 		super(idNode, x, y);
 		this.inTime = inTime;
 		this.outTime = outTime;

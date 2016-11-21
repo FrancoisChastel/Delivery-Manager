@@ -19,7 +19,7 @@ public class MapMouseListener implements MouseListener {
 		IShape shape = map.containsShape(e.getX(), e.getY());
 		
 		if(shape != null)
-			View.displayMessage("Click on "+((ViewPoint)shape).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
+			View.displayMessage("Click on "+((ViewPoint)shape).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);	
 	}
 
 	@Override

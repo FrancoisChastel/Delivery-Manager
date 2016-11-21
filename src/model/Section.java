@@ -1,20 +1,17 @@
 package model;
 
-public class Section implements Comparable {
+public class Section implements Comparable<Section>{
 
-	
-	private long idSection;
-	private Node origin;
-	private Node destination;
+	private long idOrigin;
+	private long idDestination;
 	private String name;
 	private long length;
 	private long speed;
 	
 	
-	public Section(long idSection, Node origin, Node destination, String name, long length, long speed) {
-		this.idSection = idSection;
-		this.origin = origin;
-		this.destination = destination;
+	public Section(long idOrigin,long idDestination, String name, long length, long speed) {
+		this.idOrigin = idOrigin;
+		this.idDestination = idDestination;
 		this.name = name;
 		this.length = length;
 		this.speed = speed;
@@ -24,41 +21,31 @@ public class Section implements Comparable {
 	
 	
 	// Getters and Setters
-	
-	public long getIdSection() {
-		return idSection;
+
+	public long getIdOrigin() {
+		return idOrigin;
+	}
+
+	public void setIdOrigin(long idOrigin) {
+		this.idOrigin = idOrigin;
 	}
 
 
-	public void setIdSection(long idSection) {
-		this.idSection = idSection;
+
+
+	public long getIdDestination() {
+		return idDestination;
 	}
 
-
-	public Node getOrigin() {
-		return origin;
-	}
-
-
-	public void setOrigin(Node origin) {
-		this.origin = origin;
-	}
-
-
-	public Node getDestination() {
-		return destination;
-	}
-
-
-	public void setDestination(Node destination) {
-		this.destination = destination;
+	public void setIdDestination(long idDestination) {
+		this.idDestination = idDestination;
 	}
 
 
 	public String getName() {
 		return name;
 	}
-
+	
 
 	public void setName(String name) {
 		this.name = name;
@@ -84,11 +71,8 @@ public class Section implements Comparable {
 		this.speed = speed;
 	}
 
-
-
-
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(Section o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
