@@ -13,10 +13,9 @@ public class LowerCosts {
 	public static int[][] generateCosts(Graph<MapNode, Section> graph, DeliveryOrder tour)
 	{
 		int numberOfDeliveries = tour.getDeliveryList().size();
-		//int costs[][] = new int[numberOfDeliveries][numberOfDeliveries];
+		int costsMatrix[][] = new int[numberOfDeliveries][numberOfDeliveries];
 		HashMap<MapNode,HashMap<MapNode,Double>> costs = new HashMap<>();
 		//Init HashMap with nearly infinites
-		
 		
 		
 		//Dijkstra for each node
@@ -73,11 +72,12 @@ public class LowerCosts {
 			for(Entry<MapNode, Double> entryNode : entry.getValue().entrySet())
 			{
 				System.out.println("Durée node "+entryNode.getKey().getidNode() + " : " + entryNode.getValue().toString() + " s");
+				costsMatrix[tour.getDeliveryList().indexOf(entry)][tour.getDeliveryList().indexOf(entryNode)] = (int) Math.floor(entryNode.getValue());
 			}
 			
 		}
 		
-		return null;
+		return costsMatrix;
 	}
 	
 	
