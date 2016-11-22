@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -12,6 +13,8 @@ public class Model extends Observable implements IModel {
 
 	Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
 	XmlParser xmlParser;
+	DeliveryOrder deliveryOrder;
+	TSP1 tsp;
 	//private Graph<Section, MapNode> map;
 	
 	public Model(Controller controller) {
@@ -24,7 +27,8 @@ public class Model extends Observable implements IModel {
 		graph = xmlParser.getGraph();
 		File deliveries = new File("XML/livraisons5x5-4.xml");
 		xmlParser.xmlDeliveriesParser(deliveries);
-		LowerCosts.generateCosts(graph, xmlParser.getDelOrder());
+		tsp = new TSP1();
+		generateTour();
 		setChanged();
 		notifyObservers();
 	}
@@ -54,42 +58,36 @@ public class Model extends Observable implements IModel {
 	
 	public void generateTour()
 	{
-		//int[] reducedPath;
-		//LinkedList<MapNode> completePath;
-		//LowerCosts.generateCosts(graph, deliveryOrder);
-
-				//#DeliveryOrder est ‡ remplacer par l'objet DeliveryOrder correspondant ‡ la demande de livraison
-				//int[][] couts = new int[#DeliveryOrder.getmaxIdNode()+1][#DeliveryOrder.getmaxIdNode()+1];
-				
-				// Etape 1
-				// InsÈrer Dijkstra ici
-				
-				// Etape 2
-				// TSP.chercheSolution(2500, #DeliveryOrder.getDeliveryList().size(), couts, #DeliveryOrder.getTimes())
-				// for( int i= 0 ; i < #DeliveryOrder.getDeliveryList().size();i++)
-				// {		
-				// 		reducedPath[i} = TSP.getMeilleureSolution(i);
-				// }
-				
-				// Etape 3
-				// On insËre les points intermÈdiaires (appel ‡ Dijkstra)
-				// completePath =addIntermediatePoints(reducedGraph,#DeliveryOrder)
-	}
-	
-	/*public LinkedList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
-	{
-		LinkedList<MapNode>  path;
 		
-		for(int i=0;i< reducedGraph[i].length();i++)
+		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
+		//LinkedList<MapNode> completePath;
+				
+		// get the order of the delivery	
+		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), LowerCosts.generateCosts(graph, xmlParser.getDelOrder()), xmlParser.getDelOrder().getTimes());
+		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
+		{		
+			reducedPath[i] = tsp.getMeilleureSolution(i);
+		}
+			
+		//adding the intermediates nodes
+		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
+		
+	}
+
+	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
+	{
+		ArrayList<MapNode>  path = null;
+		
+		for(int i=0;i< reducedGraph.length;i++)
 		{
-			path.add(deliveryOrder.getDeliveryList().[i].getAdress();
+			path.add(deliveryOrder.getDeliveryList().get(i).getAdress());
 			// still need to add the intermediates nodes
 		}
 		
 		
 		
 		return path;
-	}*/
+	}
 
 }
 

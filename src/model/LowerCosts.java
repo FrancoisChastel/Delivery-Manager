@@ -13,15 +13,15 @@ public class LowerCosts {
 	public static int[][] generateCosts(Graph<MapNode, Section> graph, DeliveryOrder tour)
 	{
 		int numberOfDeliveries = tour.getDeliveryList().size();
-		//int costs[][] = new int[numberOfDeliveries][numberOfDeliveries];
+		int costsMatrix[][] = new int[numberOfDeliveries][numberOfDeliveries];
 		HashMap<MapNode,HashMap<MapNode,Double>> costs = new HashMap<>();
 		//Init HashMap with nearly infinites
-		
 		
 		
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
+			System.out.println(tour.getDeliveryList().get(i).getAdress().getidNode());
 			MapNode beginning = tour.getDeliveryList().get(i).getAdress();
 			
 			ArrayList<MapNode> nodesThrough = new ArrayList<>();
@@ -73,11 +73,17 @@ public class LowerCosts {
 			for(Entry<MapNode, Double> entryNode : entry.getValue().entrySet())
 			{
 				System.out.println("Durée node "+entryNode.getKey().getidNode() + " : " + entryNode.getValue().toString() + " s");
+				try{
+				costsMatrix[tour.getDeliveryList().indexOf(entry)][tour.getDeliveryList().indexOf(entryNode)] = (int) Math.floor(entryNode.getValue());
+				}
+				catch (Exception e) {
+					System.out.println("The node is not a delivery Point");
+				}
 			}
 			
 		}
 		
-		return null;
+		return costsMatrix;
 	}
 	
 	
