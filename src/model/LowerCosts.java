@@ -21,6 +21,7 @@ public class LowerCosts {
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
+			System.out.println(tour.getDeliveryList().get(i).getAdress().getidNode());
 			MapNode beginning = tour.getDeliveryList().get(i).getAdress();
 			
 			ArrayList<MapNode> nodesThrough = new ArrayList<>();
@@ -72,7 +73,12 @@ public class LowerCosts {
 			for(Entry<MapNode, Double> entryNode : entry.getValue().entrySet())
 			{
 				System.out.println("Durée node "+entryNode.getKey().getidNode() + " : " + entryNode.getValue().toString() + " s");
+				try{
 				costsMatrix[tour.getDeliveryList().indexOf(entry)][tour.getDeliveryList().indexOf(entryNode)] = (int) Math.floor(entryNode.getValue());
+				}
+				catch (Exception e) {
+					System.out.println("The node is not a delivery Point");
+				}
 			}
 			
 		}
