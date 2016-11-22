@@ -7,7 +7,8 @@ public class Section implements Comparable<Section>{
 	private String name;
 	private int length;
 	private int speed;
-	
+	private int id;
+	private static int factoryId=0;
 	
 	public Section(int idOrigin,int idDestination, String name, int length, int speed) {
 		this.idOrigin = idOrigin;
@@ -15,6 +16,8 @@ public class Section implements Comparable<Section>{
 		this.name = name;
 		this.length = length;
 		this.speed = speed;
+		this.id = factoryId;
+		factoryId++;
 	}
 
 
@@ -30,8 +33,7 @@ public class Section implements Comparable<Section>{
 		this.idOrigin = idOrigin;
 	}
 
-
-
+	public int getId(){return id;}
 
 	public int getIdDestination() {
 		return idDestination;

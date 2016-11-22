@@ -11,6 +11,7 @@ public class ViewPoint implements IShape{
 	private int calculedX;
 	private int calculedY;
 	private int id;
+	public Color color = Color.BLACK;
 	
 	/**
 	 * Normal Constructor of the view point. Coordinates are double because they are expressed in Frame Percentage
@@ -21,16 +22,17 @@ public class ViewPoint implements IShape{
 	{
 		this.x=x;
 		this.y=y;
+		this.id=id;
 	}
 	@Override
 	public boolean contains(int x, int y) {
 		return ( (calculedX-radius)< x && x < (calculedX+radius) )&& ( (calculedY-radius)< y && y < (calculedY+radius) );
 	}
 
-	@Override
+	
 	public void drawShape(Graphics g, int width, int height) {
 		// TODO Auto-generated method stub
-		g.setColor(Color.BLACK);
+		g.setColor(color);
 		calculedX = (int) (width*x);
 		calculedY = (int) (height*y);
 		

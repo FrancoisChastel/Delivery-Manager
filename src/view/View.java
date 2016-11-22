@@ -76,7 +76,6 @@ public class View implements Observer, IView {
 		// On model update, update view
 		((MainFrame) pages.get(Page.Main)).adapte(controller.getModel().getMapNodes(),controller.getModel().getSections());
 	
-		
 		displayFrame(Page.Main,true);
 	}
 }

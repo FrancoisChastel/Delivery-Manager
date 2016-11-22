@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -55,10 +56,23 @@ public class MainFrame extends JFrame {
 		adapter = new Adapter(map);
 	}
 	
+	/**
+	 * Draw the frame with adapted from model objects. Called by update
+	 * @param nodes
+	 * @param troncons
+	 */
 	public void adapte(List<MapNode> nodes, List<Section> troncons)
 	{
-		adapter.drawModel(nodes,troncons);
+		adapter.drawModel(nodes,troncons);		
 		
+		//TEST DEBUGING
+		ArrayList<Integer> liste = new ArrayList();
+
+		liste.add(0);
+		liste.add(1);
+		liste.add(2);
+		liste.add(3);
+		//map.setTourne(liste);
 	}
 
 }
