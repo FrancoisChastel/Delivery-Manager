@@ -107,22 +107,21 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void displayTour()
 	{
 		//TEST DEBUGING
-		Tour tour = null;
+	//	Tour tour = null;
 
-		map.displayTour(tour);
+	//	map.displayTour(tour);
 				
 	}
-	
 	/**
 	 * This method add a tour into the Tree.
 	 * @param tour
 	 */	
-	public void addTourTree(Tour tour)
+/*	public void addTourTree(Tour tour)
 	{		
 		root.add(new DefaultMutableTreeNode("Tournée 1"));
 		// Adding the first Level of JTree		
 	}
-
+*/
 	/**
 	 * Action listener of the frame
 	 */

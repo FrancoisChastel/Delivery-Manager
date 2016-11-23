@@ -11,6 +11,8 @@ import controller.Controller;
 public class Model extends Observable implements IModel {
 
 	Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
+	ArrayList<Section> sections = new ArrayList<Section>();
+	Tour tour;
 	XmlParser xmlParser;
 	DeliveryOrder deliveryOrder;
 	TSP1 tsp;
@@ -58,17 +60,22 @@ public class Model extends Observable implements IModel {
 	
 	public void generateTour()
 	{
-		
-		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()+1];
+		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
+		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
 		//LinkedList<MapNode> completePath;
 				
 		// get the order of the delivery	
 		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size()+1, lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
-		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size()+1;i++)
+		
+		//Renvoie de lowCosts.getPaths : HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>>
+		
+
+		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
+		
+		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
-			System.out.println(tsp.getMeilleureSolution(i));
+			//System.out.println(tsp.getMeilleureSolution(i));
 		}
 		
 		//adding the intermediates nodes
@@ -78,24 +85,30 @@ public class Model extends Observable implements IModel {
 
 	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
-		HashMap<MapNode,HashMap<MapNode,ArrayList<MapNode>>> pathFromPoint = lowCosts.getPaths();
+		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
 		ArrayList<MapNode>  path = new ArrayList<MapNode>();
 		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
 		
-		for(int i=0;i< reducedGraph.length;i++)
+		for(int i=0;i< reducedGraph.length-1;i++)
 		{
 			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress());
+			//HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
+			//pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress());
 			
-			path.addAll(pathToNode);
+			//path.addAll(pathToNode);
 		}
-		
-		for(int i=0;i<path.size();i++)
+		// path to go back to stock node
+		HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[reducedGraph.length-1]).getAdress());
+		pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
+		path.addAll(pathToNode);
+		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
+		for(int i=0;i<path.size()-1;i++)
 		{
-			System.out.println(path.get(i).getidNode());
+			sections.add((graph.getDestinations(path.get(i))).get(path.get(i+1)));
 		}
 		
+		// create the tour instance
+		tour = new Tour(sections, xmlParser.getDelOrder());
 		
 		
 		return path;

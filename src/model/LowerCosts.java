@@ -1,26 +1,28 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class LowerCosts {
-	HashMap<MapNode,HashMap<MapNode,Double>> costs;
 	DeliveryOrder tour;
+	ArrayList<MapNode> deliveryNodes= new ArrayList<MapNode>();
 	Graph<MapNode, Section> graph;
-	HashMap<MapNode,HashMap<MapNode,ArrayList<MapNode>>> paths;
+	HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> paths;
 	int costsMatrix[][];
 	
 	public LowerCosts(Graph<MapNode, Section> graph, DeliveryOrder tour)
 	{
 		this.tour=tour;
 		this.graph=graph;
-		costs = new HashMap<>();
 		paths = new HashMap<>();
 		int numberOfDeliveries = tour.getDeliveryList().size()+1;
 		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
+		deliveryNodes.add(tour.getStoreAdress());
+		for(int i=0;i<tour.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(tour.getDeliveryList().get(i).getAdress());
+		}
 		generateCosts();
 	}
 	/*
@@ -35,123 +37,107 @@ public class LowerCosts {
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
-			//System.out.println(tour.getDeliveryList().get(i).getAdress().getidNode());
 			MapNode beginning = tour.getDeliveryList().get(i).getAdress();
 			
-			HashMap<MapNode,MapNode> predecessor = new HashMap<>();
-			
-			ArrayList<MapNode> nodesThrough = new ArrayList<>();
-			
-			HashMap<MapNode, Double> nodesCost = new HashMap<>();
-			nodesCost.put(beginning, (double) 0);
-			//costs.put(beginning, nodesCost);
-			
-			ArrayList<MapNode> nodesList = new ArrayList<>();
-			nodesList.add(beginning);
-			
-			while(!nodesList.isEmpty())
-			{
-				MapNode origin = nodesList.get(0);
-				HashMap<MapNode,Section> destinations = graph.getDestinations(origin);
-				nodesList.remove(0);
-				for(Entry<MapNode, Section> entry : destinations.entrySet())
-				{
-					if(!nodesThrough.contains(entry.getKey()))
-					{
-						MapNode target = entry.getKey();
-						double distNode;
-						if(nodesCost.containsKey(target))
-						{
-							 distNode = nodesCost.get(target).intValue();
-						}
-						else
-						{
-							distNode = 100000000;
-						}
-						
-						double distOrigin = nodesCost.get(origin).intValue();
-						double distPath = entry.getValue().getLength()/entry.getValue().getSpeed();
-						if((distPath+distOrigin)<distNode)
-						{
-							predecessor.put(target, origin);
-				            nodesCost.put(target, (distPath+distOrigin));
-				            nodesList.add(target);
-						}
-					}
-				}
-				nodesThrough.add(origin);
-			}
-			costs.put(beginning, nodesCost);
-			HashMap<MapNode, ArrayList<MapNode>> pathTargets = new HashMap<>();
+
+			ArrayList<MapNode> deliveryNodes = new ArrayList<>();
+
 			for(int j=0;j<tour.getDeliveryList().size();j++)
 			{
-				if(!beginning.equals(tour.getDeliveryList().get(j).getAdress()))
+				if(!tour.getDeliveryList().get(j).getAdress().equals(beginning))
 				{
-					ArrayList<MapNode> path = getBestPath(predecessor,beginning, tour.getDeliveryList().get(j).getAdress(),new ArrayList<MapNode>());
-					Collections.reverse(path);
-					path.remove(0);
-					path.remove(path.size()-1);
-					pathTargets.put(tour.getDeliveryList().get(j).getAdress(),path);
-					paths.put(tour.getDeliveryList().get(i).getAdress(), pathTargets);
+					deliveryNodes.add(tour.getDeliveryList().get(j).getAdress());
 				}
-				
-				/*for(int n=0;n<path.size();n++)
-				{
-					System.out.print(path.get(n).getidNode() + " ");
-				}
-				System.out.println("");*/
 			}
 			
-		}
-		
-		for(Entry<MapNode, HashMap<MapNode,Double>> entry : costs.entrySet())
-		{
-			for(Entry<MapNode, Double> entryNode : entry.getValue().entrySet())
+			paths.put(beginning, new ArrayList<Pair<ArrayList<MapNode>,Double>>());
+			while(!deliveryNodes.isEmpty())
 			{
-				try{
-				costsMatrix[tour.getDeliveryList().indexOf(entry)][tour.getDeliveryList().indexOf(entryNode)] = (int) Math.floor(entryNode.getValue());
-				}
-				catch (Exception e) {
-					//System.out.println("The node is not a delivery Point");
-				}
+				//Appel dijkstra
+				Pair<ArrayList<MapNode>,Double> dijkstra = this.dijkstra(beginning,deliveryNodes.get(0));
+				paths.get(beginning).add(dijkstra);
+				deliveryNodes.remove(0);
 			}
-			
 		}
 	}
 	
 	
-	public ArrayList<MapNode> getBestPath(HashMap<MapNode,MapNode> predecessor, MapNode origin, MapNode target, ArrayList<MapNode> path)
+	
+	public Pair<ArrayList<MapNode>,Double> dijkstra (MapNode origin, MapNode target)
 	{
-		path.add(target);
-		if(target.equals(origin))
+		HashMap<MapNode,Pair<Double,MapNode>> weightTemp = new HashMap<>();
+		HashMap<MapNode, Pair<ArrayList<MapNode>,Double>> dijkstraTemp = new HashMap<>(); 
+		weightTemp.put(origin, new Pair<Double, MapNode>(0.0,origin));
+		dijkstraTemp.put(origin,new Pair<ArrayList<MapNode>,Double>(new ArrayList<>(),0.0));
+		Boolean bestPathTarget = false;
+		HashMap<MapNode,Integer> nodesVisited = new HashMap<>();
+		while(!bestPathTarget)
 		{
-			return path;
-		}
-		else
-		{
-			if(predecessor.containsKey(target))
+			//Select shortest node path in weightTemp for the new origin
+			double min = Double.MAX_VALUE;
+			MapNode oldOrigin = origin;
+			for(Entry<MapNode,Pair<Double,MapNode>> entry : weightTemp.entrySet())
 			{
-				getBestPath(predecessor, origin, predecessor.get(target),path);
+				if(entry.getValue().getFirst()<min)
+				{
+					origin = entry.getKey();
+					min=entry.getValue().getFirst();
+				}
 			}
-			else
+			//Update dijkstraTemp by adding the path
+			ArrayList<MapNode> pathTemp = new ArrayList<>();
+			pathTemp = dijkstraTemp.get(oldOrigin).getFirst();
+			pathTemp.add(origin);
+			dijkstraTemp.put(origin, new Pair<ArrayList<MapNode>,Double>(pathTemp,min));
+			
+			nodesVisited.put(oldOrigin, 0);
+			
+			weightTemp.remove(origin);
+			
+			//Stop condition
+			if(dijkstraTemp.containsKey(target))
 			{
-				return path;
+				bestPathTarget=true;
+			}
+			
+			//Update weightTemp with the new origin
+			HashMap<MapNode,Section> destinations = graph.getDestinations(origin);
+			for(Entry<MapNode, Section> entry : destinations.entrySet())
+			{
+				if(!nodesVisited.containsKey(entry.getKey()))
+				{
+					double weight = (entry.getValue().getLength()/entry.getValue().getSpeed()) + min;
+					if(weightTemp.containsKey(entry.getKey()))
+					{ 
+						
+						if(weightTemp.get(entry.getKey()).getFirst()<weight)
+						{
+							weightTemp.put(entry.getKey(), new Pair<Double,MapNode>(weight,origin));
+						}
+					}
+					else
+					{
+						weightTemp.put(entry.getKey(), new Pair<Double,MapNode>(weight,origin));
+					}
+				}
 			}
 		}
-		return path;
+		return dijkstraTemp.get(target);
 	}
+	
 	public int[][] getCostsMatrix() {
 		return costsMatrix;
 	}
 	public void setCostsMatrix(int[][] costsMatrix) {
 		this.costsMatrix = costsMatrix;
 	}
-	public HashMap<MapNode, HashMap<MapNode, ArrayList<MapNode>>> getPaths() {
+	public HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Double>>> getPaths() {
 		return paths;
 	}
-	public void setPaths(HashMap<MapNode, HashMap<MapNode, ArrayList<MapNode>>> paths) {
+	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Double>>> paths) {
 		this.paths = paths;
 	}
+	
 	
 	
 	
