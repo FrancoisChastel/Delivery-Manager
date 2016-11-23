@@ -64,11 +64,13 @@ public class Model extends Observable implements IModel {
 				
 		// get the order of the delivery	
 		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
-		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
+		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size()+1, lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
+		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size()+1;i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
+			System.out.println(tsp.getMeilleureSolution(i));
 		}
+		
 		//adding the intermediates nodes
 		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
@@ -80,7 +82,7 @@ public class Model extends Observable implements IModel {
 		ArrayList<MapNode>  path = new ArrayList<MapNode>();
 		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
 		
-		for(int i=0;i< reducedGraph.length-1;i++)
+		for(int i=0;i< reducedGraph.length;i++)
 		{
 			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
 			HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());

@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class LowerCosts {
 		this.graph=graph;
 		costs = new HashMap<>();
 		paths = new HashMap<>();
-		int numberOfDeliveries = tour.getDeliveryList().size();
+		int numberOfDeliveries = tour.getDeliveryList().size()+1;
 		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
 		generateCosts();
 	}
@@ -29,9 +28,8 @@ public class LowerCosts {
 	 */
 	public void generateCosts()
 	{
-		//Add starting point as a delivery 
+		//Init HashMap with nearly infinites
 		
-		tour.getDeliveryList().add(new Delivery(0,tour.getStoreAdress(),0,null,null));
 		
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
@@ -45,6 +43,7 @@ public class LowerCosts {
 			
 			HashMap<MapNode, Double> nodesCost = new HashMap<>();
 			nodesCost.put(beginning, (double) 0);
+			//costs.put(beginning, nodesCost);
 			
 			ArrayList<MapNode> nodesList = new ArrayList<>();
 			nodesList.add(beginning);
