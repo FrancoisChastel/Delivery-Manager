@@ -65,54 +65,57 @@ public class Model extends Observable implements IModel {
 		
 				
 		// get the order of the delivery	
-		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
-		int[][] test = lowCosts.getCostsMatrix();
-		
-		for(int i=0;i<test.length;i++)
-			{
-				System.out.print(test[0][i]);
-				System.out.print(test[1][i]);
-				System.out.print(test[2][i]);
-				System.out.print(test[3][i]);
-				System.out.println(test[4][i]);
-			}
+
+	
 		//Renvoie de lowCosts.getPaths : HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>>
 		
 
-		/*tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
+		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
 		
 		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
 			//System.out.println(tsp.getMeilleureSolution(i));
-		}*/
+		}
 		
 		//adding the intermediates nodes
-		//addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
+		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
 	}
 
-	/*public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
+	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
 		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
-		ArrayList<MapNode>  path = new ArrayList<MapNode>();
+		ArrayList<MapNode> path = new ArrayList<MapNode>();
 		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
 		
 		for(int i=0;i< reducedGraph.length-1;i++)
 		{
 			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			//HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			//pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress());
+			for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[i]   ).getAdress()   )))
+			{
+				if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress())))
+				{
+					path.addAll(temp.getFirst());
+					path.remove(path.size()-1);
+				}
 			
-			//path.addAll(pathToNode);
+			}
 		}
 		// path to go back to stock node
-		HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[reducedGraph.length-1]).getAdress());
-		pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
-		path.addAll(pathToNode);
+		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[reducedGraph.length-1]).getAdress());
+		for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[reducedGraph.length-1]   ).getAdress()   )))
+		{
+			if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress())))
+			{
+				path.addAll(temp.getFirst());
+			}
+		
+		}
 		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
 		for(int i=0;i<path.size()-1;i++)
 		{
+			System.out.println(path.get(i).getidNode());
 			sections.add((graph.getDestinations(path.get(i))).get(path.get(i+1)));
 		}
 		
@@ -121,7 +124,7 @@ public class Model extends Observable implements IModel {
 		
 		
 		return path;
-	}*/
+	}
 
 	public void loadDeliveryFile(File currentFile) {
 		// TODO Auto-generated method stub
