@@ -12,7 +12,7 @@ public class LowerCosts {
 	 */
 	public static int[][] generateCosts(Graph<MapNode, Section> graph, DeliveryOrder tour)
 	{
-		int numberOfDeliveries = tour.getDeliveryList().size();
+		int numberOfDeliveries = tour.getDeliveryList().size()+1;
 		int costsMatrix[][] = new int[numberOfDeliveries][numberOfDeliveries];
 		HashMap<MapNode,HashMap<MapNode,Double>> costs = new HashMap<>();
 		//Init HashMap with nearly infinites
