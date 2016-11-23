@@ -69,10 +69,6 @@ public class Model extends Observable implements IModel {
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
 		}
-		for(int i=0;i<reducedPath.length;i++)
-		{
-			System.out.println(reducedPath[i]);
-		}
 		//adding the intermediates nodes
 		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
@@ -84,16 +80,18 @@ public class Model extends Observable implements IModel {
 		ArrayList<MapNode>  path = new ArrayList<MapNode>();
 		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
 		
-		for(int i=0;i< reducedGraph.length;i++)
+		for(int i=0;i< reducedGraph.length-1;i++)
 		{
 			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			pathToNode = pathFromPoint.get(reducedGraph[i]).get(reducedGraph[i+1]);
+			HashMap<MapNode,ArrayList<MapNode>> fromPoint = pathFromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
+			pathToNode = fromPoint.get(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress());
+			
 			path.addAll(pathToNode);
 		}
 		
-		for(int i=0;i<pathToNode.size();i++)
+		for(int i=0;i<path.size();i++)
 		{
-			System.out.println(pathToNode.get(i).getidNode());
+			System.out.println(path.get(i).getidNode());
 		}
 		
 		

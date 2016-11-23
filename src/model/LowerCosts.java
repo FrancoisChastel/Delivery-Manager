@@ -34,7 +34,7 @@ public class LowerCosts {
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
-			System.out.println(tour.getDeliveryList().get(i).getAdress().getidNode());
+			//System.out.println(tour.getDeliveryList().get(i).getAdress().getidNode());
 			MapNode beginning = tour.getDeliveryList().get(i).getAdress();
 			
 			HashMap<MapNode,MapNode> predecessor = new HashMap<>();
