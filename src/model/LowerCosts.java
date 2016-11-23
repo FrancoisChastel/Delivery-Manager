@@ -30,6 +30,7 @@ public class LowerCosts {
 	{
 		//Init HashMap with nearly infinites
 		
+		tour.getDeliveryList().add(0,new Delivery(0,tour.getStoreAdress(),0,null,null));
 		
 		//Dijkstra for each node
 		for(int i=0;i<tour.getDeliveryList().size();i++)
