@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 public class LowerCosts {
 	DeliveryOrder tour;
+	ArrayList<MapNode> deliveryNodes= new ArrayList<MapNode>();
 	Graph<MapNode, Section> graph;
 	HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> paths;
 	int costsMatrix[][];
@@ -15,8 +16,13 @@ public class LowerCosts {
 		this.tour=tour;
 		this.graph=graph;
 		paths = new HashMap<>();
-		int numberOfDeliveries = tour.getDeliveryList().size();
+		int numberOfDeliveries = tour.getDeliveryList().size()+1;
 		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
+		deliveryNodes.add(tour.getStoreAdress());
+		for(int i=0;i<tour.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(tour.getDeliveryList().get(i).getAdress());
+		}
 		generateCosts();
 	}
 	/*
@@ -24,7 +30,7 @@ public class LowerCosts {
 	 */
 	public void generateCosts()
 	{
-		//Add starting point as a delivery 
+		//Init HashMap with nearly infinites
 		
 		tour.getDeliveryList().add(0,new Delivery(0,tour.getStoreAdress(),0,null,null));
 		
@@ -33,7 +39,9 @@ public class LowerCosts {
 		{
 			MapNode beginning = tour.getDeliveryList().get(i).getAdress();
 			
+
 			ArrayList<MapNode> deliveryNodes = new ArrayList<>();
+
 			for(int j=0;j<tour.getDeliveryList().size();j++)
 			{
 				if(!tour.getDeliveryList().get(j).getAdress().equals(beginning))

@@ -8,6 +8,9 @@ import java.util.Iterator;
 
 import javax.swing.JPanel;
 
+import model.Section;
+import model.Tour;
+
 public class Map extends JPanel {
 
 	private ArrayList<ViewPoint> points;
@@ -21,6 +24,7 @@ public class Map extends JPanel {
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
 
+		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
 	}
@@ -34,20 +38,35 @@ public class Map extends JPanel {
 		edges.put(id,s);
 	}
 	
-	public void setTourne(ArrayList<Integer> ids)
+	
+	/**
+	 * This method display a tour on the map. 
+	 * @param tour
+	 */
+	public void displayTour(Tour tour)
 	{
-		Iterator<Integer> i = ids.iterator();
+		// Iterate over the sections
+		Iterator<Section> sectionIterator = tour.getSections().iterator();
+					
+		Section currSection = sectionIterator.next();
+		ViewEdge v =edges.get(currSection.getId());
 		
-		while(i.hasNext())
+		// Coloring FirstPoint
+		v.getOrigin().color=Color.RED;
+		
+		Color increment = Color.GREEN;
+		
+		while(sectionIterator.hasNext())
 		{
-			int currId = i.next();
-			ViewEdge v =edges.get(currId);
-			v.setColorId(Color.green,currId);
+			currSection = sectionIterator.next();
+			v =edges.get(currSection.getId());			
+			increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
+			v.setColorId(increment,currSection.getId());
 		}
 		
 		repaint();
 	}
-	
+
 	/**
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
 	 */

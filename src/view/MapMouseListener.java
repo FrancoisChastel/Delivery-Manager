@@ -27,8 +27,7 @@ public class MapMouseListener implements MouseListener {
 			point.color= Color.GREEN;
 			map.repaint();
 		}
-			
-		
+					
 		if(troncon != null)
 		{
 			String ids = "";

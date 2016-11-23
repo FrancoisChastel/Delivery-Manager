@@ -14,9 +14,12 @@ import java.util.Set;
 public class ViewEdge implements IShape {
 	
 	// Constantes ------
-	private static int strokeLine = 3;
+	private static int NormalLineWeight = 3;
+	private static int DefaultLineWeight = 1;
+
 	private static int epsilon = 8;
-	private static Color defaultColor = Color.DARK_GRAY;
+	private static Color defaultColor = Color.WHITE;
+	
 	private static int idFactory = 0;
 	
 	// Attributes ------
@@ -85,7 +88,11 @@ public class ViewEdge implements IShape {
 		{
 			// Prepare to draw the first line
 			g2d.setColor(section1);
-			g2d.setStroke(new BasicStroke(strokeLine));
+			
+			if(section1 == defaultColor)
+				g2d.setStroke(new BasicStroke(DefaultLineWeight));
+			else
+				g2d.setStroke(new BasicStroke(NormalLineWeight));
 			g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 		}
 		else // If we have to draw the second line, we draw it stroke only if there is conflict
@@ -95,19 +102,21 @@ public class ViewEdge implements IShape {
 			if(section2 == defaultColor && section1 == defaultColor) 
 			{
 				g2d.setColor(section1);
-				g2d.setStroke(new BasicStroke(strokeLine));
+				g2d.setStroke(new BasicStroke(DefaultLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 			// if section1 is default and section2 is not , then we draw section2 color 
 			else if(section1 == defaultColor && section2 != defaultColor)
 			{
 				g2d.setColor(section2);
+				g2d.setStroke(new BasicStroke(NormalLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 			// if section2 is default and section1 is not , then we draw section1 color 
 			else if(section1 != defaultColor && section2 == defaultColor)
 			{
 				g2d.setColor(section1);
+				g2d.setStroke(new BasicStroke(NormalLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 			// if both are not default, then color with stroke line
@@ -115,12 +124,12 @@ public class ViewEdge implements IShape {
 			{
 				// we draw normal first line
 				g2d.setColor(section1);				
-				g2d.setStroke(new BasicStroke(strokeLine));
+				g2d.setStroke(new BasicStroke(NormalLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 				
 				// Then we draw stroke second line
 				g2d.setColor(section2);
-				g2d.setStroke(new BasicStroke(strokeLine, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f }, 0.0f));
+				g2d.setStroke(new BasicStroke(NormalLineWeight, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f }, 0.0f));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 		}
