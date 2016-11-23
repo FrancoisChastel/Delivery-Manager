@@ -77,11 +77,22 @@ public class MainFrame extends JFrame implements ActionListener {
 		//TEST DEBUGING
 		ArrayList<Integer> liste = new ArrayList();
 
-		liste.add(0);
-		liste.add(1);
-		liste.add(2);
-		liste.add(3);
-		//map.setTourne(liste);
+		liste.add(242);
+		liste.add(241);
+		liste.add(245);
+		liste.add(247);
+		liste.add(325);
+		liste.add(400);
+		liste.add(403);
+		liste.add(406);
+		liste.add(250);
+		liste.add(248);
+		liste.add(167);
+		liste.add(93);
+		liste.add(168);
+		liste.add(252);
+	
+		map.setTourne(liste);
 	}
 
 	/**

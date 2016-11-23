@@ -21,21 +21,10 @@ public class DeliveryPoint extends MapNode{
 	
 	// Getters and Setters
 
-	public Date getInTime() {
-		return inTime;
-	}
-
-	public void setInTime(Date inTime) {
-		this.inTime = inTime;
-	}
-
-	public Date getOutTime() {
-		return outTime;
-	}
-
-	public void setOutTime(Date outTime) {
-		this.outTime = outTime;
-	}
+	public Date getInTime() {	return inTime;	}
+	public void setInTime(Date inTime) {	this.inTime = inTime;	}
+	public Date getOutTime() {	return outTime;	}
+	public void setOutTime(Date outTime) {	this.outTime = outTime;	}
 	
 	
 	

@@ -21,6 +21,7 @@ public class Map extends JPanel {
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
 
+		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
 	}
@@ -34,19 +35,44 @@ public class Map extends JPanel {
 		edges.put(id,s);
 	}
 	
+	/**
+	 * This method set the color of all edges concerned by a "tournée".
+	 * @param ids
+	 */
 	public void setTourne(ArrayList<Integer> ids)
 	{
 		Iterator<Integer> i = ids.iterator();
+		Color increment = Color.GREEN;
+		
+		int currId = i.next();
+		ViewEdge v =edges.get(currId);
+		// Coloring FirstPoint
+		v.getOrigin().color=Color.RED;
+		
+		// Coloring Section		
+		 
+		v.setColorId(increment,currId);
 		
 		while(i.hasNext())
 		{
-			int currId = i.next();
-			ViewEdge v =edges.get(currId);
-			v.setColorId(Color.green,currId);
+			currId = i.next();
+			v =edges.get(currId);
+			increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
+			v.setColorId(increment,currId);
+			
+			if(!i.hasNext()) // Drawing lastPoint
+			{
+				v.getTarget().color=Color.red;
+			}
 		}
 		
 		repaint();
 	}
+	/*
+	public Color sectionColorCalcul(Color increment)
+	{
+		return new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());;
+	}*/
 	
 	/**
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
