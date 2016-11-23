@@ -93,6 +93,11 @@ public class Model extends Observable implements IModel {
 		return path;
 	}
 
+	public void loadDeliveryFile(File currentFile) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 

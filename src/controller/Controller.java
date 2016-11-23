@@ -44,4 +44,13 @@ public class Controller implements IController{
 	}
 	
 	public Model getModel() { return model; }
+
+	/**
+	 * Load a delivery file XML. It can be called by the View.Mainframe
+	 * @param currentFile
+	 */
+	public void loadDeliveryFile(File currentFile) {
+		
+		model.loadDeliveryFile(currentFile);
+	}
 }
