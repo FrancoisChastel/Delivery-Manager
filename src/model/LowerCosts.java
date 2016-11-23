@@ -84,7 +84,7 @@ public class LowerCosts {
 			HashMap<MapNode, ArrayList<MapNode>> pathTargets = new HashMap<>();
 			for(int j=0;j<tour.getDeliveryList().size();j++)
 			{
-				if(!beginning.equals(tour.getDeliveryList().get(j)))
+				if(!beginning.equals(tour.getDeliveryList().get(j).getAdress()))
 				{
 					ArrayList<MapNode> path = getBestPath(predecessor,beginning, tour.getDeliveryList().get(j).getAdress(),new ArrayList<MapNode>());
 					Collections.reverse(path);
