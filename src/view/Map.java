@@ -8,6 +8,9 @@ import java.util.Iterator;
 
 import javax.swing.JPanel;
 
+import model.Section;
+import model.Tour;
+
 public class Map extends JPanel {
 
 	private ArrayList<ViewPoint> points;
@@ -45,45 +48,35 @@ public class Map extends JPanel {
 	}
 	 
 	
+	
 	/**
-	 * This method set the color of all edges concerned by a "tournée".
-	 * @param ids
+	 * This method display a tour on the map. 
+	 * @param tour
 	 */
-	public void setTourne(ArrayList<Integer> ids)
+	public void displayTour(Tour tour)
 	{
-		Iterator<Integer> i = ids.iterator();
-		Color increment = Color.GREEN;
+		// Iterate over the sections
+		Iterator<Section> sectionIterator = tour.getSections().iterator();
+					
+		Section currSection = sectionIterator.next();
+		ViewEdge v =edges.get(currSection.getId());
 		
-		int currId = i.next();
-		ViewEdge v =edges.get(currId);
 		// Coloring FirstPoint
 		v.getOrigin().color=Color.RED;
 		
-		// Coloring Section		
-		 
-		v.setColorId(increment,currId);
+		Color increment = Color.GREEN;
 		
-		while(i.hasNext())
+		while(sectionIterator.hasNext())
 		{
-			currId = i.next();
-			v =edges.get(currId);
+			currSection = sectionIterator.next();
+			v =edges.get(currSection.getId());			
 			increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
-			v.setColorId(increment,currId);
-			
-			if(!i.hasNext()) // Drawing lastPoint
-			{
-				v.getTarget().color=Color.red;
-			}
+			v.setColorId(increment,currSection.getId());
 		}
 		
 		repaint();
 	}
-	/*
-	public Color sectionColorCalcul(Color increment)
-	{
-		return new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());;
-	}*/
-	
+
 	/**
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
 	 */
