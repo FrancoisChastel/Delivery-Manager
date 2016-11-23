@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 
@@ -13,6 +14,7 @@ public class Model extends Observable implements IModel {
 	XmlParser xmlParser;
 	DeliveryOrder deliveryOrder;
 	TSP1 tsp;
+	LowerCosts lowCosts;
 	//private Graph<Section, MapNode> map;
 	
 	public Model(Controller controller) {
@@ -61,8 +63,8 @@ public class Model extends Observable implements IModel {
 		//LinkedList<MapNode> completePath;
 				
 		// get the order of the delivery	
-		LowerCosts lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
-		/*tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), LowerCosts.generateCosts(graph, xmlParser.getDelOrder()), xmlParser.getDelOrder().getTimes());
+		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
+		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
 		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
@@ -70,22 +72,28 @@ public class Model extends Observable implements IModel {
 		for(int i=0;i<reducedPath.length;i++)
 		{
 			System.out.println(reducedPath[i]);
-		}*/
+		}
 		//adding the intermediates nodes
-		//addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
+		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
 	}
 
 	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
+		HashMap<MapNode,HashMap<MapNode,ArrayList<MapNode>>> pathFromPoint = lowCosts.getPaths();
 		ArrayList<MapNode>  path = new ArrayList<MapNode>();
+		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
 		
 		for(int i=0;i< reducedGraph.length;i++)
 		{
 			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			//path.addAll(#nodeCollection)
-			//System.out.println(path.get(i).getidNode());
-			// still need to add the intermediates nodes
+			pathToNode = pathFromPoint.get(reducedGraph[i]).get(reducedGraph[i+1]);
+			path.addAll(pathToNode);
+		}
+		
+		for(int i=0;i<pathToNode.size();i++)
+		{
+			System.out.println(pathToNode.get(i).getidNode());
 		}
 		
 		
