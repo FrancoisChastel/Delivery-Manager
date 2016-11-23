@@ -26,7 +26,9 @@ public class Map extends JPanel {
 		
 		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
-		this.addMouseListener(new MapMouseListener(this));
+		MapMouseListener mouseListener = new MapMouseListener(this);
+		this.addMouseListener(mouseListener);
+		this.addMouseMotionListener(mouseListener);
 	}
 	
 	public void addPoint(ViewPoint s,int id)
