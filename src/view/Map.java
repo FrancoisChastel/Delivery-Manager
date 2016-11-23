@@ -12,6 +12,7 @@ public class Map extends JPanel {
 
 	private ArrayList<ViewPoint> points;
 	public HashMap<Integer,ViewEdge> edges;
+	private ArrayList<ViewLabel> labels;
 	
 	/**
 	 * Create the panel.
@@ -20,7 +21,9 @@ public class Map extends JPanel {
 				
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
-
+		labels = new ArrayList<ViewLabel>();
+		
+		
 		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
@@ -34,6 +37,11 @@ public class Map extends JPanel {
 	public void addEdge(ViewEdge s, int id){
 		edges.put(id,s);
 	}
+	
+	public void addLabel(ViewLabel s){
+		labels.add(s);
+	}
+	 
 	
 	/**
 	 * This method set the color of all edges concerned by a "tournée".
@@ -82,17 +90,22 @@ public class Map extends JPanel {
 				
 		Iterator<ViewPoint> i = points.iterator();
 		Iterator<ViewEdge> j = edges.values().iterator();
+		Iterator<ViewLabel> k = labels.iterator();
+		
 		
 		while(i.hasNext())
 			i.next().drawShape(g, getWidth(), getHeight());
 
 		while(j.hasNext())
 		{
-			ViewEdge curr =j.next();
-			
+			ViewEdge curr =j.next();	
 			curr.drawShape(g, getWidth(), getHeight());
-		}	
+		}
 		
+		while(k.hasNext()){
+			ViewLabel curr = k.next();
+			curr.drawShape(g, getWidth(), getHeight());
+		}
 		g.dispose();
 	}
 	
@@ -138,5 +151,13 @@ public class Map extends JPanel {
 		}
 		
 		return null;
+	}
+	
+	public boolean labelsIsEmpty (){
+		return labels.isEmpty();
+	}
+	
+	public void removeAllLabels(){
+		labels.clear();
 	}
 }

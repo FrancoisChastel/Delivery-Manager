@@ -47,6 +47,24 @@ public class MapMouseListener implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
+		ViewPoint point = map.containsPoint(e.getX(), e.getY());
+		
+		if(point != null)
+		{
+			String information = ((Integer)point.getId()).toString();
+			ViewLabel label = new ViewLabel(point.getCalculedX(),point.getCalculedY(),information);
+			map.addLabel(label);
+			point.color= Color.GREEN;
+			map.repaint();
+		}
+		else
+		{
+			if(!map.labelsIsEmpty())
+			{
+				map.removeAllLabels();
+				map.repaint();
+			}
+		}
 		
 	}
 
