@@ -10,7 +10,7 @@ public class LowerCosts {
 	HashMap<MapNode,HashMap<MapNode,Double>> costs;
 	DeliveryOrder tour;
 	Graph<MapNode, Section> graph;
-	HashMap<MapNode,ArrayList<MapNode>> paths;
+	HashMap<MapNode,HashMap<MapNode,ArrayList<MapNode>>> paths;
 	int costsMatrix[][];
 	
 	public LowerCosts(Graph<MapNode, Section> graph, DeliveryOrder tour)
@@ -82,12 +82,19 @@ public class LowerCosts {
 				nodesThrough.add(origin);
 			}
 			costs.put(beginning, nodesCost);
-			
+			HashMap<MapNode, ArrayList<MapNode>> pathTargets = new HashMap<>();
 			for(int j=0;j<tour.getDeliveryList().size();j++)
 			{
-				ArrayList<MapNode> path = getBestPath(predecessor,beginning, tour.getDeliveryList().get(j).getAdress(),new ArrayList<MapNode>());
-				Collections.reverse(path);
-				paths.put(tour.getDeliveryList().get(j).getAdress(), path);
+				if(!beginning.equals(tour.getDeliveryList().get(j)))
+				{
+					ArrayList<MapNode> path = getBestPath(predecessor,beginning, tour.getDeliveryList().get(j).getAdress(),new ArrayList<MapNode>());
+					Collections.reverse(path);
+					path.remove(0);
+					path.remove(path.size()-1);
+					pathTargets.put(tour.getDeliveryList().get(j).getAdress(),path);
+					paths.put(tour.getDeliveryList().get(i).getAdress(), pathTargets);
+				}
+				
 				/*for(int n=0;n<path.size();n++)
 				{
 					System.out.print(path.get(n).getidNode() + " ");
@@ -133,17 +140,17 @@ public class LowerCosts {
 		}
 		return path;
 	}
-	public HashMap<MapNode, ArrayList<MapNode>> getPaths() {
-		return paths;
-	}
-	public void setPaths(HashMap<MapNode, ArrayList<MapNode>> paths) {
-		this.paths = paths;
-	}
 	public int[][] getCostsMatrix() {
 		return costsMatrix;
 	}
 	public void setCostsMatrix(int[][] costsMatrix) {
 		this.costsMatrix = costsMatrix;
+	}
+	public HashMap<MapNode, HashMap<MapNode, ArrayList<MapNode>>> getPaths() {
+		return paths;
+	}
+	public void setPaths(HashMap<MapNode, HashMap<MapNode, ArrayList<MapNode>>> paths) {
+		this.paths = paths;
 	}
 	
 	
