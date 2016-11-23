@@ -12,7 +12,10 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import model.MapNode;
@@ -22,6 +25,7 @@ import model.Tour;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.JList;
@@ -87,8 +91,11 @@ public class MainFrame extends JFrame implements ActionListener {
         root = new DefaultMutableTreeNode("Root");
         
 		tourTree = new JTree(root);
-		rightSidePanel.add(tourTree);
-		       
+		
+        JScrollPane treeView = new JScrollPane(tourTree);
+     
+		rightSidePanel.add(treeView);
+		displayTour();
 	}
 	
 	/**
@@ -110,18 +117,18 @@ public class MainFrame extends JFrame implements ActionListener {
 	//	Tour tour = null;
 
 	//	map.displayTour(tour);
-				
+		addTourTree(null);		
 	}
 	/**
 	 * This method add a tour into the Tree.
 	 * @param tour
 	 */	
-/*	public void addTourTree(Tour tour)
+	public void addTourTree(Tour tour)
 	{		
 		root.add(new DefaultMutableTreeNode("Tournée 1"));
 		// Adding the first Level of JTree		
 	}
-*/
+
 	/**
 	 * Action listener of the frame
 	 */
