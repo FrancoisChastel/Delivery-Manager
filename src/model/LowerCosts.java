@@ -22,6 +22,7 @@ public class LowerCosts {
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
 			deliveryNodes.add(tour.getDeliveryList().get(i).getAdress());
+			//System.out.println(deliveryNodes.get(i).getidNode());
 		}
 		generateCosts();
 	}
@@ -126,6 +127,26 @@ public class LowerCosts {
 	}
 	
 	public int[][] getCostsMatrix() {
+		for(Entry<MapNode, ArrayList<Pair<ArrayList<MapNode>, Double>>> origin : paths.entrySet())
+		{
+			if(deliveryNodes.indexOf(origin.getKey()) != -1)
+			{
+				for(int i=0;i< deliveryNodes.size();i++)
+				{
+					for(Pair<ArrayList<MapNode>,Double> temp : origin.getValue())
+					{
+						if(deliveryNodes.contains(  temp.getFirst().get(   temp.getFirst().size()-1  )  )  )
+						{
+							System.out.println("node" + origin.getKey().getidNode() + " to " +  temp.getFirst().get(   temp.getFirst().size()-1  ).getidNode());
+							costsMatrix[deliveryNodes.indexOf(origin.getKey())][deliveryNodes.indexOf(temp.getFirst().get(   temp.getFirst().size()-1  ))] = (int) Math.floor(temp.getSecond());
+						}
+								
+					}
+				}
+			}
+			
+		}
+		
 		return costsMatrix;
 	}
 	public void setCostsMatrix(int[][] costsMatrix) {

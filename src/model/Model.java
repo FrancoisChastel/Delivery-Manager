@@ -62,28 +62,37 @@ public class Model extends Observable implements IModel {
 	{
 		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
 		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
-		//LinkedList<MapNode> completePath;
+		
 				
 		// get the order of the delivery	
 		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
+		int[][] test = lowCosts.getCostsMatrix();
 		
+		for(int i=0;i<test.length;i++)
+			{
+				System.out.print(test[0][i]);
+				System.out.print(test[1][i]);
+				System.out.print(test[2][i]);
+				System.out.print(test[3][i]);
+				System.out.println(test[4][i]);
+			}
 		//Renvoie de lowCosts.getPaths : HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>>
 		
 
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
+		/*tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
 		
 		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
 			//System.out.println(tsp.getMeilleureSolution(i));
-		}
+		}*/
 		
 		//adding the intermediates nodes
-		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
+		//addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
 	}
 
-	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
+	/*public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
 		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
 		ArrayList<MapNode>  path = new ArrayList<MapNode>();
@@ -112,7 +121,7 @@ public class Model extends Observable implements IModel {
 		
 		
 		return path;
-	}
+	}*/
 
 	public void loadDeliveryFile(File currentFile) {
 		// TODO Auto-generated method stub
