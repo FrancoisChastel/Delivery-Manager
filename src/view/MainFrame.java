@@ -92,7 +92,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		liste.add(168);
 		liste.add(252);
 	
-		map.setTourne(liste);
+		//map.setTourne(liste);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 public class LowerCosts {
 	HashMap<MapNode,HashMap<MapNode,Double>> costs;
 	DeliveryOrder tour;
+	ArrayList<MapNode> deliveryNodes= new ArrayList<MapNode>();
 	Graph<MapNode, Section> graph;
 	HashMap<MapNode,HashMap<MapNode,ArrayList<MapNode>>> paths;
 	int costsMatrix[][];
@@ -21,6 +22,11 @@ public class LowerCosts {
 		paths = new HashMap<>();
 		int numberOfDeliveries = tour.getDeliveryList().size()+1;
 		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
+		deliveryNodes.add(tour.getStoreAdress());
+		for(int i=0;i<tour.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(tour.getDeliveryList().get(i).getAdress());
+		}
 		generateCosts();
 	}
 	/*
@@ -109,7 +115,7 @@ public class LowerCosts {
 			for(Entry<MapNode, Double> entryNode : entry.getValue().entrySet())
 			{
 				try{
-				costsMatrix[tour.getDeliveryList().indexOf(entry)][tour.getDeliveryList().indexOf(entryNode)] = (int) Math.floor(entryNode.getValue());
+					costsMatrix[deliveryNodes.indexOf(entry.getKey())][deliveryNodes.indexOf(entryNode.getKey())] = (int) Math.floor(entryNode.getValue());
 				}
 				catch (Exception e) {
 					//System.out.println("The node is not a delivery Point");
