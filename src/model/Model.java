@@ -2,8 +2,6 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
@@ -59,7 +57,7 @@ public class Model extends Observable implements IModel {
 	public void generateTour()
 	{
 		
-		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
+		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()+1];
 		//LinkedList<MapNode> completePath;
 				
 		// get the order of the delivery	
@@ -80,11 +78,13 @@ public class Model extends Observable implements IModel {
 
 	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
-		ArrayList<MapNode>  path = null;
+		ArrayList<MapNode>  path = new ArrayList<MapNode>();
 		
 		for(int i=0;i< reducedGraph.length;i++)
 		{
-			path.add(deliveryOrder.getDeliveryList().get(i).getAdress());
+			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
+			//path.addAll(#nodeCollection)
+			//System.out.println(path.get(i).getidNode());
 			// still need to add the intermediates nodes
 		}
 		

@@ -28,7 +28,6 @@ public class LowerCosts {
 	 */
 	public void generateCosts()
 	{
-		
 		//Init HashMap with nearly infinites
 		
 		
