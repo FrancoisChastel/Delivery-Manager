@@ -1,5 +1,6 @@
 package view;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,32 +52,64 @@ public class Adapter {
 	 * This method calibrate and create all ViewPoint from a liste of model.Node.
 	 * @param node
 	 */
-	public void drawModel(List<MapNode> node, List<Section> troncons)
+	public void drawModel(List<MapNode> node, List<Section> sections)
 	{
 		calibration(node);
 		
 		Iterator<MapNode> i = node.iterator();
 		
+		// Building the ViewPoint List
 		while(i.hasNext())
 		{
 			MapNode curr = i.next();
 			map.addPoint(getView(curr), curr.getidNode());
 		}
 		
-		Iterator<Section> j = troncons.iterator();
+		Iterator<Section> j = sections.iterator();
 		
+		// Building the Viewedge map
 		while(j.hasNext())
 		{
-			Section curr = j.next();
-			map.addTroncon(getView(curr));
+			Section currSection = j.next();
+			
+			// Try to get the edge corresponding to the section
+			ViewEdge edge = getIfalreadyExist(map.edges, currSection);
+			
+			// If it does not exists, then we create it.
+			if(edge == null)
+				edge = getView(currSection);
+			else // If it exists, we just append the current Section ID to it
+			{
+				edge.addSection(currSection.getId());
+			}
+			// Add it to the edge map associated with the sectionId
+			map.addEdge(edge, currSection.getId());
 		}
-		
 		
 		map.repaint();
 	}
 	
 	/**
-	 * This methode create a ViewPoint from a Node. It calculate the x and y in frame percentage.
+	 * This method return a Viewedge if the section passed in parameter 
+	 * corresponds to and existing Viewedge.
+	 * @param t
+	 * @return
+	 */
+	public ViewEdge getIfalreadyExist(HashMap<Integer,ViewEdge> edges, Section t)
+	{
+		Iterator<ViewEdge> j = edges.values().iterator();
+		
+		while(j.hasNext())
+		{
+			ViewEdge curr = j.next();
+			if(curr.getOrigin().getId()==t.getIdDestination() && t.getIdOrigin()==curr.getTarget().getId() )
+				return curr;			
+		}
+		return null;
+	}
+	
+	/**
+	 * This method create a ViewPoint from a Node. It calculate the x and y in frame percentage.
 	 * @param p
 	 * @return The created ViewPoint
 	 */
@@ -87,9 +120,9 @@ public class Adapter {
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	
-	public ViewTroncon getView(Section troncons)
+	public ViewEdge getView(Section section)
 	{		
-		return new ViewTroncon(map.getPoint(troncons.getIdOrigin()), map.getPoint(troncons.getIdDestination()), 0 , troncons.getName());		
+		return new ViewEdge(map.getPoint(section.getIdOrigin()), map.getPoint(section.getIdDestination()), section.getId());		
 	}
 	
 	

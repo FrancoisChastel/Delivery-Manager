@@ -3,34 +3,49 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
 
 public class Map extends JPanel {
 
-	private ArrayList<IShape> points;
-	private ArrayList<IShape> troncons;
+	private ArrayList<ViewPoint> points;
+	public HashMap<Integer,ViewEdge> edges;
 	
 	/**
 	 * Create the panel.
 	 */
 	public Map() {
 				
-		points = new ArrayList<IShape>();
-		troncons = new ArrayList<IShape>();
+		points = new ArrayList<ViewPoint>();
+		edges = new HashMap<Integer,ViewEdge>();
 
 		// Action Listener
 		this.addMouseListener(new MapMouseListener(this));
 	}
 	
-	public void addPoint(IShape s,int id)
+	public void addPoint(ViewPoint s,int id)
 	{
 		points.add(id,s);
 	}
 	
-	public void addTroncon(IShape s, int id){
-		troncons.add(id,s);
+	public void addEdge(ViewEdge s, int id){
+		edges.put(id,s);
+	}
+	
+	public void setTourne(ArrayList<Integer> ids)
+	{
+		Iterator<Integer> i = ids.iterator();
+		
+		while(i.hasNext())
+		{
+			int currId = i.next();
+			ViewEdge v =edges.get(currId);
+			v.setColorId(Color.green,currId);
+		}
+		
+		repaint();
 	}
 	
 	/**
@@ -38,27 +53,33 @@ public class Map extends JPanel {
 	 */
 	public void paintComponent(Graphics g) { 	
 		super.paintComponent(g);
-		g.setColor(getForeground());
-		Iterator<IShape> i = points.iterator();
-		Iterator<IShape> j = troncons.iterator();
+				
+		Iterator<ViewPoint> i = points.iterator();
+		Iterator<ViewEdge> j = edges.values().iterator();
 		
 		while(i.hasNext())
 			i.next().drawShape(g, getWidth(), getHeight());
 
 		while(j.hasNext())
-			j.next().drawShape(g, getWidth(), getHeight());
-	
+		{
+			ViewEdge curr =j.next();
+			
+			curr.drawShape(g, getWidth(), getHeight());
+		}	
+		
+		g.dispose();
 	}
+	
 
 	/**
 	 * This method return the shape (if exists) that contains the (x,y) point passed in parameter.
 	 */
-	public IShape containsPoint(int x, int y)
+	public ViewPoint containsPoint(int x, int y)
 	{
-		Iterator<IShape> i = points.iterator();
+		Iterator<ViewPoint> i = points.iterator();
 		while(i.hasNext())
 		{
-			IShape cur = i.next();
+			ViewPoint cur = i.next();
 			
 			if(cur.contains(x, y))
 				return cur;
@@ -72,12 +93,18 @@ public class Map extends JPanel {
 		return (ViewPoint) points.get(id);
 	}
 	
-	public IShape containsTroncon(int x, int y)
+	/**
+	 * Return the first matching Section.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public ViewEdge containsEdge(int x, int y)
 	{
-		Iterator<IShape> i = troncons.iterator();
+		Iterator<ViewEdge> i = edges.values().iterator();
 		while(i.hasNext())
 		{
-			IShape current = i.next();
+			ViewEdge current = i.next();
 			if(current.contains(x, y))
 			{
 				return current;
@@ -86,9 +113,4 @@ public class Map extends JPanel {
 		
 		return null;
 	}
-
-	public void addTroncon(ViewTroncon view) {
-		troncons.add(view);
-	}
-	
 }

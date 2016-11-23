@@ -61,14 +61,18 @@ public class Model extends Observable implements IModel {
 		//LinkedList<MapNode> completePath;
 				
 		// get the order of the delivery	
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), LowerCosts.generateCosts(graph, xmlParser.getDelOrder()), xmlParser.getDelOrder().getTimes());
+		LowerCosts lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
+		/*tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), LowerCosts.generateCosts(graph, xmlParser.getDelOrder()), xmlParser.getDelOrder().getTimes());
 		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
 		}
-			
+		for(int i=0;i<reducedPath.length;i++)
+		{
+			System.out.println(reducedPath[i]);
+		}*/
 		//adding the intermediates nodes
-		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
+		//addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
 	}
 
@@ -87,6 +91,11 @@ public class Model extends Observable implements IModel {
 		
 		
 		return path;
+	}
+
+	public void loadDeliveryFile(File currentFile) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
@@ -17,18 +18,28 @@ public class MapMouseListener implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		IShape point = map.containsPoint(e.getX(), e.getY());
-		IShape troncon = map.containsTroncon(e.getX(), e.getY());
+		ViewPoint point = map.containsPoint(e.getX(), e.getY());
+		ViewEdge troncon = map.containsEdge(e.getX(), e.getY());
 		
 		if(point != null)
+		{
 			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
-		
-
+			point.color= Color.GREEN;
+			map.repaint();
+		}
+			
 		
 		if(troncon != null)
 		{
-			View.displayMessage("Click on "+((ViewTroncon)troncon).getName()+" - "+((ViewTroncon)troncon).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
-			((ViewTroncon)troncon).setColor(Color.red);
+			String ids = "";
+			Iterator<Integer> i = troncon.getIds().iterator();
+			
+			while (i.hasNext())
+			{
+				ids+=i.next()+" ";
+			}
+			View.displayMessage("Clic on "+ids, "Debug", JOptionPane.INFORMATION_MESSAGE);
+			troncon.setColorId(Color.RED, (int)troncon.getIds().toArray()[0]);
 			map.repaint();
 		}
 				
