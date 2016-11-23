@@ -23,7 +23,6 @@ public class LowerCosts {
 		for(int i=0;i<tour.getDeliveryList().size();i++)
 		{
 			deliveryNodes.add(tour.getDeliveryList().get(i).getAdress());
-			//System.out.println(deliveryNodes.get(i).getidNode());
 		}
 		generateCosts();
 	}

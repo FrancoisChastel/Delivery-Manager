@@ -27,10 +27,6 @@ public class Model extends Observable implements IModel {
 		// TODO Auto-generated method stub
 		xmlParser = new XmlParser(currentFile);
 		graph = xmlParser.getGraph();
-		File deliveries = new File("XML/livraisons5x5-4.xml");
-		xmlParser.xmlDeliveriesParser(deliveries);
-		tsp = new TSP1();
-		generateTour();
 		setChanged();
 		notifyObservers();
 	}
@@ -62,20 +58,13 @@ public class Model extends Observable implements IModel {
 	{
 		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
 		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
-		
-				
+			
 		// get the order of the delivery	
-
-	
-		//Renvoie de lowCosts.getPaths : HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>>
-		
-
 		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
 		
 		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
 		{		
 			reducedPath[i] = tsp.getMeilleureSolution(i);
-			//System.out.println(tsp.getMeilleureSolution(i));
 		}
 		
 		//adding the intermediates nodes
@@ -115,7 +104,6 @@ public class Model extends Observable implements IModel {
 		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
 		for(int i=0;i<path.size()-1;i++)
 		{
-			System.out.println(path.get(i).getidNode());
 			sections.add((graph.getDestinations(path.get(i))).get(path.get(i+1)));
 		}
 		
@@ -128,7 +116,9 @@ public class Model extends Observable implements IModel {
 
 	public void loadDeliveryFile(File currentFile) {
 		// TODO Auto-generated method stub
-		
+		xmlParser.xmlDeliveriesParser(currentFile);
+		tsp = new TSP1();
+		generateTour();
 	}
 
 }
