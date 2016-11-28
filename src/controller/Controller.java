@@ -2,6 +2,8 @@ package controller;
 
 import java.io.File;
 
+import javax.swing.JOptionPane;
+
 import model.Model;
 import view.View;
 import view.View.Page;
@@ -50,5 +52,10 @@ public class Controller implements IController{
 	public void loadDeliveryFile(File currentFile) {
 		
 		model.loadDeliveryFile(currentFile);
+	}
+	
+	public void error(String message)
+	{
+		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 }

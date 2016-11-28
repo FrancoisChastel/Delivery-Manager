@@ -21,6 +21,7 @@ import model.parser.XmlParser;
 
 public class Model extends Observable implements IModel {
 
+	private Controller controller;
 	private GraphDeliveryManager graphDelMan;
 	private Tour tour;
 	private XmlParser xmlParser;
@@ -33,6 +34,7 @@ public class Model extends Observable implements IModel {
 	 * @param controller
 	 */
 	public Model(Controller controller) {
+		this.controller=controller;
 		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
@@ -43,10 +45,15 @@ public class Model extends Observable implements IModel {
 	 * @param currentFile
 	 */
 	public void parseMapFile(File currentFile) {
-		xmlParser.xmlMapParser(currentFile);
-		
-		setChanged();
-		notifyObservers("UPDATE_MAP");
+		try{
+			xmlParser.xmlMapParser(currentFile);
+			setChanged();
+			notifyObservers("UPDATE_MAP");
+		}
+		catch(Exception e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+		}
 	}
 
 	// Accesseur
@@ -243,6 +250,7 @@ public class Model extends Observable implements IModel {
 		model.setTour(tour);
 	}
 	
+	
 	public void setTour(Tour tour) { this.tour=tour;}
 	public Tour getTour() { return tour; }
 	
@@ -253,20 +261,26 @@ public class Model extends Observable implements IModel {
 	@Override
 	public void loadDeliveryFile(File currentFile) {
 		
-		// Step1 : parsing delivery file
-		xmlParser.xmlDeliveriesParser(currentFile);
-		
-		// Step2 : Call the engine to create a tour
-		// Step2.1 : call dijkstra
-		dijkstra();
-		// step2.2 : call TSP
-		TSP();
-		
-		setChanged();
-		notifyObservers("UPDATE_DELIVERY");
+		try
+		{
+			// Step1 : parsing delivery file
+			xmlParser.xmlDeliveriesParser(currentFile);
+			
+			// Step2 : Call the engine to create a tour
+			// Step2.1 : call dijkstra
+			dijkstra();
+			// step2.2 : call TSP
+			TSP();
+			
+			setChanged();
+			notifyObservers("UPDATE_DELIVERY");
+		}
+		catch(Exception e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+		}
 	}
 }
-
 /**
  *  This class encapsulate the objects that the TSP needs to work.
  * @author antoine
