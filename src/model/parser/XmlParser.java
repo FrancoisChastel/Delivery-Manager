@@ -20,6 +20,7 @@ import model.graph.MapNode;
 import model.graph.Section;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class XmlParser {
 	
@@ -38,7 +39,6 @@ public class XmlParser {
 		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
 		ArrayList <MapNode> nodeList	= model.getGraphDeliveryManager().getNodeList();
 		ArrayList <Section> sectionList	= model.getGraphDeliveryManager().getSectionList();
-			     	  
 	    final File fXmlFile = currentFile;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -62,8 +62,7 @@ public class XmlParser {
 					int y   = Integer.parseInt(elem.getAttribute("y"));
 					MapNode mapNode  = new MapNode(id,x,y);
 					graph.add(mapNode);
-					nodeList.add(mapNode);
-					
+					nodeList.add(mapNode);					
 	    			break;
 				case "troncon":
 					int idDestination = Integer.parseInt(elem.getAttribute("destination"));

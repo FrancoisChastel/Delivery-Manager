@@ -41,15 +41,12 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     	return null;
     }
     
-    public TVertex getNodeById(TVertex node)
-    {
+    public TVertex getNodeById(Integer id)
+    {    	    	
     	for(Entry<TVertex, CoreVertex> entry : nodes.entrySet())
-		{	
-			if(entry.getKey().equals(node))
-			{
+			if(entry.getKey().hashCode() == id)
 				return entry.getKey();
-			}
-		}
+
     	return null;
     }
     

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
+import java.util.Vector;
 
 import controller.Controller;
 import model.deliverymanager.DeliveryManager;
@@ -163,11 +164,48 @@ public class Model extends Observable implements IModel {
 		{
 			TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
 		}
-		System.out.println(TSP);
+		//System.out.println(TSP);
 		
 		// Constructing a Tour
 		AdapterTSPModel(this, tspObject);
 	}
+	/**
+	 * Step 3 of the engine. Create RoadMap
+	 * This method create a Road Map with a Tour present in Model
+	 * @param model
+	 */
+	public void createRoadMap()
+	{
+		MapNode entrepot = this.getDeliveryManager().getDeliveryOrder().getStoreAdress();
+				
+		System.out.println("Feuille de Route : ");
+		System.out.println("-------------------");
+		System.out.println("ID de l'entrepot : " + entrepot.getidNode());
+		System.out.println("Position GPS de l'entrepot : (" + entrepot.getX() + "," + entrepot.getY() + ")");
+	
+		// V1 = (old,Y1)
+		// V2 = (X2,Y2)
+		int currentX, currentY = 0;
+		int oldX = entrepot.getX();
+		int oldY = entrepot.getY();
+		
+		for(Section section : this.tour.getSections())
+		{	
+			currentX = this.graphDelMan.getGraph().getNodeById(section.getIdDestination()).getX();
+			currentY = this.graphDelMan.getGraph().getNodeById(section.getIdDestination()).getY();
+			
+			
+		}
+		
+		private Vector<Integer> getScalaire(Vector<Integer> origin, Vector<Integer> destination)
+		{  	for (int i=0; i<origin.size(); i++)
+			{
+			
+			}
+		}
+		
+	}
+	
 	
 	/**
 	 * This method is a static Adapter which create a TSPObject (used to do a TSP Call) from the Model.
@@ -272,7 +310,7 @@ public class Model extends Observable implements IModel {
 		Tour tour = new Tour(sections,listIds,model.getDeliveryManager().getDeliveryOrder().getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
-	
+
 	
 	public void setTour(Tour tour) { this.tour=tour;}
 	public Tour getTour() { return tour; }
@@ -294,7 +332,8 @@ public class Model extends Observable implements IModel {
 			dijkstra();
 			// step2.2 : call TSP
 			TSP();
-			
+			// step2.3 : call createRoadMap
+			createRoadMap();
 			setChanged();
 			notifyObservers("UPDATE_DELIVERY");
 		}
@@ -322,7 +361,7 @@ class TSPObject
 	
 	public TSPObject(int nbSommets)
 	{
-		System.out.println("NbSommets"+nbSommets);
+		//System.out.println("NbSommets"+nbSommets);
 		cout 		= new int[nbSommets][nbSommets];
 		mappingId 	= new ArrayList<MapNode>();
 		duree 		= new int[nbSommets];
