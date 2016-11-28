@@ -18,10 +18,8 @@ public class Controller implements IController{
 	{
 		model = new Model(this);
 		view  = new View(this);
-		model.addObserver(view);
-		
+		model.addObserver(view);		
 		view.displayFrame(Page.Setting, false);
-
 	}
 
 	/**
@@ -40,7 +38,7 @@ public class Controller implements IController{
 	 */
 	public void parseDeliveriesFile(File currentFile)
 	{
-		model.parseDeliveriesFile(currentFile);
+		model.loadDeliveryFile(currentFile);
 	}
 	
 	public Model getModel() { return model; }

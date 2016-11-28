@@ -1,4 +1,4 @@
-package model;
+package model.graph;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -28,6 +28,17 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
         {
         	System.out.println("Origin Undefined");;
         }
+    }
+    public TEdge getEdge(TVertex o,TVertex d )
+    {
+    	CoreVertex TOrigin = null;
+    	if (nodes.containsKey(o))
+    	{
+    		TOrigin = nodes.get(o);
+    		if (TOrigin.getOutgoing().containsKey(d))
+    			return TOrigin.getOutgoing().get(d);
+    	}
+    	return null;
     }
     
     public TVertex getNodeById(TVertex node)

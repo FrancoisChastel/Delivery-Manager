@@ -1,6 +1,8 @@
-package model;
+package model.deliverymanager;
 
 import java.util.Date;
+
+import model.graph.MapNode;
 
 
 public class DeliveryPoint extends MapNode{

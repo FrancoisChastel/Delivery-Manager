@@ -1,17 +1,19 @@
-package model;
+package model.deliverymanager;
 
-import java.sql.Time;
+import java.util.Date;
+
+import model.graph.MapNode;
 
 public class Delivery {
 
 	private int idDelivery;
 	private MapNode adress;
 	private int length;
-	private Time beginning;
-	private Time end;
+	private Date beginning;
+	private Date end;
 	
 	// Constructor for a delivery with time slot
-	public Delivery(int idDelivery, MapNode adress, int length, Time beginning, Time end) {
+	public Delivery(int idDelivery, MapNode adress, int length, Date beginning, Date end) {
 		this.idDelivery = idDelivery;
 		this.adress = adress;
 		this.length = length;
@@ -55,19 +57,19 @@ public class Delivery {
 		this.length = length;
 	}
 
-	public Time getBeginning() {
+	public Date getBeginning() {
 		return beginning;
 	}
 
-	public void setBeginning(Time beginning) {
+	public void setBeginning(Date beginning) {
 		this.beginning = beginning;
 	}
 
-	public Time getEnd() {
+	public Date getEnd() {
 		return end;
 	}
 
-	public void setEnd(Time end) {
+	public void setEnd(Date end) {
 		this.end = end;
 	}
 	

@@ -11,7 +11,7 @@ public class ViewPoint implements IShape{
 	private int calculedX;
 	private int calculedY;
 	private int id;
-	public Color color = Color.BLACK;
+	public Color color = Color.lightGray;
 	
 	/**
 	 * Normal Constructor of the view point. Coordinates are double because they are expressed in Frame Percentage

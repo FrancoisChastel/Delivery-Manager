@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import model.DeliveryPoint;
-import model.MapNode;
-import model.Section;
+import model.deliverymanager.DeliveryPoint;
+import model.graph.MapNode;
+import model.graph.Section;
 
 
 public class Adapter {

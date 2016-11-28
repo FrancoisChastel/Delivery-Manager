@@ -4,59 +4,62 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Observable;
 
-import controller.Controller; 
+import controller.Controller;
+import model.deliverymanager.DeliveryManager;
+import model.deliverymanager.DeliveryOrder;
+import model.engine.LowerCosts;
+import model.engine.Pair;
+import model.engine.TSP1;
+import model.graph.Graph;
+import model.graph.GraphDeliveryManager;
+import model.graph.MapNode;
+import model.graph.Section;
+import model.parser.XmlParser; 
 
 public class Model extends Observable implements IModel {
 
-	Graph<MapNode, Section>  graph = new Graph<MapNode, Section>();
-	ArrayList<Section> sections = new ArrayList<Section>();
-	Tour tour;
-	XmlParser xmlParser;
-	DeliveryOrder deliveryOrder;
-	TSP1 tsp;
-	LowerCosts lowCosts;
-	//private Graph<Section, MapNode> map;
-	
+	private GraphDeliveryManager graphDelMan;
+	private Tour tour;
+	private XmlParser xmlParser;
+	private DeliveryManager deliveryManager;
+	private TSP1 tsp;
+	private LowerCosts lowCosts;
+
+	/**
+	 * Normal constructor of the model
+	 * @param controller
+	 */
 	public Model(Controller controller) {
-		
+		xmlParser 	= new XmlParser(this);
+		graphDelMan = new GraphDeliveryManager(this);
+		deliveryManager = new DeliveryManager();
 	}
 
+	/**
+	 * This method call the parsing process of the parser
+	 * @param currentFile
+	 */
 	public void parseMapFile(File currentFile) {
-		// TODO Auto-generated method stub
-		xmlParser = new XmlParser(currentFile);
-		graph = xmlParser.getGraph();
+		xmlParser.xmlMapParser(currentFile);
+		
 		setChanged();
-		notifyObservers();
+		notifyObservers("UPDATE_MAP");
 	}
 
-	public List<MapNode> getMapNodes() {
-		if(xmlParser.getNodeList() != null)
-		{
-			return xmlParser.getNodeList();
-		}
-		return null;
-		
-	}	
-	
-	@Override
-	public List<Section> getSections() {
-		if(xmlParser.getSectionList() != null)
-		{
-			return xmlParser.getSectionList();
-		}
-		return null;
-	}
-	
-	public void parseDeliveriesFile(File currentFile)
-	{
-		
-	}
-	
+	// Accesseur
+	public List<MapNode> getMapNodes() {	return graphDelMan.getNodeList();	}	
+	public List<Section> getSections() {	return graphDelMan.getSectionList();}
+	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
+	public DeliveryManager getDeliveryManager() { return deliveryManager; }
+	public LowerCosts getLowerCosts() 	{ return lowCosts; }
+
+	/*
 	public void generateTour()
 	{
-		lowCosts = new LowerCosts(graph,xmlParser.getDelOrder());
+		lowCosts = new LowerCosts(graph, xmlParser.getDelOrder());
 		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
 			
 		// get the order of the delivery	
@@ -71,7 +74,8 @@ public class Model extends Observable implements IModel {
 		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
 		
 	}
-
+*/
+	/*
 	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
 	{
 		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
@@ -120,5 +124,193 @@ public class Model extends Observable implements IModel {
 		tsp = new TSP1();
 		generateTour();
 	}
+*/
+	/**
+	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
+	 */
+	public void dijkstra()
+	{
+		if(lowCosts == null)
+			lowCosts = new LowerCosts(this);
+		lowCosts.generateCosts();
+		lowCosts.printCost();
+	//	lowCosts.printCost();
+	}
+	
+	/**
+	 * Step 2 of the engine. Call TSP
+	 */	
+	public void TSP()
+	{
+		if(tsp==null)
+			tsp = new TSP1();
+		
+		// Adapte the TSP Object
+		TSPObject tspObject = AdapterModelTSP(this);
+		
+		// Call the TSP module
+		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree);
+		tspObject.bestSolution = tsp.getMeilleureSolution();
 
+		// Print TSP Result
+		String TSP = "TSP: ";
+		for(int i = 0; i< tspObject.bestSolution.length;i++)
+		{
+			TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
+		}
+		System.out.println(TSP);
+		
+		// Constructing a Tour
+		AdapterTSPModel(this, tspObject);
+	}
+	
+	/**
+	 * This method is a static Adapter which create a TSPObject (used to do a TSP Call) from the Model.
+	 * @param paths
+	 * @return
+	 */
+	public static TSPObject AdapterModelTSP(Model model)
+	{		
+		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = model.getLowerCosts().getPaths();
+		int nbSommets = paths.size();
+		
+		TSPObject out = new TSPObject(nbSommets);
+				
+		// Loop which fill the out cout tab
+		int index = 0;
+		MapNode nodei, nodej;
+		
+		// For each nodes
+		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
+		{			
+			nodei = entry.getKey();
+			
+			for(Pair<ArrayList<MapNode>,Integer> pair : entry.getValue())
+			{
+				ArrayList<MapNode> list = pair.getFirst();
+				
+				nodej = list.get(list.size()-1);
+				
+				// get the cost of the pair
+				int cost =  (pair.getSecond()).intValue();
+				
+				//Adding the cost in the out object of i,j with
+				out.cout[out.getIByMapNode(nodei)][out.getIByMapNode(nodej)] = cost;
+			}				
+		}
+		return out;		
+	}
+
+	/**
+	 * This method construct a Tour from a TSPObject
+	 * @param model 
+	 * @param tspObject
+	 */
+	public static void AdapterTSPModel(Model model, TSPObject tspObject)
+	{
+		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = model.getLowerCosts().getPaths();
+		ArrayList<Section> sections= new ArrayList<>();
+		int i;
+		
+		// Iterating over TSP result
+		for(i=0; i<tspObject.bestSolution.length-1;i++)
+		{
+			MapNode o = tspObject.mappingId.get(tspObject.bestSolution[i]);
+			MapNode d = tspObject.mappingId.get(tspObject.bestSolution[i+1]);
+			
+			// Getting paths between TSP results o and d
+			for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
+			{
+				ArrayList<MapNode> list = pair.getFirst();
+				
+				// retrieve the good path
+				if(list.get(list.size()-1).equals(d))
+				{
+					// Adding the path corresponding to O and D
+					for(int j = 0; j<list.size()-1;j++)
+					{
+						System.out.println("Searching : "+list.get(j).getidNode()+", "+list.get(j+1).getidNode());
+						Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
+						System.out.println(s.toString());
+						sections.add(s);	
+					}
+				}
+			}				
+		}
+		
+		// Building IdDeliveryList
+		Integer [] listIds = new Integer[tspObject.bestSolution.length];
+		for(int in =0; in<tspObject.bestSolution.length;in++)
+			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+
+		Tour tour = new Tour(sections,listIds);	
+		model.setTour(tour);
+	}
+	
+	public void setTour(Tour tour) { this.tour=tour;}
+	public Tour getTour() { return tour; }
+	
+	/**
+	 * This method load a delivery file and call the corresponding process in the model.
+	 * 
+	 */
+	@Override
+	public void loadDeliveryFile(File currentFile) {
+		
+		// Step1 : parsing delivery file
+		xmlParser.xmlDeliveriesParser(currentFile);
+		
+		// Step2 : Call the engine to create a tour
+		// Step2.1 : call dijkstra
+		dijkstra();
+		// step2.2 : call TSP
+		TSP();
+		
+		setChanged();
+		notifyObservers("UPDATE_DELIVERY");
+	}
+}
+
+/**
+ *  This class encapsulate the objects that the TSP needs to work.
+ * @author antoine
+ */
+class TSPObject
+{
+	// in parameters of TSP
+	public int[][] cout;
+	public int[] duree;
+		
+	// TSP result
+	public Integer[] bestSolution;
+	
+	// Mapping between NodeId and index in matrix
+	public ArrayList<MapNode> mappingId;
+	
+	public TSPObject(int nbSommets)
+	{
+		System.out.println("NbSommets"+nbSommets);
+		cout 		= new int[nbSommets][nbSommets];
+		mappingId 	= new ArrayList<MapNode>();
+		duree 		= new int[nbSommets];
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int getIByMapNode(MapNode node)
+	{
+		int i = 0;
+		for(i=0;i<mappingId.size();i++)
+		{
+			if(mappingId.get(i).getidNode()==node.getidNode())
+				return i;
+		}
+	
+		mappingId.add(node);
+
+		return mappingId.size()-1;
+	}
 }

@@ -3,6 +3,8 @@ package model;
 import java.io.File;
 import java.util.List;
 
+import model.graph.MapNode;
+import model.graph.Section;
 import view.View;
 
 public interface IModel  {

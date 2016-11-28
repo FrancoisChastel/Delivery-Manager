@@ -1,21 +1,23 @@
-package model;
+package model.deliverymanager;
 
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
+
+import model.graph.MapNode;
 
 public class DeliveryOrder {
 
 	private long idOrder;
 	private MapNode storeAdress;
-	private Time startingTime;
+	private Date startingTime;
 	private ArrayList<Delivery> deliveryList;
 	private int maxIdNode;
 	private int[] times; 
 	
 	
 	
-	public DeliveryOrder(long idOrder, MapNode storeAdress, Time startingTime, ArrayList<Delivery> deliveryList) {
+	public DeliveryOrder(long idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
 		super();
 		this.idOrder = idOrder;
 		this.storeAdress = storeAdress;
@@ -52,12 +54,12 @@ public class DeliveryOrder {
 	}
 
 
-	public Time getStartingTime() {
+	public Date getStartingTime() {
 		return startingTime;
 	}
 
 
-	public void setStartingTime(Time startingTime) {
+	public void setStartingTime(Date startingTime) {
 		this.startingTime = startingTime;
 	}
 

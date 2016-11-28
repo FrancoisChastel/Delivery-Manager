@@ -1,4 +1,4 @@
-package model;
+package model.engine;
 
 public class Pair<A, B> {
     private A first;

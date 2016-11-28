@@ -8,8 +8,8 @@ import java.util.Iterator;
 
 import javax.swing.JPanel;
 
-import model.Section;
 import model.Tour;
+import model.graph.Section;
 
 public class Map extends JPanel {
 
@@ -59,19 +59,19 @@ public class Map extends JPanel {
 		Iterator<Section> sectionIterator = tour.getSections().iterator();
 					
 		Section currSection = sectionIterator.next();
-		ViewEdge v =edges.get(currSection.getId());
+		ViewEdge edge =edges.get(currSection.getId());
 		
 		// Coloring FirstPoint
-		v.getOrigin().color=Color.RED;
+		edge.getOrigin().color=Color.RED;
 		
 		Color increment = Color.GREEN;
 		
 		while(sectionIterator.hasNext())
 		{
 			currSection = sectionIterator.next();
-			v =edges.get(currSection.getId());			
+			edge = edges.get(currSection.getId());			
 			increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
-			v.setColorId(increment,currSection.getId());
+			edge.setColorId(increment,currSection.getId());
 		}
 		
 		repaint();

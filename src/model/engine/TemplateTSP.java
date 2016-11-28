@@ -1,4 +1,4 @@
-package model;
+package model.engine;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +28,10 @@ public abstract class TemplateTSP implements TSP {
 		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
 			return null;
 		return meilleureSolution[i];
+	}
+	
+	public Integer[] getMeilleureSolution(){
+		return meilleureSolution;
 	}
 	
 	public int getCoutMeilleureSolution(){

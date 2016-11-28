@@ -18,9 +18,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import model.MapNode;
-import model.Section;
 import model.Tour;
+import model.graph.MapNode;
+import model.graph.Section;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -88,14 +88,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		// Initialization of the JTree -----------
 		//create the root node
-        root = new DefaultMutableTreeNode("Root");
-        
-		tourTree = new JTree(root);
-		
-        JScrollPane treeView = new JScrollPane(tourTree);
-     
+        root = new DefaultMutableTreeNode("Root");        
+		tourTree = new JTree(root);		
+        JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
-		displayTour();
+
 	}
 	
 	/**
@@ -111,22 +108,20 @@ public class MainFrame extends JFrame implements ActionListener {
 	/** 
 	 * This method display a tour on the main frame.
 	 */
-	public void displayTour()
+	public void displayTour(Tour tour)
 	{
-		//TEST DEBUGING
-	//	Tour tour = null;
-
-	//	map.displayTour(tour);
-		addTourTree(null);		
+		map.displayTour(tour);
+	//	addTourTree(null);		
 	}
+	
 	/**
 	 * This method add a tour into the Tree.
 	 * @param tour
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		root.add(new DefaultMutableTreeNode("Tournée 1"));
-		// Adding the first Level of JTree		
+		root.add(new DefaultMutableTreeNode("Tour "+tour.getId()));
+		// Adding the first Level of JTree				
 	}
 
 	/**
@@ -146,8 +141,6 @@ public class MainFrame extends JFrame implements ActionListener {
             	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
-		}
-			
+		}			
 	}
-
 }

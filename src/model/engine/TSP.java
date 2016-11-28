@@ -1,4 +1,4 @@
-package model;
+package model.engine;
 
 public interface TSP {
 		
@@ -15,11 +15,14 @@ public interface TSP {
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 */
 	public  void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree);
+	
 	/**
 	 * @param i
 	 * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
 	 */
 	public  Integer getMeilleureSolution(int i);
+	
+	public  Integer[] getMeilleureSolution();
 	
 	/** 
 	 * @return la duree de la solution calculee par chercheSolution

@@ -1,4 +1,4 @@
-package model;
+package model.graph;
 
 public class Section implements Comparable<Section>{
 
@@ -79,5 +79,8 @@ public class Section implements Comparable<Section>{
 		return 0;
 	}
 	
-	
+	public String toString()
+	{
+		return "<"+idOrigin+","+idDestination+">";
+	}
 }

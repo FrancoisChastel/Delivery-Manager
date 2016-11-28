@@ -3,20 +3,28 @@ package model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import model.deliverymanager.Delivery;
+import model.deliverymanager.DeliveryOrder;
+import model.graph.Section;
+
 public class Tour {
 	private ArrayList<Section> sections;
-	private DeliveryOrder deliveryOrder;
+	private Integer[] deliveryPointsId;
 	private int length = 10;
 	private int totalDuration = 50;
+	private int id;
+	private static int factoryId = 0;
 	
 	/**
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, DeliveryOrder deliveryOrder)
+	public Tour(ArrayList<Section> sections, Integer[] deliveryPointsId)
 	{
 		this.sections = sections;
-		this.deliveryOrder = deliveryOrder;
+		this.deliveryPointsId = deliveryPointsId;
+		this.id=factoryId;
+		factoryId++;
 	}
 	
 	/**
@@ -25,18 +33,15 @@ public class Tour {
 	 * @return
 	 */
 	public boolean isDeliveryPoint(int idPoint)
-	{
-		Iterator<Delivery> i =  deliveryOrder.getDeliveryList().iterator();
-		
-		while(i.hasNext())
+	{	
+		for(int i = 0; i<deliveryPointsId.length;i++)
 		{
-			Delivery delivery = i.next();
-			
-			if(delivery.getAdress().getidNode() == idPoint)
+			if(deliveryPointsId[i]==idPoint)
 				return true;
-		}		
+		}
 		return false;
 	}
 	
 	public ArrayList<Section> getSections() { return sections;}
+	public int getId(){ return id; }
 }

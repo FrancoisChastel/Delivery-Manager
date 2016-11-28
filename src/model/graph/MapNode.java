@@ -1,12 +1,13 @@
-package model;
+package model.graph;
 
 
 public class MapNode {
 	
+	public static enum ColorNode {Gris, Blanc, Noir};
 	private int idNode;
 	private int x;
 	private int y;
-	
+
 	
 	
 	public MapNode(int idNode, int x, int y) {
@@ -14,12 +15,8 @@ public class MapNode {
 		this.x = x;
 		this.y = y;
 	}
-
-
-
 	
-	// Getters and Setters
-	
+	// Getters and Setters	
 	
 	public int getidNode() {
 		return idNode;
