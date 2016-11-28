@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,6 +42,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem mntmLoadDeliveryfile;
 	private JTree tourTree;
 	private DefaultMutableTreeNode root;
+	private JPanel rightSidePanel;
 	
 	/**
 	 * Normal Construcor
@@ -73,12 +75,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		
 		// Instanciate Map
-		map = new Map();
+		map = new Map(this);
 		contentPane.add(map);
 		
 		adapter = new Adapter(map);
 		
-		JPanel rightSidePanel = new JPanel();
+		rightSidePanel = new JPanel();
 		contentPane.add(rightSidePanel, BorderLayout.EAST);
 		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
 		
@@ -92,7 +94,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		tourTree = new JTree(root);		
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
-
 	}
 	
 	/**
@@ -143,10 +144,22 @@ public class MainFrame extends JFrame implements ActionListener {
             int returnVal = fc.showOpenDialog(MainFrame.this);
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-            	File currentFile = fc.getSelectedFile();
-            	
+            	File currentFile = fc.getSelectedFile();            	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
 		}			
+	}
+	
+	public JTree getJtree() { return tourTree; }
+	/**
+	 * 
+	 * @return
+	 */
+	public View getView() { return hamecon; }
+
+	public void majPrefSize() {
+		// TODO Auto-generated method stub
+		
+		rightSidePanel.setPreferredSize(new Dimension(this.getSize().height/4,rightSidePanel.getHeight()));
 	}
 }
