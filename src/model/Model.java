@@ -221,13 +221,15 @@ public class Model extends Observable implements IModel {
 			// Getting paths between TSP results o and d
 			for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
 			{
+				
 				ArrayList<MapNode> list = pair.getFirst();
 				
 				// retrieve the good path
 				if(list.get(list.size()-1).equals(d))
 				{
 					// Adding the path corresponding to O and D
-					for(int j = 0; j<list.size()-1;j++)
+					int j;
+					for(j = 0; j<list.size()-1;j++)
 					{
 						System.out.println("Searching : "+list.get(j).getidNode()+", "+list.get(j+1).getidNode());
 						Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
@@ -235,8 +237,38 @@ public class Model extends Observable implements IModel {
 						sections.add(s);	
 					}
 				}
-			}				
+				
+			}
+			
 		}
+		
+		// Link between the last and the first element
+		
+		MapNode o = tspObject.mappingId.get(tspObject.bestSolution[i]);
+		System.out.println("Last Node : " +  o.getidNode());
+		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
+		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
+		{
+			
+			ArrayList<MapNode> list = pair.getFirst();
+			
+			// retrieve the good path
+			if(list.get(list.size()-1).equals(d))
+			{
+				// Adding the path corresponding to O and D
+				int j;
+				for(j = 0; j<list.size()-1;j++)
+				{
+					System.out.println("Searching : "+list.get(j).getidNode()+", "+list.get(j+1).getidNode());
+					Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
+					System.out.println(s.toString());
+					sections.add(s);	
+				}
+			}
+			
+		}
+		
+		
 		
 		// Building IdDeliveryList
 		Integer [] listIds = new Integer[tspObject.bestSolution.length];
