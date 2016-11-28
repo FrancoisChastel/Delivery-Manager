@@ -29,6 +29,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
@@ -172,9 +174,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	public View getView() { return hamecon; }
 
+	
 	public void majPrefSize() {
 		// TODO Auto-generated method stub
 		
-		rightSidePanel.setPreferredSize(new Dimension(this.getSize().height/4,rightSidePanel.getHeight()));
+		rightSidePanel.setPreferredSize(new Dimension(this.getSize().height/3,rightSidePanel.getHeight()));
 	}
 }
