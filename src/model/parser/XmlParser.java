@@ -53,6 +53,10 @@ public class XmlParser {
 		iterator.nextNode();
 		
 		Node n;
+		int nodesCreated = 0;
+		int edgesCreated = 0;
+		model.getController().getLogger().write("Parsing map file : "+currentFile.getName());
+		Date deb = new Date();
 		while((n = iterator.nextNode()) != null)
 		{
 			Element elem = (Element) n;
@@ -65,7 +69,7 @@ public class XmlParser {
 					MapNode mapNode  = new MapNode(id,x,y);
 					graph.add(mapNode);
 					nodeList.add(mapNode);
-					
+					nodesCreated++;
 	    			break;
 				case "troncon":
 					int idDestination = Integer.parseInt(elem.getAttribute("destination"));
@@ -79,12 +83,16 @@ public class XmlParser {
 					MapNode origin = nodeList.get(idOrigin);
 					MapNode destination = nodeList.get(idDestination);
 					graph.addDestination(origin, section, destination);
-					sectionList.add(section);    					
+					sectionList.add(section); 
+					edgesCreated++;
 	    			break;
 	    		default:break;
 			}
 		}
-	    		
+		Date end = new Date();
+		int duration = end.compareTo(deb);
+		model.getController().getLogger().write("Map parsed in "+duration+" ms");
+	    model.getController().getLogger().write("Nodes created : "+nodesCreated+" - Edges created : "+edgesCreated);	
 
 	}
 	
@@ -112,7 +120,9 @@ public class XmlParser {
 		String heureDepart = null;
 		int idDelivery = 0;
 		ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
-		
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		model.getController().getLogger().write("Parsing delivery file : "+currentFile.getName());
+		Date deb = new Date();
 		while((n = iterator.nextNode()) != null)
 		{
 			Element elem = (Element) n;
@@ -139,7 +149,7 @@ public class XmlParser {
 					{
 						debutString=elem.getAttribute("debutPlage");
 						finString=elem.getAttribute("finPlage");
-						SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+						
 						Date debut = formatter.parse(debutString);
 						Date fin = formatter.parse(finString);
 						deliveries.add(new Delivery(idDelivery++,no,duree,debut,fin));
@@ -149,18 +159,15 @@ public class XmlParser {
 						// This line create the corresponding delivery
 						deliveries.add(new Delivery(idDelivery++,no,duree));
 					}		
-					
-					
-					
-					
 	    			break;
 	    		default:break;
 			}
 		}
-		SimpleDateFormat parser = new SimpleDateFormat("HH:mm:ss");
-
+		Date end = new Date();
+		int duration = end.compareTo(deb);
+		model.getController().getLogger().write("Deliveries parsed in "+duration+" ms");
 		// Create the deliveryOrder
-		model.getDeliveryManager().addDeliveryOrder(new DeliveryOrder(0,entrepotNode, parser.parse(heureDepart),deliveries));
+		model.getDeliveryManager().addDeliveryOrder(new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries));
 		
 		
 	}
