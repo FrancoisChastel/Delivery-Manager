@@ -156,7 +156,6 @@ public class Model extends Observable implements IModel {
 		{
 			TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
 		}
-		System.out.println(TSP);
 		
 		// Constructing a Tour
 		AdapterTSPModel(this, tspObject);
@@ -241,7 +240,6 @@ public class Model extends Observable implements IModel {
 		// Link between the last and the first element
 		
 		MapNode o = tspObject.mappingId.get(tspObject.bestSolution[i]);
-		System.out.println("Last Node : " +  o.getidNode());
 		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
 		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
 		{
@@ -255,9 +253,7 @@ public class Model extends Observable implements IModel {
 				int j;
 				for(j = 0; j<list.size()-1;j++)
 				{
-					System.out.println("Searching : "+list.get(j).getidNode()+", "+list.get(j+1).getidNode());
 					Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
-					System.out.println(s.toString());
 					sections.add(s);	
 				}
 			}
