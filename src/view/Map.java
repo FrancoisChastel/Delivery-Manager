@@ -16,7 +16,7 @@ public class Map extends JPanel {
 	private ArrayList<ViewPoint> points;
 	public HashMap<Integer,ViewEdge> edges;
 	private ArrayList<ViewLabel> labels;
-	
+	private Color gradient;
 	/**
 	 * Create the panel.
 	 */
@@ -25,13 +25,24 @@ public class Map extends JPanel {
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
-		
+		//gradient = new Color(255,0,0);
+		gradient = new Color(Color.HSBtoRGB(0, 1, 1));
 		
 		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
 		MapMouseListener mouseListener = new MapMouseListener(this);
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
+	}
+	
+	private void ajustColor()
+	{
+			float[] hsbVals = new float[3];
+			Color.RGBtoHSB(gradient.getRed(), gradient.getGreen(), gradient.getBlue(), hsbVals);
+			if(hsbVals[0] <=1.0f)
+			{
+				gradient = new Color(Color.HSBtoRGB(hsbVals[0]+0.01f, hsbVals[1], hsbVals[2]));
+			}
 	}
 	
 	public void addPoint(ViewPoint s,int id)
@@ -64,7 +75,8 @@ public class Map extends JPanel {
 		// Coloring FirstPoint
 		edge.getOrigin().color=Color.RED;
 		
-		Color increment = Color.GREEN;
+		//Color increment = Color.GREEN;
+		Color increment = gradient;
 		
 		while(sectionIterator.hasNext())
 		{			
@@ -77,6 +89,8 @@ public class Map extends JPanel {
 			
 			//increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
 			edge.setColorId(increment,currSection.getId());
+			ajustColor();
+			increment = gradient;
 		}
 		
 		repaint();
