@@ -26,7 +26,6 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 		if(point != null)
 		{
 			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
-			point.color= Color.GREEN;
 			map.repaint();
 		}
 					

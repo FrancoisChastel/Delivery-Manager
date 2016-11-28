@@ -241,6 +241,29 @@ public class Model extends Observable implements IModel {
 			}				
 		}
 		
+		// Link between the last and the first element
+		
+		MapNode o = tspObject.mappingId.get(tspObject.bestSolution[i]);
+		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
+		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
+		{
+			
+			ArrayList<MapNode> list = pair.getFirst();
+			
+			// retrieve the good path
+			if(list.get(list.size()-1).equals(d))
+			{
+				// Adding the path corresponding to O and D
+				int j;
+				for(j = 0; j<list.size()-1;j++)
+				{
+					Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
+					sections.add(s);	
+				}
+			}
+			
+		}
+		
 		// Building IdDeliveryList
 		Integer [] listIds = new Integer[tspObject.bestSolution.length];
 		for(int in =0; in<tspObject.bestSolution.length;in++)
