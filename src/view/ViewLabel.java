@@ -21,6 +21,7 @@ public class ViewLabel implements IShape {
 	}
 	
 	public void drawShape(Graphics g, int width, int height) {
+		
 		g.setColor(color);
 		g.drawString(information, x, y);
 	}

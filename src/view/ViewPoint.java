@@ -7,11 +7,13 @@ public class ViewPoint implements IShape{
 
 	private double x;
 	private double y;
+	public static Color colorDefault = Color.lightGray;
 	private static int radius = 10;
+	private static int radiusBIG = 20;
 	private int calculedX;
 	private int calculedY;
 	private int id;
-	public Color color = Color.lightGray;
+	public Color color = colorDefault;
 	
 	/**
 	 * Normal Constructor of the view point. Coordinates are double because they are expressed in Frame Percentage
@@ -36,9 +38,14 @@ public class ViewPoint implements IShape{
 		calculedX = (int) (width*x);
 		calculedY = (int) (height*y);
 		
-		int dx = calculedX-(radius/2);
-		int dy = calculedY-(radius/2);
-		g.fillOval(dx,dy,radius,radius);
+		int usedRadius = radius;
+		
+		if(!color.equals(ViewPoint.colorDefault))
+			usedRadius = radiusBIG;
+		
+		int dx = calculedX-(usedRadius/2);
+		int dy = calculedY-(usedRadius/2);
+		g.fillOval(dx,dy,usedRadius,usedRadius);
 	}
 	
 	public int getId() { return id;}

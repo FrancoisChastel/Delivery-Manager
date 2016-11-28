@@ -239,7 +239,7 @@ public class Model extends Observable implements IModel {
 		for(int in =0; in<tspObject.bestSolution.length;in++)
 			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
 
-		Tour tour = new Tour(sections,listIds);	
+		Tour tour = new Tour(sections,listIds,model.getDeliveryManager().getDeliveryOrder().getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
 	

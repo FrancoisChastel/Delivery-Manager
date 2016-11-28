@@ -88,7 +88,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		// Initialization of the JTree -----------
 		//create the root node
-        root = new DefaultMutableTreeNode("Root");        
+        root = new DefaultMutableTreeNode("Deliveries");        
 		tourTree = new JTree(root);		
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
@@ -111,7 +111,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void displayTour(Tour tour)
 	{
 		map.displayTour(tour);
-	//	addTourTree(null);		
+		addTourTree(tour);		
 	}
 	
 	/**
@@ -120,8 +120,14 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		root.add(new DefaultMutableTreeNode("Tour "+tour.getId()));
-		// Adding the first Level of JTree				
+		DefaultMutableTreeNode tourTree = new DefaultMutableTreeNode("Tour "+tour.getId());
+		
+		for(Integer dp : tour.getDeliveryPoints())
+		{
+			tourTree.add(new DefaultMutableTreeNode("Point "+dp));
+		}
+		
+		root.add(tourTree);
 	}
 
 	/**

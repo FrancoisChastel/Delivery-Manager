@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,26 +56,25 @@ public class Map extends JPanel {
 	 */
 	public void displayTour(Tour tour)
 	{
+		// Coloring Point
+		for(Integer id: tour.getDeliveryPoints())
+			points.get(id).color = Color.orange;
+		
 		// Iterate over the sections
 		Iterator<Section> sectionIterator = tour.getSections().iterator();
 					
-		Section currSection = sectionIterator.next();
-		ViewEdge edge =edges.get(currSection.getId());
+		Section currSection;
+		ViewEdge edge;
 		
-		// Coloring FirstPoint
-		edge.getOrigin().color=Color.RED;
+		// Coloring Entrepot
+		points.get(tour.getEntrepotId()).color = Color.RED;
 		
-		Color increment = Color.GREEN;
+		Color increment = Color.GREEN;		
 		
 		while(sectionIterator.hasNext())
 		{			
 			currSection = sectionIterator.next();
-			edge = edges.get(currSection.getId());
-			
-			// Coloring Delivery Points
-			if(tour.isDeliveryPoint(currSection.getIdDestination()))
-				edge.getTarget().color = Color.orange;
-			
+			edge = edges.get(currSection.getId());		
 			//increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
 			edge.setColorId(increment,currSection.getId());
 		}
@@ -88,6 +88,8 @@ public class Map extends JPanel {
 	public void paintComponent(Graphics g) { 	
 		super.paintComponent(g);
 				
+		g.setFont(new Font("Calibri", Font.PLAIN, 20)); 
+		
 		Iterator<ViewPoint> i = points.iterator();
 		Iterator<ViewEdge> j = edges.values().iterator();
 		Iterator<ViewLabel> k = labels.iterator();
