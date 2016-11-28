@@ -32,6 +32,22 @@ public class DeliveryOrder {
 			times[(int)deliveryList.get(iter).getAdress().getidNode()] = (int) deliveryList.get(iter).getLength();
 		}
 	}
+	
+	/**
+	 * Return a Delivery from an Id
+	 * @param mapNodeId
+	 * @return
+	 */
+	public Delivery getDeliveryById(int mapNodeId)
+	{
+		for(Delivery d : deliveryList)
+		{
+			if(d.getAdress().getidNode() == mapNodeId)
+				return d;
+		}
+		
+		return null;
+	}
 
 
 	public long getIdOrder() {

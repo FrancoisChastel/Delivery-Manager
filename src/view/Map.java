@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ public class Map extends JPanel {
 	public HashMap<Integer,ViewEdge> edges;
 	private ArrayList<ViewLabel> labels;
 	private Color gradient;
+	private MainFrame mainFrame;
+	
 	/**
 	 * Create the panel.
 	 */
-	public Map() {
-				
+	public Map(MainFrame mainFrame) {
+		this.mainFrame=mainFrame;
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
@@ -127,6 +130,8 @@ public class Map extends JPanel {
 			curr.drawShape(g, getWidth(), getHeight());
 		}
 		g.dispose();
+		
+		mainFrame.majPrefSize();
 	}
 	
 
@@ -189,4 +194,6 @@ public class Map extends JPanel {
 	public void removeAllLabels(){
 		labels.clear();
 	}
+	
+	public MainFrame getMainFrame() { return mainFrame; }
 }
