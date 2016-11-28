@@ -175,7 +175,6 @@ public class LowerCosts {
 			
 			// Recupération du sommet gris minimal
 			MapNode si = getSommetMinimal(greyNodes,couts);
-			System.out.println("Si"+si.getidNode());
 			
 			// Pour chaque successeur de si
 			HashMap<MapNode,Section> succSi = graph.getDestinations(si);
@@ -268,7 +267,6 @@ public class LowerCosts {
 					{
 						if(deliveryNodes.contains(  temp.getFirst().get(   temp.getFirst().size()-1  )  )  )
 						{
-							//System.out.println("node" + origin.getKey().getidNode() + " to " +  temp.getFirst().get(   temp.getFirst().size()-1  ).getidNode());
 							costsMatrix[deliveryNodes.indexOf(origin.getKey())][deliveryNodes.indexOf(temp.getFirst().get(   temp.getFirst().size()-1  ))] = (int) Math.floor(temp.getSecond());
 						}
 								

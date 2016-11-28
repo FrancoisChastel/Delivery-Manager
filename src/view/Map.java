@@ -67,10 +67,15 @@ public class Map extends JPanel {
 		Color increment = Color.GREEN;
 		
 		while(sectionIterator.hasNext())
-		{
+		{			
 			currSection = sectionIterator.next();
-			edge = edges.get(currSection.getId());			
-			increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
+			edge = edges.get(currSection.getId());
+			
+			// Coloring Delivery Points
+			if(tour.isDeliveryPoint(currSection.getIdDestination()))
+				edge.getTarget().color = Color.orange;
+			
+			//increment = new Color(increment.getRed(), increment.getGreen()-15,increment.getBlue());
 			edge.setColorId(increment,currSection.getId());
 		}
 		
@@ -96,6 +101,10 @@ public class Map extends JPanel {
 			ViewEdge curr =j.next();	
 			curr.drawShape(g, getWidth(), getHeight());
 		}
+		
+		i = points.iterator();
+		while(i.hasNext())
+			i.next().drawShape(g, getWidth(), getHeight());
 		
 		while(k.hasNext()){
 			ViewLabel curr = k.next();
