@@ -21,6 +21,7 @@ import model.parser.XmlParser;
 
 public class Model extends Observable implements IModel {
 
+	private Controller controller;
 	private GraphDeliveryManager graphDelMan;
 	private Tour tour;
 	private XmlParser xmlParser;
@@ -33,6 +34,7 @@ public class Model extends Observable implements IModel {
 	 * @param controller
 	 */
 	public Model(Controller controller) {
+		this.controller=controller;
 		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
@@ -43,10 +45,15 @@ public class Model extends Observable implements IModel {
 	 * @param currentFile
 	 */
 	public void parseMapFile(File currentFile) {
-		xmlParser.xmlMapParser(currentFile);
-		
-		setChanged();
-		notifyObservers("UPDATE_MAP");
+		try{
+			xmlParser.xmlMapParser(currentFile);
+			setChanged();
+			notifyObservers("UPDATE_MAP");
+		}
+		catch(Exception e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+		}
 	}
 
 	// Accesseur
@@ -234,14 +241,38 @@ public class Model extends Observable implements IModel {
 			}				
 		}
 		
+		// Link between the last and the first element
+		
+		MapNode o = tspObject.mappingId.get(tspObject.bestSolution[i]);
+		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
+		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
+		{
+			
+			ArrayList<MapNode> list = pair.getFirst();
+			
+			// retrieve the good path
+			if(list.get(list.size()-1).equals(d))
+			{
+				// Adding the path corresponding to O and D
+				int j;
+				for(j = 0; j<list.size()-1;j++)
+				{
+					Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
+					sections.add(s);	
+				}
+			}
+			
+		}
+		
 		// Building IdDeliveryList
 		Integer [] listIds = new Integer[tspObject.bestSolution.length];
 		for(int in =0; in<tspObject.bestSolution.length;in++)
 			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
 
-		Tour tour = new Tour(sections,listIds);	
+		Tour tour = new Tour(sections,listIds,model.getDeliveryManager().getDeliveryOrder().getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
+	
 	
 	public void setTour(Tour tour) { this.tour=tour;}
 	public Tour getTour() { return tour; }
@@ -253,20 +284,26 @@ public class Model extends Observable implements IModel {
 	@Override
 	public void loadDeliveryFile(File currentFile) {
 		
-		// Step1 : parsing delivery file
-		xmlParser.xmlDeliveriesParser(currentFile);
-		
-		// Step2 : Call the engine to create a tour
-		// Step2.1 : call dijkstra
-		dijkstra();
-		// step2.2 : call TSP
-		TSP();
-		
-		setChanged();
-		notifyObservers("UPDATE_DELIVERY");
+		try
+		{
+			// Step1 : parsing delivery file
+			xmlParser.xmlDeliveriesParser(currentFile);
+			
+			// Step2 : Call the engine to create a tour
+			// Step2.1 : call dijkstra
+			dijkstra();
+			// step2.2 : call TSP
+			TSP();
+			
+			setChanged();
+			notifyObservers("UPDATE_DELIVERY");
+		}
+		catch(Exception e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+		}
 	}
 }
-
 /**
  *  This class encapsulate the objects that the TSP needs to work.
  * @author antoine

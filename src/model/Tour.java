@@ -14,13 +14,15 @@ public class Tour {
 	private int totalDuration = 50;
 	private int id;
 	private static int factoryId = 0;
+	private int entrepotId;
 	
 	/**
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, Integer[] deliveryPointsId)
+	public Tour(ArrayList<Section> sections, Integer[] deliveryPointsId, int entrepotId)
 	{
+		this.entrepotId=entrepotId;
 		this.sections = sections;
 		this.deliveryPointsId = deliveryPointsId;
 		this.id=factoryId;
@@ -44,4 +46,7 @@ public class Tour {
 	
 	public ArrayList<Section> getSections() { return sections;}
 	public int getId(){ return id; }
+	public Integer[] getDeliveryPoints() {return deliveryPointsId;}
+
+	public int getEntrepotId() {return entrepotId;}
 }
