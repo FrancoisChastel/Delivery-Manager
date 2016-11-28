@@ -133,8 +133,6 @@ public class Model extends Observable implements IModel {
 		if(lowCosts == null)
 			lowCosts = new LowerCosts(this);
 		lowCosts.generateCosts();
-		lowCosts.printCost();
-	//	lowCosts.printCost();
 	}
 	
 	/**
@@ -229,9 +227,7 @@ public class Model extends Observable implements IModel {
 					// Adding the path corresponding to O and D
 					for(int j = 0; j<list.size()-1;j++)
 					{
-						System.out.println("Searching : "+list.get(j).getidNode()+", "+list.get(j+1).getidNode());
 						Section s = model.graphDelMan.getSection(list.get(j),list.get(j+1));
-						System.out.println(s.toString());
 						sections.add(s);	
 					}
 				}
