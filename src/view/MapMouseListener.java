@@ -39,7 +39,6 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 				ids+=i.next()+" ";
 			}
 			View.displayMessage("Clic on "+ids, "Debug", JOptionPane.INFORMATION_MESSAGE);
-			troncon.setColorId(Color.RED, (int)troncon.getIds().toArray()[0]);
 			map.repaint();
 		}
 				
