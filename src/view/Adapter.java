@@ -120,6 +120,12 @@ public class Adapter {
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	
+	public TreeMapNode getTreeNode(Integer id)
+	{		
+		
+		return new TreeMapNode("test", id);
+	}
+	
 	public ViewEdge getView(Section section)
 	{		
 		return new ViewEdge(map.getPoint(section.getIdOrigin()), map.getPoint(section.getIdDestination()), section.getId());		

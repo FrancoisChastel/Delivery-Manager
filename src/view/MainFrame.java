@@ -124,7 +124,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		for(Integer dp : tour.getDeliveryPoints())
 		{
-			tourTree.add(new DefaultMutableTreeNode("Point "+dp));
+			tourTree.add(adapter.getTreeNode(dp));
 		}
 		
 		root.add(tourTree);
