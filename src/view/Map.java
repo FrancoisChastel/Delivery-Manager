@@ -46,6 +46,13 @@ public class Map extends JPanel {
 			}
 	}
 	
+	public void resetMap()
+	{
+		points.clear();
+		edges.clear();
+		labels.clear();
+	}
+	
 	public void addPoint(ViewPoint s,int id)
 	{
 		points.add(id,s);

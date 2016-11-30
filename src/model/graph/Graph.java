@@ -53,6 +53,14 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     	return null;
     }
     
+    public void emptyGraph()
+    {
+    	for(Iterator<Map.Entry<TVertex, CoreVertex>> it = nodes.entrySet().iterator(); it.hasNext(); ) {
+    	      Map.Entry<TVertex, CoreVertex> entry = it.next();
+    	        it.remove();
+    	    }
+    }
+    
     public HashMap<TVertex, TEdge> getDestinations(TVertex origin)
     {
     	CoreVertex TOrigin = null;
