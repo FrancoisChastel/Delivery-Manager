@@ -8,7 +8,7 @@ import model.graph.MapNode;
 
 public class DeliveryOrder {
 
-	private long idOrder;
+	private int idOrder;
 	private MapNode storeAdress;
 	private Date startingTime;
 	private ArrayList<Delivery> deliveryList;
@@ -17,7 +17,7 @@ public class DeliveryOrder {
 	
 	
 	
-	public DeliveryOrder(long idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
+	public DeliveryOrder(int idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
 		super();
 		this.idOrder = idOrder;
 		this.storeAdress = storeAdress;
@@ -34,12 +34,12 @@ public class DeliveryOrder {
 	}
 
 
-	public long getIdOrder() {
+	public int getIdOrder() {
 		return idOrder;
 	}
 
 
-	public void setIdOrder(long idOrder) {
+	public void setIdOrder(int idOrder) {
 		this.idOrder = idOrder;
 	}
 

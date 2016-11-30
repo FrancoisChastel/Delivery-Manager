@@ -28,7 +28,7 @@ public class LowerCosts {
 	{
 		this.model = model;
 		this.graph = model.getGraphDeliveryManager().getGraph();
-		delOrder = model.getDeliveryManager().getDeliveryOrder();
+		delOrder = model.getDeliveryManager().getDeliveryOrders().get(0);
 		paths = new HashMap<>();
 		
 		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
@@ -302,10 +302,18 @@ public class LowerCosts {
 		}		
 	}
 	
+	public void setCostsMatrix(int[][] costsMatrix) {
+		this.costsMatrix = costsMatrix;
+	}
+	public HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> getPaths() {
+		return paths;
+	}
+	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> paths) {
+		this.paths = paths;
+	}	
 	public void refresh()
 	{
-		this.graph = model.getGraphDeliveryManager().getGraph();
-		delOrder = model.getDeliveryManager().getDeliveryOrder();
+		delOrder = model.getSelected();
 		paths = new HashMap<>();
 		
 		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
@@ -317,15 +325,4 @@ public class LowerCosts {
 			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
 		}
 	}
-	
-	public void setCostsMatrix(int[][] costsMatrix) {
-		this.costsMatrix = costsMatrix;
-	}
-	public HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> getPaths() {
-		return paths;
-	}
-	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> paths) {
-		this.paths = paths;
-	}	
-	
 }
