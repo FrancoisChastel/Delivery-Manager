@@ -73,15 +73,19 @@ public class View implements Observer, IView {
 	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		HashMap<String,Object> params = (HashMap<String,Object>) arg1;
 		
-		if(arg1.toString() == "UPDATE_MAP")
+		String type = (String) params.get("type");
+		
+		if(type == "UPDATE_MAP")
 		{
 			((MainFrame) pages.get(Page.Main)).adapte(controller.getModel().getMapNodes(),controller.getModel().getSections());
 			displayFrame(Page.Main,true);
 		}
-		else if(arg1.toString() == "UPDATE_DELIVERY")
+		else if(type == "UPDATE_DELIVERY")
 		{
-			((MainFrame) pages.get(Page.Main)).displayTour(controller.getModel().getTour());
+			Integer idTour = (Integer) params.get("tour");
+			((MainFrame) pages.get(Page.Main)).displayTour(controller.getModel().getTourById(idTour));
 		}
 			
 	}
