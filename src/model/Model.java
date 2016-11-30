@@ -68,7 +68,13 @@ public class Model extends Observable implements IModel {
 	public void dijkstra()
 	{
 		if(lowCosts == null)
+		{
 			lowCosts = new LowerCosts(this);
+		}
+		else
+		{
+			lowCosts.refresh();
+		}
 		lowCosts.generateCosts();
 	}
 	

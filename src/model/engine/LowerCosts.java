@@ -302,6 +302,22 @@ public class LowerCosts {
 		}		
 	}
 	
+	public void refresh()
+	{
+		this.graph = model.getGraphDeliveryManager().getGraph();
+		delOrder = model.getDeliveryManager().getDeliveryOrder();
+		paths = new HashMap<>();
+		
+		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
+		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
+		deliveryNodes.add(delOrder.getStoreAdress());
+		
+		for(int i=0;i<delOrder.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
+		}
+	}
+	
 	public void setCostsMatrix(int[][] costsMatrix) {
 		this.costsMatrix = costsMatrix;
 	}
@@ -311,4 +327,5 @@ public class LowerCosts {
 	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> paths) {
 		this.paths = paths;
 	}	
+	
 }
