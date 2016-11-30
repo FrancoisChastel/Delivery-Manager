@@ -1,8 +1,11 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,12 +22,15 @@ public class Map extends JPanel {
 	// the key of this map is the ID of the section
 	private HashMap<Integer,ViewEdge> edges;
 	private ArrayList<ViewLabel> labels;
+
 	private HashMap<Integer,ViewTour> tours;
+	private MainFrame mainFrame;
+	
 	/**
 	 * Create the panel.
 	 */
-	public Map() {
-				
+	public Map(MainFrame mainFrame) {
+		this.mainFrame=mainFrame;
 		points = new ArrayList<ViewPoint>();
 		edges  = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
@@ -110,7 +116,13 @@ public class Map extends JPanel {
 	 */
 	public void paintComponent(Graphics g) { 	
 		super.paintComponent(g);
-				
+		
+		/*
+		RenderingHints rh = new RenderingHints(
+	             RenderingHints.KEY_ANTIALIASING,
+	             RenderingHints.VALUE_ANTIALIAS_ON);
+	    ((Graphics2D) g).setRenderingHints(rh);
+			*/	
 		g.setFont(new Font("Calibri", Font.PLAIN, 20)); 
 		
 		Iterator<ViewPoint> i = points.iterator();
@@ -136,6 +148,8 @@ public class Map extends JPanel {
 			curr.drawShape(g, getWidth(), getHeight());
 		}
 		g.dispose();
+		
+		mainFrame.majPrefSize();
 	}
 	
 
@@ -186,14 +200,25 @@ public class Map extends JPanel {
 		return labels.isEmpty();
 	}
 	
+	public void setAllPointHoved(boolean hooved)
+	{
+		Iterator<ViewPoint> i = this.points.iterator();
+		while(i.hasNext())
+		{
+			i.next().setHoved(hooved);
+		}
+	}
+	
 	public void removeAllLabels(){
 		labels.clear();
 	}
-
 
 
 	public HashMap<Integer, ViewEdge> getEdges() {
 		// TODO Auto-generated method stub
 		return edges;
 	}
+	
+	public MainFrame getMainFrame() { return mainFrame; }
+
 }

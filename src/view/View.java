@@ -24,12 +24,13 @@ public class View implements Observer, IView {
 	 */
 	public static void displayMessage(String message, String title, int typeIcone)
 	{
-		
+			
 		JOptionPane.showMessageDialog(null,
 				message,
 				title,
 				typeIcone);
 	}
+	
 	/**
 	 * Normal Contructor of View class. It instanciate all Frame pages and put it in its list of pages.
 	 * @param controller
@@ -47,8 +48,7 @@ public class View implements Observer, IView {
 	 * @param only
 	 */	
 	public void displayFrame(Page p, boolean only)
-	{
-		
+	{		
 		if(only)
 		{
 		// Hiding all pages
