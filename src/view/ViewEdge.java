@@ -16,15 +16,14 @@ public class ViewEdge implements IShape {
 	// Constantes ------
 	private static int NormalLineWeight = 3;
 	private static int DefaultLineWeight = 1;
-
 	private static int epsilon = 8;
-	private static Color defaultColor = Color.WHITE;
-	
+	private static Color defaultColor = Color.WHITE;	
 	private static int idFactory = 0;
 	
 	// Attributes ------
 	private ViewPoint pointOrigin;
 	private ViewPoint pointTarget;
+	private boolean	isSelectedTour;
 	
 	// This map represents the sections on this Troncon. It could be sized 2 or 1. The key is the ID of the section and the value its color.
 	private HashMap <Integer,Color> sections;
@@ -89,9 +88,9 @@ public class ViewEdge implements IShape {
 			// Prepare to draw the first line
 			g2d.setColor(section1);
 			
-			if(section1 == defaultColor)
+			if(section1 == defaultColor  && !isSelectedTour)
 				g2d.setStroke(new BasicStroke(DefaultLineWeight));
-			else
+			else if (section1 != defaultColor || isSelectedTour)
 				g2d.setStroke(new BasicStroke(NormalLineWeight));
 			g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 		}
@@ -141,5 +140,5 @@ public class ViewEdge implements IShape {
 	public void setColorId(Color c, int id) { sections.put(id, c);}
 	public ViewPoint getOrigin() {return pointOrigin;}
 	public ViewPoint getTarget() {return pointTarget;}
-
+	public void setSelectedTour(boolean value) {isSelectedTour=value; }
 }

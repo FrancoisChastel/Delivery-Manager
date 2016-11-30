@@ -171,8 +171,9 @@ public class XmlParser {
 		int duration = end.compareTo(deb);
 		model.getController().getLogger().write("Deliveries parsed in "+duration+" ms");
 		// Create the deliveryOrder
-		model.getDeliveryManager().addDeliveryOrder(new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries));
-		
+		DeliveryOrder newOrder = new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries);
+		model.getDeliveryManager().addDeliveryOrder(newOrder);
+		model.setSelected(newOrder);
 		
 	}
 	
