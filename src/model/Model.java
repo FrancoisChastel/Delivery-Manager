@@ -260,6 +260,7 @@ public class Model extends Observable implements IModel {
 		this.selected = selected;
 	}
 
+	public Tour getTourById(int id) {return tours.get(id); }
 	/**
 	 * This method load a delivery file and call the corresponding process in the model.
 	 * 
