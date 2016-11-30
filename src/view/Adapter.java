@@ -128,7 +128,7 @@ public class Adapter {
 		TreeMapNode node = new TreeMapNode("Point "+id, id);
 				
 		// Get back the corresponding deliveryNode
-		Delivery delivery = map.getMainFrame().getView().getController().getModel().getDeliveryManager().getDeliveryOrder().getDeliveryById(id);
+		Delivery delivery = map.getMainFrame().getView().getController().getModel().getSelected().getDeliveryById(id);
 		
 		// Address
 		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
