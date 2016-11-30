@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -118,6 +121,26 @@ public class Adapter {
 		double x = ((double)(p.getX()-minX))/etendueX;
 		double y = ((double)(p.getY()-minY))/etendueY;
 		return new ViewPoint(x,y,p.getidNode());		
+	}
+	
+	public TreeMapNode getTreeNode(Integer id)
+	{		
+		TreeMapNode node = new TreeMapNode("Point "+id, id);
+				
+		// Get back the corresponding deliveryNode
+		Delivery delivery = map.getMainFrame().getView().getController().getModel().getDeliveryManager().getDeliveryOrder().getDeliveryById(id);
+		
+		// Address
+		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
+		
+		// Plage
+		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
+		plage.add(new DefaultMutableTreeNode("in : "+delivery.getBeginning()));
+		plage.add(new DefaultMutableTreeNode("out : "+delivery.getEnd()));
+		
+		node.add(plage);
+		
+		return node;
 	}
 	
 	public ViewEdge getView(Section section)
