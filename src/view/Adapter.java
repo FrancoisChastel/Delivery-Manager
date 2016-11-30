@@ -57,6 +57,8 @@ public class Adapter {
 	 */
 	public void drawModel(List<MapNode> node, List<Section> sections)
 	{
+		map.resetMap();
+		
 		calibration(node);
 		
 		Iterator<MapNode> i = node.iterator();

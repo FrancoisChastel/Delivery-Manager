@@ -47,6 +47,15 @@ public class Model extends Observable implements IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 	}
+	
+	public void resetModel()
+	{
+		indexDelOrdersTours = new HashMap<>();
+		tours=new HashMap<>();
+		deliveryManager = new DeliveryManager();
+		graphDelMan=new GraphDeliveryManager(this);
+		xmlParser=new XmlParser(this);
+	}
 
 	/**
 	 * This method call the parsing process of the parser

@@ -45,6 +45,11 @@ public class Controller implements IController{
 		model.loadDeliveryFile(currentFile);
 	}
 	
+	public void reset()
+	{
+		model.resetModel();
+	}
+	
 	public Model getModel() { return model; }
 
 	/**

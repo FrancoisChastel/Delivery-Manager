@@ -174,8 +174,9 @@ public class MainFrame extends JFrame implements ActionListener {
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             	File currentFile = fc.getSelectedFile();
-            	
+            	hamecon.getController().reset();
             	hamecon.getController().parseMapFile(currentFile);
+            	root.removeAllChildren();
             }
 		}
 		else if(arg0.getSource()==mntmReset)
