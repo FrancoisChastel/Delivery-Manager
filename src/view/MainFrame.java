@@ -100,6 +100,9 @@ public class MainFrame extends JFrame implements ActionListener {
 			public void valueChanged(TreeSelectionEvent e) {
 				// TODO Auto-generated method stub
 				JTree curr = (JTree) e.getSource();
+				if(curr == null)
+					return;
+				
 				map.setAllPointHoved(false);
 				if (curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
 				{

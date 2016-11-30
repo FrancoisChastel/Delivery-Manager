@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,7 +106,13 @@ public class Map extends JPanel {
 	 */
 	public void paintComponent(Graphics g) { 	
 		super.paintComponent(g);
-				
+		
+		/*
+		RenderingHints rh = new RenderingHints(
+	             RenderingHints.KEY_ANTIALIASING,
+	             RenderingHints.VALUE_ANTIALIAS_ON);
+	    ((Graphics2D) g).setRenderingHints(rh);
+			*/	
 		g.setFont(new Font("Calibri", Font.PLAIN, 20)); 
 		
 		Iterator<ViewPoint> i = points.iterator();
