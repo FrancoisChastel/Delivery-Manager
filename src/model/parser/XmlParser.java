@@ -1,6 +1,7 @@
 package model.parser;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +21,7 @@ import model.graph.MapNode;
 import model.graph.Section;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class XmlParser {
 	
@@ -127,13 +129,29 @@ public class XmlParser {
 				case "livraison":
 					int idNode = Integer.parseInt(elem.getAttribute("adresse"));
 					int duree = Integer.parseInt(elem.getAttribute("duree"));
-					
 					// This node is instanciated only for get the real node from the graph
 					MapNode no = new MapNode(idNode,0,0);
 					no = graph.getNodeById(no);
 					
-					// This line create the corresponding delivery
-					deliveries.add(new Delivery(idDelivery++,no,duree));
+					String debutString;
+					String finString;
+					try
+					{
+						debutString=elem.getAttribute("debutPlage");
+						finString=elem.getAttribute("finPlage");
+						SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+						Date debut = formatter.parse(debutString);
+						Date fin = formatter.parse(finString);
+						deliveries.add(new Delivery(idDelivery++,no,duree,debut,fin));
+					}
+					catch(Exception e )
+					{
+						// This line create the corresponding delivery
+						deliveries.add(new Delivery(idDelivery++,no,duree));
+					}		
+					
+					
+					
 	    			break;
 	    		default:break;
 			}
