@@ -1,7 +1,11 @@
 package model.engine;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+
+
+
 
 public class TSP1 extends TemplateTSP {
 
@@ -13,5 +17,10 @@ public class TSP1 extends TemplateTSP {
 	@Override
 	protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
 		return 0;
+	}
+
+	@Override
+	protected boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int sommetCrt,int[] duree){
+		return true;
 	}
 }
