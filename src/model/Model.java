@@ -57,7 +57,9 @@ public class Model extends Observable implements IModel {
 			xmlParser.xmlMapParser(currentFile);
 			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
-			notifyObservers("UPDATE_MAP");
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_MAP");
+			notifyObservers(map);
 		}
 		catch(Exception e)
 		{
