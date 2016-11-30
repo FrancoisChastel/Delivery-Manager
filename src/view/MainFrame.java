@@ -29,6 +29,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
@@ -71,8 +73,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		mnDelivery.add(mntmNewDelivery);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		
 		// Instanciate Map
 		map = new Map(this);
@@ -80,13 +82,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		adapter = new Adapter(map);
 		
-		rightSidePanel = new JPanel();
-		contentPane.add(rightSidePanel, BorderLayout.EAST);
-		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
-		
-		
+		// RightSizePanel
 		JLabel lblNewLabel = new JLabel("Calculed Tour");
+		rightSidePanel = new JPanel();		
 		rightSidePanel.add(lblNewLabel);
+		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
+		contentPane.add(rightSidePanel);
 		
 		// Initialization of the JTree -----------
 		//create the root node
@@ -94,6 +95,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		tourTree = new JTree(root);		
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
+		
+		repaint();
 	}
 	
 	/**
@@ -150,6 +153,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}			
 	}
 	
+	public void paint(Graphics g)
+	{
+		majPrefSize();
+		super.paint(g);
+	}
+	
 	public JTree getJtree() { return tourTree; }
 	/**
 	 * 
@@ -160,6 +169,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void majPrefSize() {
 		// TODO Auto-generated method stub
 		
-		rightSidePanel.setPreferredSize(new Dimension(this.getSize().height/4,rightSidePanel.getHeight()));
+		map.setPreferredSize(new Dimension(this.getSize().width*3/4,rightSidePanel.getHeight()));
+		rightSidePanel.setPreferredSize(new Dimension(this.getSize().width/4,rightSidePanel.getHeight()));
 	}
 }
