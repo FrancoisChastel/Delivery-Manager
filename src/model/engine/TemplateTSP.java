@@ -1,7 +1,10 @@
 package model.engine;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+
+
 
 public abstract class TemplateTSP implements TSP {
 	
@@ -13,7 +16,7 @@ public abstract class TemplateTSP implements TSP {
 		return tempsLimiteAtteint;
 	}
 	
-	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree){
+	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window){
 		tempsLimiteAtteint = false;
 		coutMeilleureSolution = Integer.MAX_VALUE;
 		meilleureSolution = new Integer[nbSommets];
@@ -21,7 +24,7 @@ public abstract class TemplateTSP implements TSP {
 		for (int i=1; i<nbSommets; i++) nonVus.add(i);
 		ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
 		vus.add(0); // le premier sommet visite est 0
-		branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
+		branchAndBound(0, nonVus, vus, 0, cout, duree,window, System.currentTimeMillis(), tpsLimite);
 	}
 	
 	public Integer getMeilleureSolution(int i){
@@ -49,6 +52,8 @@ public abstract class TemplateTSP implements TSP {
 	 */
 	protected abstract int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
 	
+	protected abstract boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int SommetCrt,int[] duree);
+	
 	/**
 	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
 	 * @param sommetCrt
@@ -59,6 +64,8 @@ public abstract class TemplateTSP implements TSP {
 	 */
 	protected abstract Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
 	
+	
+	//protected abstract boolean checkDeliveryWindow(ArrayList<Integer> nonVus);
 	/**
 	 * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
 	 * @param sommetCrt le dernier sommet visite
@@ -70,24 +77,28 @@ public abstract class TemplateTSP implements TSP {
 	 * @param tpsDebut : moment ou la resolution a commence
 	 * @param tpsLimite : limite de temps pour la resolution
 	 */	
-	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite){
-		 if (System.currentTimeMillis() - tpsDebut > tpsLimite){
+	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite){
+		 /*
+		 if (System.currentTimeMillis() - tpsDebut > tpsLimite)
+		 {
 			 tempsLimiteAtteint = true;
+			 System.out.println("out of time");
 			 return;
 		 }
-	    if (nonVus.size() == 0){ // tous les sommets ont ete visites
+		 */
+		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
 	    	coutVus += cout[sommetCrt][0];
 	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
 	    		vus.toArray(meilleureSolution);
 	    		coutMeilleureSolution = coutVus;
 	    	}
-	    } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
+		 } else if (checkWindow(window,nonVus,sommetCrt,duree) && coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
 	        	Integer prochainSommet = it.next();
 	        	vus.add(prochainSommet);
 	        	nonVus.remove(prochainSommet);
-	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
+	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree,window, tpsDebut, tpsLimite);
 	        	vus.remove(prochainSommet);
 	        	nonVus.add(prochainSommet);
 	        }	    

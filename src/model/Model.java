@@ -2,15 +2,19 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
 
+
 import controller.Controller;
+import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.engine.LowerCosts;
 import model.engine.Pair;
+import model.engine.TSP2;
 import model.engine.TSP1;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
@@ -24,7 +28,7 @@ public class Model extends Observable implements IModel {
 	private Tour tour;
 	private XmlParser xmlParser;
 	private DeliveryManager deliveryManager;
-	private TSP1 tsp;
+	private TSP2 tsp;
 	private LowerCosts lowCosts;
 
 	/**
@@ -51,7 +55,7 @@ public class Model extends Observable implements IModel {
 		}
 		catch(Exception e)
 		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
 
@@ -84,25 +88,33 @@ public class Model extends Observable implements IModel {
 	public void TSP()
 	{
 		if(tsp==null)
-			tsp = new TSP1();
+			tsp = new TSP2();
 		
 		// Adapte the TSP Object
 		TSPObject tspObject = AdapterModelTSP(this);
 		
 		// Call the TSP module
-		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree);
+		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
 
 		// Print TSP Result
 		String TSP = "TSP: ";
-		for(int i = 0; i< tspObject.bestSolution.length;i++)
-		{
-			TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
-		}
+		try{
+			for(int i = 0; i< tspObject.bestSolution.length;i++)
+			{
+				TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
+			}
+			
+		
 		System.out.println(TSP);
 		
 		// Constructing a Tour
 		AdapterTSPModel(this, tspObject);
+		}
+		catch (Exception e) {
+			controller.error("Impossible de calculer la tournée en respectant les conditions");
+			return;
+		}
 	}
 	
 	/**
@@ -118,8 +130,11 @@ public class Model extends Observable implements IModel {
 		TSPObject out = new TSPObject(nbSommets);
 				
 		// Loop which fill the out cout tab
-		int index = 0;
 		MapNode nodei, nodej;
+		Delivery delivery;
+		
+		//get the time for each delivery
+		out.duree = model.deliveryManager.getDeliveryOrder().getTimes();
 		
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
@@ -137,7 +152,17 @@ public class Model extends Observable implements IModel {
 				
 				//Adding the cost in the out object of i,j with
 				out.cout[out.getIByMapNode(nodei)][out.getIByMapNode(nodej)] = cost;
-			}				
+				
+			}
+			// Adding the delivery windows for each
+			for(int i = 0; i<model.getDeliveryManager().getDeliveryOrder().getDeliveryList().size();i++)
+			{
+				if(model.deliveryManager.getDeliveryOrder().getDeliveryList().get(i).getAdress().equals(nodei))
+				{
+					delivery = model.deliveryManager.getDeliveryOrder().getDeliveryList().get(i);
+					out.window.add(new Pair<Date, Date>(delivery.getBeginning(), delivery.getEnd()));
+				}
+			}
 		}
 		return out;		
 	}
@@ -174,7 +199,7 @@ public class Model extends Observable implements IModel {
 						sections.add(s);	
 					}
 				}
-			}				
+			}
 		}
 		
 		// Link between the last and the first element
@@ -254,6 +279,7 @@ class TSPObject
 	// in parameters of TSP
 	public int[][] cout;
 	public int[] duree;
+	public ArrayList<Pair<Date,Date>> window;
 		
 	// TSP result
 	public Integer[] bestSolution;
@@ -267,6 +293,7 @@ class TSPObject
 		cout 		= new int[nbSommets][nbSommets];
 		mappingId 	= new ArrayList<MapNode>();
 		duree 		= new int[nbSommets];
+		window = new ArrayList<Pair<Date,Date>>();
 	}
 	
 	/**

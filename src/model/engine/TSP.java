@@ -1,5 +1,9 @@
 package model.engine;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+
 public interface TSP {
 		
 	/**
@@ -14,7 +18,7 @@ public interface TSP {
 	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 */
-	public  void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree);
+	public  void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window);
 	
 	/**
 	 * @param i
