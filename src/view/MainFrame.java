@@ -93,6 +93,22 @@ public class MainFrame extends JFrame implements ActionListener {
 		//create the root node
         root = new DefaultMutableTreeNode("Deliveries");        
 		tourTree = new JTree(root);		
+		
+		tourTree.addTreeSelectionListener(new TreeSelectionListener() {
+			
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				// TODO Auto-generated method stub
+				JTree curr = (JTree) e.getSource();
+				map.setAllPointHoved(false);
+				if (curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
+				{
+					int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
+					map.getPoint(selected).setHoved(true);
+					map.repaint();
+				}
+			}
+		});
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
 		
@@ -125,7 +141,6 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void addTourTree(Tour tour)
 	{		
 		DefaultMutableTreeNode tourTree = new DefaultMutableTreeNode("Tour "+tour.getId());
-		
 		for(Integer dp : tour.getDeliveryPoints())
 		{
 			tourTree.add(adapter.getTreeNode(dp));
@@ -166,10 +181,12 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	public View getView() { return hamecon; }
 
+	
 	public void majPrefSize() {
 		// TODO Auto-generated method stub
 		
 		map.setPreferredSize(new Dimension(this.getSize().width*3/4,rightSidePanel.getHeight()));
 		rightSidePanel.setPreferredSize(new Dimension(this.getSize().width/4,rightSidePanel.getHeight()));
+
 	}
 }

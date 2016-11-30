@@ -182,6 +182,15 @@ public class Map extends JPanel {
 		return labels.isEmpty();
 	}
 	
+	public void setAllPointHoved(boolean hooved)
+	{
+		Iterator<ViewPoint> i = this.points.iterator();
+		while(i.hasNext())
+		{
+			i.next().setHoved(hooved);
+		}
+	}
+	
 	public void removeAllLabels(){
 		labels.clear();
 	}
