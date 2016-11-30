@@ -73,7 +73,7 @@ public class Adapter {
 			Section currSection = j.next();
 			
 			// Try to get the edge corresponding to the section
-			ViewEdge edge = getIfalreadyExist(map.edges, currSection);
+			ViewEdge edge = getIfalreadyExist(map.getEdges(), currSection);
 			
 			// If it does not exists, then we create it.
 			if(edge == null)
