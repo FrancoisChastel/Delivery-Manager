@@ -15,6 +15,7 @@ import model.deliverymanager.DeliveryManager;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
+import model.engine.TSP1;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -48,6 +49,7 @@ public class Model extends Observable implements IModel {
 	public void parseMapFile(File currentFile) {
 		try{
 			xmlParser.xmlMapParser(currentFile);
+			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
 			notifyObservers("UPDATE_MAP");
 		}
@@ -64,75 +66,6 @@ public class Model extends Observable implements IModel {
 	public DeliveryManager getDeliveryManager() { return deliveryManager; }
 	public LowerCosts getLowerCosts() 	{ return lowCosts; }
 
-	/*
-	public void generateTour()
-	{
-		lowCosts = new LowerCosts(graph, xmlParser.getDelOrder());
-		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
-			
-		// get the order of the delivery	
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
-		
-		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
-		{		
-			reducedPath[i] = tsp.getMeilleureSolution(i);
-		}
-		
-		//adding the intermediates nodes
-		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
-		
-	}
-*/
-	/*
-	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
-	{
-		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
-		ArrayList<MapNode> path = new ArrayList<MapNode>();
-		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
-		
-		for(int i=0;i< reducedGraph.length-1;i++)
-		{
-			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[i]   ).getAdress()   )))
-			{
-				if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress())))
-				{
-					path.addAll(temp.getFirst());
-					path.remove(path.size()-1);
-				}
-			
-			}
-		}
-		// path to go back to stock node
-		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[reducedGraph.length-1]).getAdress());
-		for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[reducedGraph.length-1]   ).getAdress()   )))
-		{
-			if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress())))
-			{
-				path.addAll(temp.getFirst());
-			}
-		
-		}
-		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
-		for(int i=0;i<path.size()-1;i++)
-		{
-			sections.add((graph.getDestinations(path.get(i))).get(path.get(i+1)));
-		}
-		
-		// create the tour instance
-		tour = new Tour(sections, xmlParser.getDelOrder());
-		
-		
-		return path;
-	}
-
-	public void loadDeliveryFile(File currentFile) {
-		// TODO Auto-generated method stub
-		xmlParser.xmlDeliveriesParser(currentFile);
-		tsp = new TSP1();
-		generateTour();
-	}
-*/
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
@@ -310,13 +243,14 @@ public class Model extends Observable implements IModel {
 		{
 			// Step1 : parsing delivery file
 			xmlParser.xmlDeliveriesParser(currentFile);
-			
+			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
 			// Step2 : Call the engine to create a tour
 			// Step2.1 : call dijkstra
 			dijkstra();
+			controller.getLogger().write(currentFile.getName()+ " : Dijkstra computed");
 			// step2.2 : call TSP
 			TSP();
-			
+			controller.getLogger().write(currentFile.getName()+ " : TSP done");
 			setChanged();
 			notifyObservers("UPDATE_DELIVERY");
 		}
@@ -324,6 +258,10 @@ public class Model extends Observable implements IModel {
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
 		}
+	}
+
+	public Controller getController() {
+		return controller;
 	}
 }
 /**
@@ -370,4 +308,7 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
+	
+	
+	
 }
