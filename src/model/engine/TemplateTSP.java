@@ -11,20 +11,26 @@ public abstract class TemplateTSP implements TSP {
 	private Integer[] meilleureSolution;
 	private int coutMeilleureSolution = 0;
 	private Boolean tempsLimiteAtteint;
+	private Date departureDate;
+	private Date[] datesLivraisons;
 	
 	public Boolean getTempsLimiteAtteint(){
 		return tempsLimiteAtteint;
 	}
 	
-	public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window){
+	public void chercheSolution(Date departureDate,int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window){
 		tempsLimiteAtteint = false;
 		coutMeilleureSolution = Integer.MAX_VALUE;
 		meilleureSolution = new Integer[nbSommets];
+		datesLivraisons = new Date[nbSommets];
+		this.departureDate= departureDate;
 		ArrayList<Integer> nonVus = new ArrayList<Integer>();
 		for (int i=1; i<nbSommets; i++) nonVus.add(i);
 		ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
 		vus.add(0); // le premier sommet visite est 0
-		branchAndBound(0, nonVus, vus, 0, cout, duree,window, System.currentTimeMillis(), tpsLimite);
+		branchAndBound(0, nonVus, vus, 0, cout, duree,window, System.currentTimeMillis(), tpsLimite,departureDate);
+		
+		
 	}
 	
 	public Integer getMeilleureSolution(int i){
@@ -52,7 +58,9 @@ public abstract class TemplateTSP implements TSP {
 	 */
 	protected abstract int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
 	
-	protected abstract boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int SommetCrt,int[] duree);
+	protected abstract Date updateDate(ArrayList<Pair<Date,Date>> window,int sommmetCrt,int sommetProchain,int[][] cout,int[] duree,Date actualDate);
+	
+	protected abstract boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int SommetCrt);
 	
 	/**
 	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
@@ -77,7 +85,8 @@ public abstract class TemplateTSP implements TSP {
 	 * @param tpsDebut : moment ou la resolution a commence
 	 * @param tpsLimite : limite de temps pour la resolution
 	 */	
-	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite){
+	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite,Date actualDate){
+		 Date nextDate;
 		 /*
 		 if (System.currentTimeMillis() - tpsDebut > tpsLimite)
 		 {
@@ -88,19 +97,31 @@ public abstract class TemplateTSP implements TSP {
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
 	    	coutVus += cout[sommetCrt][0];
-	    	if (coutVus < coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
+	    	if (actualDate.getTime()-departureDate.getTime()/1000 +cout[sommetCrt][0]< coutMeilleureSolution){ // on a trouve une solution meilleure que meilleureSolution
 	    		vus.toArray(meilleureSolution);
-	    		coutMeilleureSolution = coutVus;
+	    		coutMeilleureSolution = (int)(actualDate.getTime()-departureDate.getTime())/1000 +cout[sommetCrt][0];
+	    		datesLivraisons[sommetCrt]= actualDate;
+	    		for(int i=0;i<datesLivraisons.length;i++)
+	    		{
+	    			System.out.println("@ Node "+ i + " " + datesLivraisons[i]);
+	    		}
 	    	}
-		 } else if (checkWindow(window,nonVus,sommetCrt,duree) && coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
+	    	
+	    	
+		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()-departureDate.getTime())/1000 + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
 	        	Integer prochainSommet = it.next();
-	        	vus.add(prochainSommet);
-	        	nonVus.remove(prochainSommet);
-	        	branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree,window, tpsDebut, tpsLimite);
-	        	vus.remove(prochainSommet);
-	        	nonVus.add(prochainSommet);
+	        	nextDate = updateDate(window, sommetCrt, prochainSommet, cout, duree, actualDate);
+	        	if(nextDate != null)
+	        	{
+	        		vus.add(prochainSommet);
+	        		nonVus.remove(prochainSommet);
+	        		datesLivraisons[sommetCrt] = actualDate;
+	        		branchAndBound(prochainSommet, nonVus, vus, (int)(nextDate.getTime()-departureDate.getTime())/1000, cout, duree,window, tpsDebut, tpsLimite,nextDate);
+	        		vus.remove(prochainSommet);
+	        		nonVus.add(prochainSommet);
+	        	}
 	        }	    
 	    }
 	}

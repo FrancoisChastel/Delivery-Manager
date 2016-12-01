@@ -30,6 +30,7 @@ public class Model extends Observable implements IModel {
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
 	private LowerCosts lowCosts;
+	
 
 	/**
 	 * Normal constructor of the model
@@ -88,7 +89,7 @@ public class Model extends Observable implements IModel {
 		TSPObject tspObject = AdapterModelTSP(this);
 		
 		// Call the TSP module
-		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
+		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
 
 		// Print TSP Result
@@ -129,6 +130,7 @@ public class Model extends Observable implements IModel {
 		
 		//get the time for each delivery
 		out.duree = model.deliveryManager.getDeliveryOrder().getTimes();
+		out.departureDate = model.deliveryManager.getDeliveryOrder().getStartingTime();
 		
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
@@ -256,7 +258,7 @@ public class Model extends Observable implements IModel {
 		}
 		catch(Exception e)
 		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
 
@@ -274,6 +276,7 @@ class TSPObject
 	public int[][] cout;
 	public int[] duree;
 	public ArrayList<Pair<Date,Date>> window;
+	Date departureDate;
 		
 	// TSP result
 	public Integer[] bestSolution;
