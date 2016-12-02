@@ -70,6 +70,10 @@ public class MapNode {
 		return true;
 	}
 
+	public String toString()
+	{
+		return "idNode = " + idNode + " X = " + x + " Y = " + y;
+	}
 
 	
 	

@@ -5,9 +5,11 @@ import java.util.Map.Entry;
 
 public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     private Map<TVertex, CoreVertex> nodes;
+    private Map<Integer, TVertex> mappingIdNodes;
 
     public Graph() {
         nodes = new HashMap<TVertex, CoreVertex>();
+        mappingIdNodes = new HashMap<Integer,TVertex>();
     }
 
     public void add(TVertex origin) {
@@ -15,6 +17,7 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     	CoreVertex TOrigin = null;
         TOrigin = new CoreVertex();
         nodes.put(origin, TOrigin);
+        mappingIdNodes.put(origin.hashCode(), origin);
     }
     public void addDestination(TVertex origin,TEdge edge,TVertex destination)
     {
@@ -43,11 +46,7 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     
     public TVertex getNodeById(Integer id)
     {    	    	
-    	for(Entry<TVertex, CoreVertex> entry : nodes.entrySet())
-			if(entry.getKey().hashCode() == id)
-				return entry.getKey();
-
-    	return null;
+    	return mappingIdNodes.get(id);
     }
     
     public HashMap<TVertex, TEdge> getDestinations(TVertex origin)
