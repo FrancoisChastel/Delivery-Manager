@@ -24,6 +24,8 @@ public class Instruction
 		this.road = road;
 	}
 	
+	
+	
 	@Override
 	public String toString() {
 		return "Instruction [direction=" + direction + ", index=" + index + ", road=" + road + "]";
