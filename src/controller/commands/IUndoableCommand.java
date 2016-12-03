@@ -11,7 +11,7 @@ package controller.commands;
  * @author FACANT
  *
  */
-public interface IUndoableCommand extend ICommand {
+public interface IUndoableCommand extends ICommand {
 	/**
 	 * Undo the command
 	 * @throws Throwable
