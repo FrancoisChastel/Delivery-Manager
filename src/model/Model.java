@@ -2,13 +2,14 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
-
-
+import java.util.Set;
+import TraceRoute.TraceRoute;
 import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
@@ -34,6 +35,7 @@ public class Model extends Observable implements IModel {
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
 	private LowerCosts lowCosts;
+	
 
 	/**
 	 * Normal constructor of the model
@@ -111,7 +113,7 @@ public class Model extends Observable implements IModel {
 		TSPObject tspObject = AdapterModelTSP(this);
 		
 		// Call the TSP module
-		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
+		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
 
 		// Print TSP Result
@@ -133,7 +135,7 @@ public class Model extends Observable implements IModel {
 			return;
 		}
 	}
-	
+		
 	/**
 	 * This method is a static Adapter which create a TSPObject (used to do a TSP Call) from the Model.
 	 * @param paths
@@ -152,6 +154,7 @@ public class Model extends Observable implements IModel {
 		
 		//get the time for each delivery
 		out.duree = model.selected.getTimes();
+		out.departureDate = model.selected.getStartingTime();
 		
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
@@ -289,6 +292,9 @@ public class Model extends Observable implements IModel {
 			// step2.2 : call TSP
 			TSP();
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
+			// step2.3 : call RoadMap
+			TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph());
+			controller.getLogger().write(currentFile.getName()+ " : RoadMap done");
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
@@ -297,7 +303,7 @@ public class Model extends Observable implements IModel {
 		}
 		catch(Exception e)
 		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
 
@@ -315,6 +321,7 @@ class TSPObject
 	public int[][] cout;
 	public int[] duree;
 	public ArrayList<Pair<Date,Date>> window;
+	Date departureDate;
 		
 	// TSP result
 	public Integer[] bestSolution;
@@ -349,7 +356,4 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
-	
-	
-	
 }

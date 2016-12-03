@@ -40,11 +40,14 @@ public class XmlParser {
 		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
 		ArrayList <MapNode> nodeList	= model.getGraphDeliveryManager().getNodeList();
 		ArrayList <Section> sectionList	= model.getGraphDeliveryManager().getSectionList();
+<<<<<<< HEAD
 		
 		graph.emptyGraph();
 		nodeList.clear();
 		sectionList.clear();
 		
+=======
+>>>>>>> af00e5fbd843265851cdc3b1c47a424c79c050b3
 	    final File fXmlFile = currentFile;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -82,8 +85,6 @@ public class XmlParser {
 					String nomRue    = elem.getAttribute("nomRue");
 					int vitesse     = Integer.parseInt(elem.getAttribute("vitesse"));
 					Section section  = new Section(idOrigin,idDestination,nomRue,longueur,vitesse);
-	
-					
 					MapNode origin = nodeList.get(idOrigin);
 					MapNode destination = nodeList.get(idDestination);
 					graph.addDestination(origin, section, destination);
@@ -134,18 +135,15 @@ public class XmlParser {
 				case "entrepot":
 					
 					int entrepotNodeId = Integer.parseInt(elem.getAttribute("adresse"));
-					MapNode entrepotNodeTemp = new MapNode(entrepotNodeId,0,0);
-					
 					// Initialization of the entrepotNode object
-					entrepotNode = graph.getNodeById(entrepotNodeTemp);
+					entrepotNode = graph.getNodeById(entrepotNodeId);
 					heureDepart   = elem.getAttribute("heureDepart");
 	    			break;
 				case "livraison":
 					int idNode = Integer.parseInt(elem.getAttribute("adresse"));
 					int duree = Integer.parseInt(elem.getAttribute("duree"));
 					// This node is instanciated only for get the real node from the graph
-					MapNode no = new MapNode(idNode,0,0);
-					no = graph.getNodeById(no);
+					MapNode no = graph.getNodeById(idNode);
 					
 					String debutString;
 					String finString;

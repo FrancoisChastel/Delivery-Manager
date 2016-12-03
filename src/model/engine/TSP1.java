@@ -20,7 +20,16 @@ public class TSP1 extends TemplateTSP {
 	}
 
 	@Override
-	protected boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int sommetCrt,int[] duree){
+	protected boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int sommetCrt){
 		return true;
 	}
+
+	@Override
+	protected Date updateDate(ArrayList<Pair<Date, Date>> window, int sommmetCrt, int sommetProchain, int[][] cout,
+			int[] duree, Date actualDate) {
+		// TODO Auto-generated method stub
+		return actualDate;
+	}
+	
+	
 }

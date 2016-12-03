@@ -1,3 +1,4 @@
+
 package model.graph;
 
 import java.util.*;
@@ -5,9 +6,11 @@ import java.util.Map.Entry;
 
 public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     private Map<TVertex, CoreVertex> nodes;
+    private Map<Integer, TVertex> mappingIdNodes;
 
     public Graph() {
         nodes = new HashMap<TVertex, CoreVertex>();
+        mappingIdNodes = new HashMap<Integer,TVertex>();
     }
 
     public void add(TVertex origin) {
@@ -15,6 +18,7 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     	CoreVertex TOrigin = null;
         TOrigin = new CoreVertex();
         nodes.put(origin, TOrigin);
+        mappingIdNodes.put(origin.hashCode(), origin);
     }
     public void addDestination(TVertex origin,TEdge edge,TVertex destination)
     {
@@ -41,24 +45,9 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     	return null;
     }
     
-    public TVertex getNodeById(TVertex node)
-    {
-    	for(Entry<TVertex, CoreVertex> entry : nodes.entrySet())
-		{	
-			if(entry.getKey().equals(node))
-			{
-				return entry.getKey();
-			}
-		}
-    	return null;
-    }
-    
-    public void emptyGraph()
-    {
-    	for(Iterator<Map.Entry<TVertex, CoreVertex>> it = nodes.entrySet().iterator(); it.hasNext(); ) {
-    	      Map.Entry<TVertex, CoreVertex> entry = it.next();
-    	        it.remove();
-    	    }
+    public TVertex getNodeById(Integer id)
+    {    	    	
+    	return mappingIdNodes.get(id);
     }
     
     public HashMap<TVertex, TEdge> getDestinations(TVertex origin)
@@ -93,4 +82,3 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
         
     }
 }
-

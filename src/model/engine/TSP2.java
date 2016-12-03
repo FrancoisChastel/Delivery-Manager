@@ -1,8 +1,9 @@
 package model.engine;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+
 
 public class TSP2 extends TemplateTSP {
 
@@ -12,7 +13,35 @@ public class TSP2 extends TemplateTSP {
 	}
 
 	@Override
-	protected boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int sommetCrt,int[] duree){
+	protected Date updateDate(ArrayList<Pair<Date,Date>> window,int sommmetCrt,int sommetProchain,int[][] cout,int[] duree,Date actualDate)
+	{
+		//System.out.println("Node " + sommmetCrt + " to " + sommetProchain);
+		Date limit;
+		Date in;
+		long deliveryTime = actualDate.getTime()+(cout[sommmetCrt][sommetProchain]+duree[sommmetCrt])*1000;
+		Date delivery = new Date(deliveryTime);
+		
+		
+		limit = window.get(sommetProchain).getSecond();
+		in = window.get(sommetProchain).getFirst();
+		if(limit != null)
+		{
+			if(!delivery.after(limit))
+			{
+				if(delivery.before(in))
+				{
+					//System.out.println("wait for " + (in.getTime()-delivery.getTime())/1000 + " @ node " + sommetProchain);
+					return in;
+				}
+				return delivery;
+			}
+
+			return null;
+		}
+		return delivery;
+	}
+	@Override
+	protected boolean checkWindow(ArrayList<Pair<Date,Date>> window,ArrayList<Integer> nonVus,int sommetCrt){
 		if(window.get(sommetCrt).getFirst() != null)
 		{	
 			Date in = window.get(sommetCrt).getFirst();
@@ -27,6 +56,7 @@ public class TSP2 extends TemplateTSP {
 					}
 				}
 			}
+			
 			
 		}
 		return true;
