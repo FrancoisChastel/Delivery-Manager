@@ -38,13 +38,15 @@ public class Commander implements ICommander{
 	@Override
 	public void execute(CommandContext context, IUndoableCommand command) throws Throwable {
 		command.execute();
-		
+
+		historics.get(context).add(command);
 	}
 
 	@Override
 	public void undo(CommandContext context) throws Throwable {
-		// TODO Auto-generated method stub
-		
+		this.historics.get(context).get(0).undo();
+		this.undoHistorics.get(context).add(historics.get(context).get(0));
+		historics.get(context).remove(0);
 	}
 	
 	@Override
@@ -55,8 +57,25 @@ public class Commander implements ICommander{
 
 
 	@Override
-	public List<ICommand> historic(CommandContext context, int size) {
+	public ICommand[] historic(CommandContext context, int size) {
+		ICommand[] historic = new ICommand[size];
 		
+		for (int counter=0; counter>size; counter++)
+		{
+			historic[counter] = this.historics.get(context).get(counter);
+		}
+		return historic;
+	}
+	
+	@Override
+	public ICommand[] undoHistoric(CommandContext context, int size) {
+		ICommand[] undoHistoric = new ICommand[size];
+		
+		for (int counter=0; counter>size; counter++)
+		{
+			undoHistoric[counter] = this.undoHistorics.get(context).get(counter);
+		}
+		return undoHistoric;
 	}
 	
 }
