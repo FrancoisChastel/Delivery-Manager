@@ -31,7 +31,10 @@ public abstract class HtmlGenerator {
 					+ "<h1>Feuille de Route</h1>" + "</div>" + "<div class='row'>" + "<ul class='collection'>";
 			bufferedWriter.write(htmlPage);
 			
-			MapNode entrepot = deliveryManager.getDeliveryOrder().getStoreAdress();
+			//Update to next Version
+			//MapNode entrepot = deliveryManager.getDeliveryOrders().get(key)
+			MapNode entrepot = new MapNode(0,0,0);
+		
 			
 			bufferedWriter.append("<li class='collection-item avatar'>"
 								+ 	"<img src='images/delivery-truck.png' class='circle green lighten-3'>"

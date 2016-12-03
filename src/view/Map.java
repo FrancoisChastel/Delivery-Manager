@@ -1,11 +1,15 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import javax.swing.JPanel;
 
@@ -15,19 +19,22 @@ import model.graph.Section;
 public class Map extends JPanel {
 
 	private ArrayList<ViewPoint> points;
-	public HashMap<Integer,ViewEdge> edges;
+	// the key of this map is the ID of the section
+	private HashMap<Integer,ViewEdge> edges;
 	private ArrayList<ViewLabel> labels;
-	private Color gradient;
+
+	private HashMap<Integer,ViewTour> tours;
+	private MainFrame mainFrame;
+	
 	/**
 	 * Create the panel.
 	 */
-	public Map() {
-				
+	public Map(MainFrame mainFrame) {
+		this.mainFrame=mainFrame;
 		points = new ArrayList<ViewPoint>();
-		edges = new HashMap<Integer,ViewEdge>();
+		edges  = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
-		//gradient = new Color(255,0,0);
-		gradient = new Color(Color.HSBtoRGB(0, 1, 1));
+		tours  = new HashMap<>();
 		
 		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
@@ -36,14 +43,13 @@ public class Map extends JPanel {
 		this.addMouseMotionListener(mouseListener);
 	}
 	
-	private void ajustColor()
+
+	
+	public void resetMap()
 	{
-			float[] hsbVals = new float[3];
-			Color.RGBtoHSB(gradient.getRed(), gradient.getGreen(), gradient.getBlue(), hsbVals);
-			if(hsbVals[0] <=1.0f)
-			{
-				gradient = new Color(Color.HSBtoRGB(hsbVals[0]+0.01f, hsbVals[1], hsbVals[2]));
-			}
+		points.clear();
+		edges.clear();
+		labels.clear();
 	}
 	
 	public void addPoint(ViewPoint s,int id)
@@ -66,42 +72,64 @@ public class Map extends JPanel {
 	 * @param tour
 	 */
 	public void displayTour(Tour tour)
-	{
-		// Coloring Point
+	{		
+		// Getting a list of concerned points that will be used for the used tour
+		ArrayList<ViewPoint> concernedPoints = new ArrayList<>();
+		
 		for(Integer id: tour.getDeliveryPoints())
-			points.get(id).color = Color.orange;
+			concernedPoints.add(points.get(id));
+		
+		// Getting a map of concerned edges
+		LinkedHashMap<Integer, ViewEdge> concernedEdge = new LinkedHashMap<>();
 		
 		// Iterate over the sections
 		Iterator<Section> sectionIterator = tour.getSections().iterator();
-					
 		Section currSection;
 		ViewEdge edge;
-		
-		// Coloring Entrepot
-		points.get(tour.getEntrepotId()).color = Color.RED;
-		
-		//Color increment = Color.GREEN;
-		Color increment = gradient;
-
 		
 		while(sectionIterator.hasNext())
 		{			
 			currSection = sectionIterator.next();
-			edge = edges.get(currSection.getId());		
-			edge.setColorId(increment,currSection.getId());
-			ajustColor();
-			increment = gradient;
+			concernedEdge.put(currSection.getId(), edges.get(currSection.getId()));
 		}
 		
+		// Creating the tour object
+		ViewTour vTour = new ViewTour(tour.getId(), concernedEdge, concernedPoints, points.get(tour.getEntrepotId()));
+		
+		tours.put(vTour.getId(), vTour);
+		
+		// if there is only one tour, then we set it selected
+		if(tours.size()==1)
+			setTourSelected(vTour.getId());
 		repaint();
 	}
+	
+	/**
+	 * Set selected a tour. All other tours are unselected
+	 * @param idTour
+	 */
+	private void setTourSelected(int idTour)
+	{
+		for(ViewTour t : tours.values())
+		{
+			t.setSelected(false);
+		}
+		tours.get(idTour).setSelected(true);
+	}
+	
 
 	/**
 	 * This is the draw method of the map. It iterate over its list of shapes, and draw all shapes.
 	 */
 	public void paintComponent(Graphics g) { 	
 		super.paintComponent(g);
-				
+		
+		/*
+		RenderingHints rh = new RenderingHints(
+	             RenderingHints.KEY_ANTIALIASING,
+	             RenderingHints.VALUE_ANTIALIAS_ON);
+	    ((Graphics2D) g).setRenderingHints(rh);
+			*/	
 		g.setFont(new Font("Calibri", Font.PLAIN, 20)); 
 		
 		Iterator<ViewPoint> i = points.iterator();
@@ -127,6 +155,8 @@ public class Map extends JPanel {
 			curr.drawShape(g, getWidth(), getHeight());
 		}
 		g.dispose();
+		
+		mainFrame.majPrefSize();
 	}
 	
 
@@ -177,7 +207,25 @@ public class Map extends JPanel {
 		return labels.isEmpty();
 	}
 	
+	public void setAllPointHoved(boolean hooved)
+	{
+		Iterator<ViewPoint> i = this.points.iterator();
+		while(i.hasNext())
+		{
+			i.next().setHoved(hooved);
+		}
+	}
+	
 	public void removeAllLabels(){
 		labels.clear();
 	}
+
+
+	public HashMap<Integer, ViewEdge> getEdges() {
+		// TODO Auto-generated method stub
+		return edges;
+	}
+	
+	public MainFrame getMainFrame() { return mainFrame; }
+
 }

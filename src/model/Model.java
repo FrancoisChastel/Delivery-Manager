@@ -17,6 +17,7 @@ import TraceRoute.TraceRoute;
 import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
+import model.deliverymanager.DeliveryOrder;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
@@ -30,8 +31,11 @@ public class Model extends Observable implements IModel {
 
 	private Controller controller;
 	private GraphDeliveryManager graphDelMan;
+	private HashMap<Integer,Integer> indexDelOrdersTours;
+	private HashMap<Integer,Tour> tours;
 	private Tour tour;
 	private XmlParser xmlParser;
+	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
 	private LowerCosts lowCosts;
@@ -48,6 +52,24 @@ public class Model extends Observable implements IModel {
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
 		instructions = new LinkedList<Instruction>();
+		indexDelOrdersTours = new HashMap<>();
+		tours = new HashMap<>();
+	}
+	
+	public void resetModel()
+	{
+		indexDelOrdersTours = new HashMap<>();
+		tours=new HashMap<>();
+		deliveryManager = new DeliveryManager();
+		graphDelMan=new GraphDeliveryManager(this);
+		xmlParser=new XmlParser(this);
+	}
+	
+	public void resetDeliveries()
+	{
+		indexDelOrdersTours = new HashMap<>();
+		tours=new HashMap<>();
+		deliveryManager = new DeliveryManager();
 	}
 
 	/**
@@ -59,7 +81,9 @@ public class Model extends Observable implements IModel {
 			xmlParser.xmlMapParser(currentFile);
 			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
-			notifyObservers("UPDATE_MAP");
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_MAP");
+			notifyObservers(map);
 		}
 		catch(Exception e)
 		{
@@ -80,7 +104,13 @@ public class Model extends Observable implements IModel {
 	public void dijkstra()
 	{
 		if(lowCosts == null)
+		{
 			lowCosts = new LowerCosts(this);
+		}
+		else
+		{
+			lowCosts.refresh();
+		}
 		lowCosts.generateCosts();
 	}
 	
@@ -136,8 +166,8 @@ public class Model extends Observable implements IModel {
 		Delivery delivery;
 		
 		//get the time for each delivery
-		out.duree = model.deliveryManager.getDeliveryOrder().getTimes();
-		out.departureDate = model.deliveryManager.getDeliveryOrder().getStartingTime();
+		out.duree = model.selected.getTimes();
+		out.departureDate = model.selected.getStartingTime();
 		
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
@@ -158,11 +188,11 @@ public class Model extends Observable implements IModel {
 				
 			}
 			// Adding the delivery windows for each
-			for(int i = 0; i<model.getDeliveryManager().getDeliveryOrder().getDeliveryList().size();i++)
+			for(int i = 0; i<model.selected.getDeliveryList().size();i++)
 			{
-				if(model.deliveryManager.getDeliveryOrder().getDeliveryList().get(i).getAdress().equals(nodei))
+				if(model.selected.getDeliveryList().get(i).getAdress().equals(nodei))
 				{
-					delivery = model.deliveryManager.getDeliveryOrder().getDeliveryList().get(i);
+					delivery = model.selected.getDeliveryList().get(i);
 					out.window.add(new Pair<Date, Date>(delivery.getBeginning(), delivery.getEnd()));
 				}
 			}
@@ -233,14 +263,29 @@ public class Model extends Observable implements IModel {
 		for(int in =0; in<tspObject.bestSolution.length;in++)
 			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
 
-		Tour tour = new Tour(sections,listIds,model.getDeliveryManager().getDeliveryOrder().getStoreAdress().getidNode());	
+		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
 	
 	
-	public void setTour(Tour tour) { this.tour=tour;}
+	public void setTour(Tour tour) { 
+		this.tour=tour;
+		tours.put(tour.getId(), tour);
+		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId());
+	}
 	public Tour getTour() { return tour; }
 	
+	
+	
+	public DeliveryOrder getSelected() {
+		return selected;
+	}
+
+	public void setSelected(DeliveryOrder selected) {
+		this.selected = selected;
+	}
+
+	public Tour getTourById(int id) {return tours.get(id); }
 	/**
 	 * This method load a delivery file and call the corresponding process in the model.
 	 * 
@@ -269,7 +314,10 @@ public class Model extends Observable implements IModel {
 			controller.getLogger().write(currentFile.getName()+ " : Html done");
 			
 			setChanged();
-			notifyObservers("UPDATE_DELIVERY");
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_DELIVERY");
+			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			notifyObservers(map);
 		}
 		catch(Exception e)
 		{

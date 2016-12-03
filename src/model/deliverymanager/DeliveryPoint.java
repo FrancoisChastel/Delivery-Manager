@@ -6,14 +6,13 @@ import model.graph.MapNode;
 
 
 public class DeliveryPoint extends MapNode{
-
+	private Date inTime;
+	private Date outTime;
 	
 	public DeliveryPoint(int idNode, int x, int y) {
 		super(idNode, x, y);
-		// TODO Auto-generated constructor stub
+
 	}
-	private Date inTime;
-	private Date outTime;
 	
 	public DeliveryPoint(int idNode, int x, int y, Date inTime, Date outTime) {
 		super(idNode, x, y);
@@ -22,12 +21,8 @@ public class DeliveryPoint extends MapNode{
 	}
 	
 	// Getters and Setters
-
 	public Date getInTime() {	return inTime;	}
 	public void setInTime(Date inTime) {	this.inTime = inTime;	}
 	public Date getOutTime() {	return outTime;	}
-	public void setOutTime(Date outTime) {	this.outTime = outTime;	}
-	
-	
-	
+	public void setOutTime(Date outTime) {	this.outTime = outTime;	}	
 }

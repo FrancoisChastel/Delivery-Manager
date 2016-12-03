@@ -28,7 +28,7 @@ public class LowerCosts {
 	{
 		this.model = model;
 		this.graph = model.getGraphDeliveryManager().getGraph();
-		delOrder = model.getDeliveryManager().getDeliveryOrder();
+		delOrder = model.getDeliveryManager().getDeliveryOrders().get(0);
 		paths = new HashMap<>();
 		
 		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
@@ -311,4 +311,18 @@ public class LowerCosts {
 	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> paths) {
 		this.paths = paths;
 	}	
+	public void refresh()
+	{
+		delOrder = model.getSelected();
+		paths = new HashMap<>();
+		
+		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
+		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
+		deliveryNodes.add(delOrder.getStoreAdress());
+		
+		for(int i=0;i<delOrder.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
+		}
+	}
 }
