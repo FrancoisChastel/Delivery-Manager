@@ -50,6 +50,11 @@ public class Controller implements IController{
 		model.resetModel();
 	}
 	
+	public void resetDeliveries()
+	{
+		model.resetDeliveries();
+	}
+	
 	public Model getModel() { return model; }
 
 	/**

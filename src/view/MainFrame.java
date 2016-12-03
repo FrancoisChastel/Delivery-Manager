@@ -181,7 +181,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		else if(arg0.getSource()==mntmReset)
 		{
-			
+			root.removeAllChildren();
+			hamecon.getController().resetDeliveries();
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
