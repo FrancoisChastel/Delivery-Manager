@@ -26,14 +26,6 @@ public interface ICommander {
 	public ICommand[] undoHistoric(CommandContext context, int size);
 	
 	/**
-	 * obtain a list of the last undo top command of the context
-	 * @param context of execution that need to be returned
-	 * @param number of commands that will be returned
-	 * @return last commands
-	 */
-	public List<ICommand> undoHistoric(CommandContext context, int size);
-	
-	/**
 	 * execute the command
 	 * @param context of execution of the command
 	 * @param command that will be executed
