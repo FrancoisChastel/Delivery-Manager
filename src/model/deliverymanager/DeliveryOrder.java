@@ -8,7 +8,7 @@ import model.graph.MapNode;
 
 public class DeliveryOrder {
 
-	private long idOrder;
+	private int idOrder;
 	private MapNode storeAdress;
 	private Date startingTime;
 	private ArrayList<Delivery> deliveryList;
@@ -17,7 +17,7 @@ public class DeliveryOrder {
 	
 	
 	
-	public DeliveryOrder(long idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
+	public DeliveryOrder(int idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
 		super();
 		this.idOrder = idOrder;
 		this.storeAdress = storeAdress;
@@ -27,19 +27,35 @@ public class DeliveryOrder {
 			int idNode = (int) deliveryList.get(iter).getAdress().getidNode();
 			if(idNode > this.maxIdNode){this.maxIdNode = idNode;}
 		}
-		this.times = new int[maxIdNode+1];
+		this.times = new int[deliveryList.size()+1];
 		for (int iter = 0; iter<deliveryList.size(); iter++){
-			times[(int)deliveryList.get(iter).getAdress().getidNode()] = (int) deliveryList.get(iter).getLength();
+			times[iter+1] = (int) deliveryList.get(iter).getLength();
 		}
+	}
+	
+	/**
+	 * Return a Delivery from an Id
+	 * @param mapNodeId
+	 * @return
+	 */
+	public Delivery getDeliveryById(int mapNodeId)
+	{
+		for(Delivery d : deliveryList)
+		{
+			if(d.getAdress().getidNode() == mapNodeId)
+				return d;
+		}
+		
+		return null;
 	}
 
 
-	public long getIdOrder() {
+	public int getIdOrder() {
 		return idOrder;
 	}
 
 
-	public void setIdOrder(long idOrder) {
+	public void setIdOrder(int idOrder) {
 		this.idOrder = idOrder;
 	}
 

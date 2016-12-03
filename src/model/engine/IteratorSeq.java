@@ -3,6 +3,7 @@ package model.engine;
 import java.util.Collection;
 import java.util.Iterator;
 
+
 public class IteratorSeq implements Iterator<Integer> {
 
 	private Integer[] candidats;

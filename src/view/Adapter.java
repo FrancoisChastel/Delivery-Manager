@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -54,6 +57,8 @@ public class Adapter {
 	 */
 	public void drawModel(List<MapNode> node, List<Section> sections)
 	{
+		map.resetMap();
+		
 		calibration(node);
 		
 		Iterator<MapNode> i = node.iterator();
@@ -73,7 +78,7 @@ public class Adapter {
 			Section currSection = j.next();
 			
 			// Try to get the edge corresponding to the section
-			ViewEdge edge = getIfalreadyExist(map.edges, currSection);
+			ViewEdge edge = getIfalreadyExist(map.getEdges(), currSection);
 			
 			// If it does not exists, then we create it.
 			if(edge == null)
@@ -118,6 +123,26 @@ public class Adapter {
 		double x = ((double)(p.getX()-minX))/etendueX;
 		double y = ((double)(p.getY()-minY))/etendueY;
 		return new ViewPoint(x,y,p.getidNode());		
+	}
+	
+	public TreeMapNode getTreeNode(Integer id)
+	{		
+		TreeMapNode node = new TreeMapNode("Point "+id, id);
+				
+		// Get back the corresponding deliveryNode
+		Delivery delivery = map.getMainFrame().getView().getController().getModel().getSelected().getDeliveryById(id);
+		
+		// Address
+		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
+		
+		// Plage
+		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
+		plage.add(new DefaultMutableTreeNode("in : "+delivery.getBeginning()));
+		plage.add(new DefaultMutableTreeNode("out : "+delivery.getEnd()));
+		
+		node.add(plage);
+		
+		return node;
 	}
 	
 	public ViewEdge getView(Section section)

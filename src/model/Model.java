@@ -2,18 +2,26 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
+import java.util.Set;
 
+import TraceRoute.HtmlGenerator;
+import TraceRoute.Instruction;
+import TraceRoute.TraceRoute;
 import controller.Controller;
+import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
 import model.engine.LowerCosts;
 import model.engine.Pair;
+import model.engine.TSP2;
 import model.engine.TSP1;
-import model.graph.Graph;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -23,11 +31,16 @@ public class Model extends Observable implements IModel {
 
 	private Controller controller;
 	private GraphDeliveryManager graphDelMan;
+	private HashMap<Integer,Integer> indexDelOrdersTours;
+	private HashMap<Integer,Tour> tours;
 	private Tour tour;
 	private XmlParser xmlParser;
+	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
-	private TSP1 tsp;
+	private TSP2 tsp;
 	private LowerCosts lowCosts;
+	private List<Instruction> instructions;
+	
 
 	/**
 	 * Normal constructor of the model
@@ -38,6 +51,25 @@ public class Model extends Observable implements IModel {
 		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
+		instructions = new LinkedList<Instruction>();
+		indexDelOrdersTours = new HashMap<>();
+		tours = new HashMap<>();
+	}
+	
+	public void resetModel()
+	{
+		indexDelOrdersTours = new HashMap<>();
+		tours=new HashMap<>();
+		deliveryManager = new DeliveryManager();
+		graphDelMan=new GraphDeliveryManager(this);
+		xmlParser=new XmlParser(this);
+	}
+	
+	public void resetDeliveries()
+	{
+		indexDelOrdersTours = new HashMap<>();
+		tours=new HashMap<>();
+		deliveryManager = new DeliveryManager();
 	}
 
 	/**
@@ -47,12 +79,15 @@ public class Model extends Observable implements IModel {
 	public void parseMapFile(File currentFile) {
 		try{
 			xmlParser.xmlMapParser(currentFile);
+			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
-			notifyObservers("UPDATE_MAP");
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_MAP");
+			notifyObservers(map);
 		}
 		catch(Exception e)
 		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
 
@@ -63,82 +98,19 @@ public class Model extends Observable implements IModel {
 	public DeliveryManager getDeliveryManager() { return deliveryManager; }
 	public LowerCosts getLowerCosts() 	{ return lowCosts; }
 
-	/*
-	public void generateTour()
-	{
-		lowCosts = new LowerCosts(graph, xmlParser.getDelOrder());
-		int[] reducedPath = new int[xmlParser.getDelOrder().getDeliveryList().size()];
-			
-		// get the order of the delivery	
-		tsp.chercheSolution(2500, xmlParser.getDelOrder().getDeliveryList().size(), lowCosts.getCostsMatrix(), xmlParser.getDelOrder().getTimes());
-		
-		for( int i= 0 ; i < xmlParser.getDelOrder().getDeliveryList().size();i++)
-		{		
-			reducedPath[i] = tsp.getMeilleureSolution(i);
-		}
-		
-		//adding the intermediates nodes
-		addIntermediatePoints(reducedPath, xmlParser.getDelOrder());
-		
-	}
-*/
-	/*
-	public ArrayList<MapNode> addIntermediatePoints(int[] reducedGraph,DeliveryOrder deliveryOrder)
-	{
-		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Double>>> pathFromPoint = lowCosts.getPaths();
-		ArrayList<MapNode> path = new ArrayList<MapNode>();
-		ArrayList<MapNode> pathToNode = new ArrayList<MapNode>();
-		
-		for(int i=0;i< reducedGraph.length-1;i++)
-		{
-			path.add(deliveryOrder.getDeliveryList().get(reducedGraph[i]).getAdress());
-			for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[i]   ).getAdress()   )))
-			{
-				if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[i+1]).getAdress())))
-				{
-					path.addAll(temp.getFirst());
-					path.remove(path.size()-1);
-				}
-			
-			}
-		}
-		// path to go back to stock node
-		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[reducedGraph.length-1]).getAdress());
-		for (Pair<ArrayList<MapNode>,Double> temp : (    pathFromPoint.get(    deliveryOrder.getDeliveryList().get(   reducedGraph[reducedGraph.length-1]   ).getAdress()   )))
-		{
-			if( (temp.getFirst().get(temp.getFirst().size() -1 ).equals(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress())))
-			{
-				path.addAll(temp.getFirst());
-			}
-		
-		}
-		path.add(deliveryOrder.getDeliveryList().get(reducedGraph[0]).getAdress());
-		for(int i=0;i<path.size()-1;i++)
-		{
-			sections.add((graph.getDestinations(path.get(i))).get(path.get(i+1)));
-		}
-		
-		// create the tour instance
-		tour = new Tour(sections, xmlParser.getDelOrder());
-		
-		
-		return path;
-	}
-
-	public void loadDeliveryFile(File currentFile) {
-		// TODO Auto-generated method stub
-		xmlParser.xmlDeliveriesParser(currentFile);
-		tsp = new TSP1();
-		generateTour();
-	}
-*/
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
 	public void dijkstra()
 	{
 		if(lowCosts == null)
+		{
 			lowCosts = new LowerCosts(this);
+		}
+		else
+		{
+			lowCosts.refresh();
+		}
 		lowCosts.generateCosts();
 	}
 	
@@ -148,27 +120,35 @@ public class Model extends Observable implements IModel {
 	public void TSP()
 	{
 		if(tsp==null)
-			tsp = new TSP1();
+			tsp = new TSP2();
 		
 		// Adapte the TSP Object
 		TSPObject tspObject = AdapterModelTSP(this);
 		
 		// Call the TSP module
-		tsp.chercheSolution(10000, tspObject.cout.length, tspObject.cout, tspObject.duree);
+		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
 
 		// Print TSP Result
 		String TSP = "TSP: ";
-		for(int i = 0; i< tspObject.bestSolution.length;i++)
-		{
-			TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
-		}
+		try{
+			for(int i = 0; i< tspObject.bestSolution.length;i++)
+			{
+				TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
+			}
+			
+		
 		System.out.println(TSP);
 		
 		// Constructing a Tour
 		AdapterTSPModel(this, tspObject);
+		}
+		catch (Exception e) {
+			controller.error("Impossible de calculer la tournée en respectant les conditions");
+			return;
+		}
 	}
-	
+		
 	/**
 	 * This method is a static Adapter which create a TSPObject (used to do a TSP Call) from the Model.
 	 * @param paths
@@ -182,8 +162,12 @@ public class Model extends Observable implements IModel {
 		TSPObject out = new TSPObject(nbSommets);
 				
 		// Loop which fill the out cout tab
-		int index = 0;
 		MapNode nodei, nodej;
+		Delivery delivery;
+		
+		//get the time for each delivery
+		out.duree = model.selected.getTimes();
+		out.departureDate = model.selected.getStartingTime();
 		
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
@@ -201,7 +185,17 @@ public class Model extends Observable implements IModel {
 				
 				//Adding the cost in the out object of i,j with
 				out.cout[out.getIByMapNode(nodei)][out.getIByMapNode(nodej)] = cost;
-			}				
+				
+			}
+			// Adding the delivery windows for each
+			for(int i = 0; i<model.selected.getDeliveryList().size();i++)
+			{
+				if(model.selected.getDeliveryList().get(i).getAdress().equals(nodei))
+				{
+					delivery = model.selected.getDeliveryList().get(i);
+					out.window.add(new Pair<Date, Date>(delivery.getBeginning(), delivery.getEnd()));
+				}
+			}
 		}
 		return out;		
 	}
@@ -238,7 +232,7 @@ public class Model extends Observable implements IModel {
 						sections.add(s);	
 					}
 				}
-			}				
+			}
 		}
 		
 		// Link between the last and the first element
@@ -269,14 +263,29 @@ public class Model extends Observable implements IModel {
 		for(int in =0; in<tspObject.bestSolution.length;in++)
 			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
 
-		Tour tour = new Tour(sections,listIds,model.getDeliveryManager().getDeliveryOrder().getStoreAdress().getidNode());	
+		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
 	
 	
-	public void setTour(Tour tour) { this.tour=tour;}
+	public void setTour(Tour tour) { 
+		this.tour=tour;
+		tours.put(tour.getId(), tour);
+		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId());
+	}
 	public Tour getTour() { return tour; }
 	
+	
+	
+	public DeliveryOrder getSelected() {
+		return selected;
+	}
+
+	public void setSelected(DeliveryOrder selected) {
+		this.selected = selected;
+	}
+
+	public Tour getTourById(int id) {return tours.get(id); }
 	/**
 	 * This method load a delivery file and call the corresponding process in the model.
 	 * 
@@ -288,20 +297,36 @@ public class Model extends Observable implements IModel {
 		{
 			// Step1 : parsing delivery file
 			xmlParser.xmlDeliveriesParser(currentFile);
-			
+			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
 			// Step2 : Call the engine to create a tour
 			// Step2.1 : call dijkstra
 			dijkstra();
+			controller.getLogger().write(currentFile.getName()+ " : Dijkstra computed");
 			// step2.2 : call TSP
 			TSP();
+			controller.getLogger().write(currentFile.getName()+ " : TSP done");
+			// step2.3 : call RoadMap
+			TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph(),this.instructions);
+			controller.getLogger().write(currentFile.getName()+ " : RoadMap done");
+			
+			File htmlFile = new File("roadMap/index.html");
+			HtmlGenerator.generateHtml(instructions,this.deliveryManager,htmlFile);
+			controller.getLogger().write(currentFile.getName()+ " : Html done");
 			
 			setChanged();
-			notifyObservers("UPDATE_DELIVERY");
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_DELIVERY");
+			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			notifyObservers(map);
 		}
 		catch(Exception e)
 		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
+	}
+
+	public Controller getController() {
+		return controller;
 	}
 }
 /**
@@ -313,6 +338,8 @@ class TSPObject
 	// in parameters of TSP
 	public int[][] cout;
 	public int[] duree;
+	public ArrayList<Pair<Date,Date>> window;
+	Date departureDate;
 		
 	// TSP result
 	public Integer[] bestSolution;
@@ -326,6 +353,7 @@ class TSPObject
 		cout 		= new int[nbSommets][nbSommets];
 		mappingId 	= new ArrayList<MapNode>();
 		duree 		= new int[nbSommets];
+		window = new ArrayList<Pair<Date,Date>>();
 	}
 	
 	/**
