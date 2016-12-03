@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Set;
+
+import TraceRoute.HtmlGenerator;
+import TraceRoute.Instruction;
 import TraceRoute.TraceRoute;
 import controller.Controller;
 import model.deliverymanager.Delivery;
@@ -31,6 +35,7 @@ public class Model extends Observable implements IModel {
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
 	private LowerCosts lowCosts;
+	private List<Instruction> instructions;
 	
 
 	/**
@@ -42,6 +47,7 @@ public class Model extends Observable implements IModel {
 		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
+		instructions = new LinkedList<Instruction>();
 	}
 
 	/**
@@ -255,8 +261,13 @@ public class Model extends Observable implements IModel {
 			TSP();
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
 			// step2.3 : call RoadMap
-			TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph());
+			TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph(),this.instructions);
 			controller.getLogger().write(currentFile.getName()+ " : RoadMap done");
+			
+			File htmlFile = new File("roadMap/index.html");
+			HtmlGenerator.generateHtml(instructions,this.deliveryManager,htmlFile);
+			controller.getLogger().write(currentFile.getName()+ " : Html done");
+			
 			setChanged();
 			notifyObservers("UPDATE_DELIVERY");
 		}

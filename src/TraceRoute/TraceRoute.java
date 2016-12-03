@@ -24,9 +24,8 @@ public abstract class TraceRoute {
 	 * @param model
 	 */
 	
-	public static List<Instruction> generateInstructions(Tour tour, Graph<MapNode, Section> map)
+	public static List<Instruction> generateInstructions(Tour tour, Graph<MapNode, Section> map,List<Instruction> instructions)
 	{
-		List<Instruction> instructions = new LinkedList<Instruction>();
 		
 		int oldX,oldY;
 		MathVector origin = new MathVector();
@@ -48,15 +47,15 @@ public abstract class TraceRoute {
 			destination.redifineVector(oldX, oldY, nextNode.getX(),  nextNode.getY());
 					
 			instructions.add(instruction(origin, destination, 
-								section.getName(),section.getIdOrigin(), section.getIdDestination(), 
+								section.getName(),section.getLength(),section.getIdOrigin(), section.getIdDestination(), 
 								contains(tour.getDeliveryPoints(), section.getIdDestination()),
 								allDestinations.keySet()));
-			
+			/*
 			System.out.println(instruction(origin, destination, 
-					section.getName(),section.getIdOrigin(), section.getIdDestination(), 
+					section.getName(),section.getLength(),section.getIdOrigin(), section.getIdDestination(), 
 					contains(tour.getDeliveryPoints(), section.getIdDestination()),
 					allDestinations.keySet()).toString());
-			
+			*/
 			// Change Vector and old point
 			oldX = nextNode.getX();
 			oldY = nextNode.getY();
@@ -78,7 +77,7 @@ public abstract class TraceRoute {
 	}
 	
 	private static Instruction instruction(MathVector origin, MathVector destination, 
-			String roadName,
+			String roadName, Integer length,
 			int idOrigin, int idDestination,
 			boolean isDeliveryPoint, Set<MapNode> nodesDestination)
 	{
@@ -86,11 +85,11 @@ public abstract class TraceRoute {
 		int counter = 1;
 		if(Math.abs(angle) < 5)
 		{
-			return new Instruction(Direction.STRAIGHT, counter, roadName);
+			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName);
 		}
 		else if(Math.abs(angle) == 180)
 		{
-			return new Instruction(Direction.TURNAROUND, counter, roadName);
+			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint,roadName);
 		}
 		else if(angle < 0)
 		{
@@ -104,7 +103,7 @@ public abstract class TraceRoute {
 					counter++;
 				}
 			}
-			return new Instruction(Direction.LEFT, counter, roadName);
+			return new Instruction(Direction.LEFT, counter,length,idDestination,isDeliveryPoint, roadName);
 		}
 		else
 		{
@@ -118,7 +117,7 @@ public abstract class TraceRoute {
 					counter++;
 				}
 			}
-			return new Instruction(Direction.RIGHT, counter, roadName);
+			return new Instruction(Direction.RIGHT, counter,length,idDestination,isDeliveryPoint, roadName);
 		}		
 	}
 }
