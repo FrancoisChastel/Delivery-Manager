@@ -40,14 +40,9 @@ public class XmlParser {
 		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
 		ArrayList <MapNode> nodeList	= model.getGraphDeliveryManager().getNodeList();
 		ArrayList <Section> sectionList	= model.getGraphDeliveryManager().getSectionList();
-<<<<<<< HEAD
-		
 		graph.emptyGraph();
 		nodeList.clear();
 		sectionList.clear();
-		
-=======
->>>>>>> af00e5fbd843265851cdc3b1c47a424c79c050b3
 	    final File fXmlFile = currentFile;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
