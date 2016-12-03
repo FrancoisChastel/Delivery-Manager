@@ -17,10 +17,4 @@ public interface IUndoableCommand extend ICommand {
 	 * @throws Throwable
 	 */
 	public void undo() throws Throwable;
-	
-	/**
-	 * Redo the command
-	 * @throws Throwable
-	 */
-	public void redo() throws Throwable;
 }
