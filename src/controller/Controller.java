@@ -12,6 +12,7 @@ public class Controller implements IController{
 
 	private Model model;
 	private View view;
+	private Logger logger;
 	
 	/**
 	 * Default constructor of the controller. It instanciate model and view, and set up observer/observable pattern
@@ -20,6 +21,7 @@ public class Controller implements IController{
 	{
 		model = new Model(this);
 		view  = new View(this);
+		logger = new Logger();
 		model.addObserver(view);		
 		view.displayFrame(Page.Setting, false);
 	}
@@ -43,6 +45,16 @@ public class Controller implements IController{
 		model.loadDeliveryFile(currentFile);
 	}
 	
+	public void reset()
+	{
+		model.resetModel();
+	}
+	
+	public void resetDeliveries()
+	{
+		model.resetDeliveries();
+	}
+	
 	public Model getModel() { return model; }
 
 	/**
@@ -57,5 +69,12 @@ public class Controller implements IController{
 	public void error(String message)
 	{
 		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE);
+		logger.write("Error : "+ message);
 	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+	
+	
 }

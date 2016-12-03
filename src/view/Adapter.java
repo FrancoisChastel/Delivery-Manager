@@ -57,6 +57,8 @@ public class Adapter {
 	 */
 	public void drawModel(List<MapNode> node, List<Section> sections)
 	{
+		map.resetMap();
+		
 		calibration(node);
 		
 		Iterator<MapNode> i = node.iterator();
@@ -76,7 +78,7 @@ public class Adapter {
 			Section currSection = j.next();
 			
 			// Try to get the edge corresponding to the section
-			ViewEdge edge = getIfalreadyExist(map.edges, currSection);
+			ViewEdge edge = getIfalreadyExist(map.getEdges(), currSection);
 			
 			// If it does not exists, then we create it.
 			if(edge == null)
@@ -128,7 +130,7 @@ public class Adapter {
 		TreeMapNode node = new TreeMapNode("Point "+id, id);
 				
 		// Get back the corresponding deliveryNode
-		Delivery delivery = map.getMainFrame().getView().getController().getModel().getDeliveryManager().getDeliveryOrder().getDeliveryById(id);
+		Delivery delivery = map.getMainFrame().getView().getController().getModel().getSelected().getDeliveryById(id);
 		
 		// Address
 		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );

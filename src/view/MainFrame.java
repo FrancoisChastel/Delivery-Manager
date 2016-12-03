@@ -42,6 +42,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private Map map;
 	private Adapter adapter;
 	private JMenuItem mntmLoadDeliveryfile;
+	private JMenuItem mntmNewMap;
+	private JMenuItem mntmReset;
 	private JTree tourTree;
 	private DefaultMutableTreeNode root;
 	private JPanel rightSidePanel;
@@ -62,6 +64,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
+		mntmNewMap = new JMenuItem("Load New Map");
+		mnFile.add(mntmNewMap);
+		mntmNewMap.addActionListener(this);
+		
 		JMenu mnDelivery = new JMenu("Delivery");
 		menuBar.add(mnDelivery);
 		
@@ -69,8 +75,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		mnDelivery.add(mntmLoadDeliveryfile);
 		mntmLoadDeliveryfile.addActionListener(this);
 		
-		JMenuItem mntmNewDelivery = new JMenuItem("New delivery");
-		mnDelivery.add(mntmNewDelivery);
+		mntmReset = new JMenuItem("Reset");
+		mnDelivery.add(mntmReset);
+		mntmReset.addActionListener(this);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -159,7 +167,24 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		
 		// Load Livraison
-		if(arg0.getSource()==mntmLoadDeliveryfile)
+		if(arg0.getSource()==mntmNewMap)
+		{
+			JFileChooser fc = new JFileChooser();	
+            int returnVal = fc.showOpenDialog(MainFrame.this);
+            
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            	File currentFile = fc.getSelectedFile();
+            	hamecon.getController().reset();
+            	hamecon.getController().parseMapFile(currentFile);
+            	root.removeAllChildren();
+            }
+		}
+		else if(arg0.getSource()==mntmReset)
+		{
+			root.removeAllChildren();
+			hamecon.getController().resetDeliveries();
+		}
+		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
 			JFileChooser fc = new JFileChooser();	
             int returnVal = fc.showOpenDialog(MainFrame.this);
@@ -168,7 +193,8 @@ public class MainFrame extends JFrame implements ActionListener {
             	File currentFile = fc.getSelectedFile();            	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
-		}			
+		}
+		
 	}
 	
 	public void paint(Graphics g)

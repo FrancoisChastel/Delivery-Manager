@@ -28,7 +28,7 @@ public class Tour {
 		this.id=factoryId;
 		factoryId++;
 	}
-	
+
 	/**
 	 * Check if a Point is a delivery point
 	 * @param idPoint
