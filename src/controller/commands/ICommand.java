@@ -7,7 +7,7 @@
 package controller.commands;
 
 /**
- * Command interface that is not undoable 
+ * Command interface that is undoable 
  * @author FACANT
  *
  */

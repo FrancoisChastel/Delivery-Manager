@@ -19,7 +19,7 @@ public class Commander implements ICommander{
 	 * @return
 	 */
 	public static Commander getInstance() {
-		if (null == instance) { // Premier appel
+		if (null == instance) { 
 			instance = new Commander();
 		}
 		return instance;	
