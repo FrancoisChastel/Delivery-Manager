@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 public class ViewTour {
 	private int id;
-	private boolean selected;
+	private boolean selected = false;
 	private LinkedHashMap<Integer,ViewEdge> concernedEdge;
 	private ArrayList<ViewPoint> concernedPoints;
 	private Color gradient;
@@ -33,6 +33,7 @@ public class ViewTour {
 	 */
 	public void colorTourComponentsOnMap()
 	{
+		System.out.println("Coloring "+id);
 		if(selected)
 			colorSelected();
 		else
