@@ -6,11 +6,16 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import model.Tour;
 import model.deliverymanager.Delivery;
 import model.graph.MapNode;
 import model.graph.Section;
 
-
+/**
+ * 
+ * @author antoine
+ *
+ */
 public class Adapter {
 	
 	private int minX, minY, maxX, maxY;
@@ -144,12 +149,24 @@ public class Adapter {
 		return node;
 	}
 	
+	public TreeTour getTreeTour(Tour t)
+	{
+		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId());
+		// TODO add meta data of tour
+		
+		return res;
+	}
+	
 	public ViewEdge getView(Section section)
 	{		
 		return new ViewEdge(map.getPoint(section.getIdOrigin()), map.getPoint(section.getIdDestination()), section.getId());		
 	}
 	
 	
+	/**
+	 * Constructor
+	 * @param map
+	 */
 	public Adapter(Map map)
 	{
 		this.map = map;

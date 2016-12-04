@@ -296,11 +296,7 @@ public class Model extends Observable implements IModel {
 			// step2.2 : call TSP
 			TSP();
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
-			// step2.3 : call RoadMap			
-			File htmlFile = new File("roadMap/index.html");
-			HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
-			controller.getLogger().write(currentFile.getName()+ " : Instructions in HTML done");
-			
+						
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
@@ -313,11 +309,21 @@ public class Model extends Observable implements IModel {
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
+	
+	public void generateTraceRoute(int tourid)
+	{
+				
+		File htmlFile = new File("roadMap/index.html");
+		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
+		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
+	}
 
 	public Controller getController() {
 		return controller;
 	}
 }
+
+
 /**
  *  This class encapsulate the objects that the TSP needs to work.
  * @author antoine

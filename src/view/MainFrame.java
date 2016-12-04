@@ -53,6 +53,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	 * @param view
 	 */
 	public MainFrame(View view) {
+		setTitle("Delivery Manager");
 		this.hamecon = view;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,26 +101,14 @@ public class MainFrame extends JFrame implements ActionListener {
 		// Initialization of the JTree -----------
 		//create the root node
         root = new DefaultMutableTreeNode("Deliveries");        
-		tourTree = new JTree(root);		
+		tourTree = new JTree(root);	
 		
-		tourTree.addTreeSelectionListener(new TreeSelectionListener() {
-			
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				// TODO Auto-generated method stub
-				JTree curr = (JTree) e.getSource();
-				if(curr == null)
-					return;
-				
-				map.setAllPointHoved(false);
-				if (curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
-				{
-					int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
-					map.getPoint(selected).setHoved(true);
-					map.repaint();
-				}
-			}
-		});
+		// Manage listener
+		TreeListener treeListener = new TreeListener(this);
+		tourTree.addTreeSelectionListener(treeListener);
+		tourTree.addMouseListener(treeListener);
+		
+		// Add to right pane
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
 		
@@ -151,7 +140,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		DefaultMutableTreeNode tourTree = new DefaultMutableTreeNode("Tour "+tour.getId());
+		TreeTour tourTree = adapter.getTreeTour(tour);
 		for(Integer dp : tour.getDeliveryPoints())
 		{
 			tourTree.add(adapter.getTreeNode(dp));
@@ -218,4 +207,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		rightSidePanel.setPreferredSize(new Dimension(this.getSize().width/4,rightSidePanel.getHeight()));
 
 	}
+
+	public Map getMap() {	return map;	}
 }

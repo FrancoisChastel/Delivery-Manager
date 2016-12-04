@@ -30,6 +30,8 @@ public class Controller implements IController{
 		model.addObserver(view);		
 		view.displayFrame(Page.Setting, false);
 	}
+	
+	// Callbacks ------------------------------
 
 	/**
 	 * This method just call the parseMapFile method of the model. It called by the view when a click on 
@@ -48,6 +50,24 @@ public class Controller implements IController{
 	public void parseDeliveriesFile(File currentFile)
 	{
 		model.loadDeliveryFile(currentFile);
+	}	
+
+	/**
+	 * Loads a delivery file XML. It can be called by the View.Mainframe
+	 * @param currentFile
+	 */
+	public void loadDeliveryFile(File currentFile) {
+		
+		model.loadDeliveryFile(currentFile);
+	}
+	
+	/**
+	 * Generates a trace route. It called by the view on rightclick>Generate trace route in the JTree
+	 * @param tourid
+	 */
+	public void generateTraceRoute(int tourid)
+	{
+		model.generateTraceRoute(tourid);
 	}
 	
 	public void reset()
@@ -60,17 +80,10 @@ public class Controller implements IController{
 		model.resetDeliveries();
 	}
 	
+	// End callbacks ------------------------------
+	
 	public Model getModel() { return model; }
 
-	/**
-	 * Load a delivery file XML. It can be called by the View.Mainframe
-	 * @param currentFile
-	 */
-	public void loadDeliveryFile(File currentFile) {
-		
-		model.loadDeliveryFile(currentFile);
-	}
-	
 	public void error(String message)
 	{
 		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -81,5 +94,6 @@ public class Controller implements IController{
 		return logger;
 	}
 	
+
 	
 }
