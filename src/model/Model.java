@@ -48,14 +48,21 @@ public class Model extends IModel {
 	}
 
 	// Getters 
-	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}	
-	public List<Section> getSections() {					return graphDelMan.getSectionList();}
+	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
 	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
 	public Tour getTour(int id) { 							return tours.get(id); }
-	public DeliveryOrder getSelected() { 					return selected; }
+	@Override
+	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
+	@Override
+	public List<Section> getSections() {					return graphDelMan.getSectionList();}
+	@Override
 	public Tour getTourById(int id) { 						return tours.get(id); }
+	@Override
+	public DeliveryOrder getDeliveryOrderById(int id) {		return this.getDeliveryManager().getDeliveryOrders().get(id); }
+	@Override
+	public DeliveryOrder getSelected() { 					return selected; }
 
 	// Setters
 	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
@@ -126,16 +133,13 @@ public class Model extends IModel {
 		}
 	}
 	
+	@Override
 	public void generateTraceRoute(int tourid)
 	{
 				
 		File htmlFile = new File("roadMap/index.html");
 		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
 		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
-	}
-
-	public Controller getController() {
-		return controller;
 	}
 
 	@Override
