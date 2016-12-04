@@ -87,7 +87,13 @@ public class Model extends IModel {
 	@Override
 	public void loadMapFile(File currentFile) {
 		try{
-			XmlParser.xmlMapParser(this,currentFile);
+			Date dateBeforeParser = new Date();
+			this.getController().getLogger().write("Parsing map file : "+currentFile.getName());
+			XmlParser.xmlMapParser(this.getGraphDeliveryManager().getGraph(),this.getGraphDeliveryManager().getNodeList(),
+			this.getGraphDeliveryManager().getSectionList(),currentFile);
+			Date dateAfterParser = new Date();
+			int duration = dateAfterParser.compareTo(dateBeforeParser);
+			this.getController().getLogger().write("Map parsed in "+duration+" ms");
 			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
@@ -105,7 +111,13 @@ public class Model extends IModel {
 		try
 		{
 			// Step1 : parsing delivery file
-			XmlParser.xmlDeliveriesParser(this,currentFile);
+			Date dateBeforeParser = new Date();
+			DeliveryOrder newOrder = XmlParser.xmlDeliveriesParser(this.getGraphDeliveryManager().getGraph(),currentFile);
+			this.getDeliveryManager().addDeliveryOrder(newOrder);
+			this.setSelected(newOrder);	
+			Date dateAfterParser = new Date();
+			int duration = dateAfterParser.compareTo(dateBeforeParser);
+			this.getController().getLogger().write("Deliveries parsed in "+duration+" ms");
 			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
 			// Step2 : Call the engine to create a tour
 			// Step2.1 : call dijkstra

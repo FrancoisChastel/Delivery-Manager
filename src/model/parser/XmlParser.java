@@ -1,7 +1,6 @@
 package model.parser;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,7 +12,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.traversal.DocumentTraversal;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
-import model.Model;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryOrder;
 import model.graph.Graph;
@@ -27,14 +25,14 @@ public abstract class XmlParser {
 	
 	/**
 	 * Method used to parse Map File XML. It modifies the graph,nodeList,sectionList passed in parameter
-	 * @param model : To Import graph,nodeList,sectionList,getLogger
+	 * @param graph
+	 * @param nodeList
+	 * @param sectionList
 	 * @param currentFile
 	 * @throws Exception
 	 */
-	public static void xmlMapParser(Model model,File currentFile) throws Exception{
-		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
-		ArrayList <MapNode> nodeList	= model.getGraphDeliveryManager().getNodeList();
-		ArrayList <Section> sectionList	= model.getGraphDeliveryManager().getSectionList();
+	public static void xmlMapParser(Graph <MapNode, Section> graph,ArrayList <MapNode> nodeList,ArrayList <Section> sectionList,File currentFile) throws Exception{
+
 		graph.emptyGraph();
 		nodeList.clear();
 		sectionList.clear();
@@ -50,10 +48,10 @@ public abstract class XmlParser {
 		iterator.nextNode();
 		
 		Node n;
-		int nodesCreated = 0;
-		int edgesCreated = 0;
-		model.getController().getLogger().write("Parsing map file : "+currentFile.getName());
-		Date deb = new Date();
+		//int nodesCreated = 0;
+		//int edgesCreated = 0;
+		
+		
 		while((n = iterator.nextNode()) != null)
 		{
 			Element elem = (Element) n;
@@ -66,7 +64,7 @@ public abstract class XmlParser {
 					MapNode mapNode  = new MapNode(id,x,y);
 					graph.add(mapNode);
 					nodeList.add(mapNode);
-					nodesCreated++;
+					//nodesCreated++;
 	    			break;
 				case "troncon":
 					int idDestination = Integer.parseInt(elem.getAttribute("destination"));
@@ -79,15 +77,12 @@ public abstract class XmlParser {
 					MapNode destination = nodeList.get(idDestination);
 					graph.addDestination(origin, section, destination);
 					sectionList.add(section); 
-					edgesCreated++;
+					//edgesCreated++;
 	    			break;
 	    		default:break;
 			}
 		}
-		Date end = new Date();
-		int duration = end.compareTo(deb);
-		model.getController().getLogger().write("Map parsed in "+duration+" ms");
-	    model.getController().getLogger().write("Nodes created : "+nodesCreated+" - Edges created : "+edgesCreated);	
+		//model.getController().getLogger().write("Nodes created : "+nodesCreated+" - Edges created : "+edgesCreated);	
 
 	}
 	
@@ -96,9 +91,9 @@ public abstract class XmlParser {
 	 * @param currentFile file to parse
 	 * @param graph graph that will be modified in the method.
 	 */
-	public static void xmlDeliveriesParser(Model model,File currentFile) throws Exception
+	public static DeliveryOrder xmlDeliveriesParser(Graph <MapNode, Section> graph,File currentFile) throws Exception
 	{
-		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
+
  	  
 	    final File fXmlFile = currentFile;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -116,8 +111,7 @@ public abstract class XmlParser {
 		int idDelivery = 0;
 		ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-		model.getController().getLogger().write("Parsing delivery file : "+currentFile.getName());
-		Date deb = new Date();
+		
 		while((n = iterator.nextNode()) != null)
 		{
 			Element elem = (Element) n;
@@ -155,13 +149,11 @@ public abstract class XmlParser {
 	    		default:break;
 			}
 		}
-		Date end = new Date();
-		int duration = end.compareTo(deb);
-		model.getController().getLogger().write("Deliveries parsed in "+duration+" ms");
+		
 		// Create the deliveryOrder
-		DeliveryOrder newOrder = new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries);
-		model.getDeliveryManager().addDeliveryOrder(newOrder);
-		model.setSelected(newOrder);		
+		return new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries);
+
+			
 	}
 	
 }
