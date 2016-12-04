@@ -46,7 +46,25 @@ public class Model extends IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 	}
-	
+
+	// Getters 
+	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}	
+	public List<Section> getSections() {					return graphDelMan.getSectionList();}
+	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
+	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
+	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
+	public Tour getTour(int id) { 							return tours.get(id); }
+	public DeliveryOrder getSelected() { 					return selected; }
+	public Tour getTourById(int id) { 						return tours.get(id); }
+
+	// Setters
+	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
+	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
+															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
+
+
+		
+	@Override
 	public void resetModel()
 	{
 		indexDelOrdersTours = new HashMap<>();
@@ -56,6 +74,7 @@ public class Model extends IModel {
 		xmlParser=new XmlParser(this);
 	}
 	
+	@Override
 	public void resetDeliveries()
 	{
 		indexDelOrdersTours = new HashMap<>();
@@ -63,10 +82,7 @@ public class Model extends IModel {
 		deliveryManager = new DeliveryManager();
 	}
 
-	/**
-	 * This method call the parsing process of the parser
-	 * @param currentFile
-	 */
+	@Override
 	public void loadMapFile(File currentFile) {
 		try{
 			xmlParser.xmlMapParser(currentFile);
@@ -81,14 +97,60 @@ public class Model extends IModel {
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
+	
+	@Override
+	public void loadDeliveriesFile(File currentFile) {
+		try
+		{
+			// Step1 : parsing delivery file
+			xmlParser.xmlDeliveriesParser(currentFile);
+			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
+			// Step2 : Call the engine to create a tour
+			// Step2.1 : call dijkstra
+			dijkstra();
+			controller.getLogger().write(currentFile.getName()+ " : Dijkstra computed");
+			// step2.2 : call TSP
+			TSP();
+			controller.getLogger().write(currentFile.getName()+ " : TSP done");
+						
+			setChanged();
+			HashMap<String,Object> map = new HashMap<>();
+			map.put("type", "UPDATE_DELIVERY");
+			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			
+			notifyObservers(map);
+		}
+		catch(Exception e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
+		}
+	}
+	
+	public void generateTraceRoute(int tourid)
+	{
+				
+		File htmlFile = new File("roadMap/index.html");
+		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
+		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
+	}
 
-	// Accesseur
-	public List<MapNode> getMapNodes() {	return graphDelMan.getNodeList();	}	
-	public List<Section> getSections() {	return graphDelMan.getSectionList();}
-	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
-	public DeliveryManager getDeliveryManager() { return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ return lowCosts; }
+	public Controller getController() {
+		return controller;
+	}
 
+	@Override
+	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addDeliveryPoint(int tourId, int nodeId, int duration,
+			Date availabilityBeginning, Date availabilityEnd) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
@@ -254,64 +316,6 @@ public class Model extends IModel {
 
 		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
-	}
-	
-	
-	public void setTour(Tour tour) { 
-		tours.put(tour.getId(), tour);
-		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId());
-	}
-	
-	public Tour getTour(int id) { return tours.get(id); }
-	
-	public DeliveryOrder getSelected() {
-		return selected;
-	}
-
-	public void setSelected(DeliveryOrder selected) {
-		this.selected = selected;
-	}
-
-	public Tour getTourById(int id) {return tours.get(id); }
-	
-	@Override
-	public void loadDeliveriesFile(File currentFile) {
-		try
-		{
-			// Step1 : parsing delivery file
-			xmlParser.xmlDeliveriesParser(currentFile);
-			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
-			// Step2 : Call the engine to create a tour
-			// Step2.1 : call dijkstra
-			dijkstra();
-			controller.getLogger().write(currentFile.getName()+ " : Dijkstra computed");
-			// step2.2 : call TSP
-			TSP();
-			controller.getLogger().write(currentFile.getName()+ " : TSP done");
-						
-			setChanged();
-			HashMap<String,Object> map = new HashMap<>();
-			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
-			
-			notifyObservers(map);
-		}
-		catch(Exception e)
-		{
-			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
-		}
-	}
-	
-	public void generateTraceRoute(int tourid)
-	{
-				
-		File htmlFile = new File("roadMap/index.html");
-		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
-		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
-	}
-
-	public Controller getController() {
-		return controller;
 	}
 }
 

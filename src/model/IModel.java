@@ -34,8 +34,16 @@ public abstract class IModel extends Observable {
 	 * @return delivery order
 	 */
 	//TODO : refactor using an ID to get a selected, stock in IHM the selected
+	@Deprecated
 	public abstract DeliveryOrder getSelected();
 	
+	/**
+	 * Obtain a delivery order based on his id
+	 * @param id of the delivery order
+	 * @return delivery order
+	 */
+	public abstract DeliveryOrder getDeliveryOrderById(int id);
+
 	/**
 	 * Get tour based on his id
 	 * @param id of the tour
