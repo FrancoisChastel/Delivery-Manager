@@ -31,5 +31,5 @@ public interface TSP {
 	/** 
 	 * @return la duree de la solution calculee par chercheSolution
 	 */
-	public int getCoutMeilleureSolution();
+	public Date getDateMeilleureSolution();
 }

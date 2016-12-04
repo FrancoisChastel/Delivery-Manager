@@ -91,6 +91,7 @@ public class Model extends Observable implements IModel {
 		// Call the TSP module
 		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
+		tspObject.datesLivraisons = tsp.getDatesLivraisons();
 
 		// Print TSP Result
 		String TSP = "TSP: ";
@@ -280,7 +281,8 @@ class TSPObject
 		
 	// TSP result
 	public Integer[] bestSolution;
-	
+	public Date [] datesLivraisons;
+	 
 	// Mapping between NodeId and index in matrix
 	public ArrayList<MapNode> mappingId;
 	
