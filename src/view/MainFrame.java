@@ -34,6 +34,7 @@ import java.awt.Graphics;
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
+import java.awt.GridLayout;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -74,11 +75,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		// Instanciate Map
 		map = new Map(this);
-		contentPane.add(map);
+		contentPane.add(map, BorderLayout.CENTER);
 		
 		adapter = new Adapter(map);
 		
@@ -87,7 +88,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		rightSidePanel = new JPanel();		
 		rightSidePanel.add(lblNewLabel);
 		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
-		contentPane.add(rightSidePanel);
+		contentPane.add(rightSidePanel, BorderLayout.EAST);
 		
 		// Initialization of the JTree -----------
 		//create the root node
@@ -112,10 +113,11 @@ public class MainFrame extends JFrame implements ActionListener {
 				}
 			}
 		});
-        JScrollPane treeView = new JScrollPane(tourTree);     
-		rightSidePanel.add(treeView);
-		
-		repaint();
+        JScrollPane treeScrollPane = new JScrollPane(tourTree);
+		tourTree.setVisibleRowCount(10);        
+		rightSidePanel.add(treeScrollPane);
+
+		//pack();
 	}
 	
 	/**
@@ -143,13 +145,15 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		DefaultMutableTreeNode tourTree = new DefaultMutableTreeNode("Tour "+tour.getId());
+		DefaultMutableTreeNode tourInTree = new DefaultMutableTreeNode("Tour "+tour.getId());
 		for(Integer dp : tour.getDeliveryPoints())
 		{
-			tourTree.add(adapter.getTreeNode(dp));
+			tourInTree.add(adapter.getTreeNode(dp));
 		}
 		
-		root.add(tourTree);
+		root.add(tourInTree);	
+		
+		tourTree.setSelectionRow(root.getChildCount()-1);
 	}
 
 	/**
@@ -170,13 +174,7 @@ public class MainFrame extends JFrame implements ActionListener {
             }
 		}			
 	}
-	
-	public void paint(Graphics g)
-	{
-		majPrefSize();
-		super.paint(g);
-	}
-	
+
 	public JTree getJtree() { return tourTree; }
 	/**
 	 * 
@@ -184,12 +182,4 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	public View getView() { return hamecon; }
 
-	
-	public void majPrefSize() {
-		// TODO Auto-generated method stub
-		
-		map.setPreferredSize(new Dimension(this.getSize().width*3/4,rightSidePanel.getHeight()));
-		rightSidePanel.setPreferredSize(new Dimension(this.getSize().width/4,rightSidePanel.getHeight()));
-
-	}
 }

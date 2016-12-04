@@ -77,7 +77,7 @@ public class Model extends Observable implements IModel {
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
-	public void dijkstra()
+	private void dijkstra()
 	{
 		if(lowCosts == null)
 		{
@@ -93,10 +93,9 @@ public class Model extends Observable implements IModel {
 	/**
 	 * Step 2 of the engine. Call TSP
 	 */	
-	public void TSP()
+	private void TSP()
 	{
-		if(tsp==null)
-			tsp = new TSP2();
+		tsp = new TSP2();
 		
 		// Adapte the TSP Object
 		TSPObject tspObject = AdapterModelTSP(this);
@@ -112,8 +111,7 @@ public class Model extends Observable implements IModel {
 			{
 				TSP+=tspObject.mappingId.get(tspObject.bestSolution[i]).getidNode()+" ";
 			}
-			
-		
+					
 		System.out.println(TSP);
 		
 		// Constructing a Tour
@@ -249,9 +247,7 @@ public class Model extends Observable implements IModel {
 		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId());
 	}
 	public Tour getTour() { return tour; }
-	
-	
-	
+		
 	public DeliveryOrder getSelected() {
 		return selected;
 	}
@@ -261,6 +257,7 @@ public class Model extends Observable implements IModel {
 	}
 
 	public Tour getTourById(int id) {return tours.get(id); }
+	
 	/**
 	 * This method load a delivery file and call the corresponding process in the model.
 	 * 
@@ -289,6 +286,7 @@ public class Model extends Observable implements IModel {
 		catch(Exception e)
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()); 
+			e.printStackTrace();
 		}
 	}
 
@@ -315,7 +313,6 @@ class TSPObject
 	
 	public TSPObject(int nbSommets)
 	{
-		System.out.println("NbSommets"+nbSommets);
 		cout 		= new int[nbSommets][nbSommets];
 		mappingId 	= new ArrayList<MapNode>();
 		duree 		= new int[nbSommets];
@@ -340,7 +337,5 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
-	
-	
-	
+
 }

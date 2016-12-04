@@ -169,8 +169,7 @@ public class XmlParser {
 		// Create the deliveryOrder
 		DeliveryOrder newOrder = new DeliveryOrder(0,entrepotNode, formatter.parse(heureDepart),deliveries);
 		model.getDeliveryManager().addDeliveryOrder(newOrder);
-		model.setSelected(newOrder);
-		
+		model.setSelected(newOrder);		
 	}
 	
 }

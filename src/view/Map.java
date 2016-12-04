@@ -93,8 +93,7 @@ public class Map extends JPanel {
 		tours.put(vTour.getId(), vTour);
 		
 		// if there is only one tour, then we set it selected
-		if(tours.size()==1)
-			setTourSelected(vTour.getId());
+		setTourSelected(vTour.getId());
 		
 		toursColoring();
 		repaint();
@@ -157,7 +156,6 @@ public class Map extends JPanel {
 		}
 		g.dispose();
 		
-		mainFrame.majPrefSize();
 	}
 	
 
