@@ -105,7 +105,7 @@ public class MainFrame extends JFrame implements ActionListener {
 					return;
 				
 				map.setAllPointHoved(false);
-				if (curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
+				if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
 				{
 					int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
 					map.getPoint(selected).setHoved(true);
