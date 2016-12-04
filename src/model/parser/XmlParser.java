@@ -23,20 +23,15 @@ import model.graph.Section;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class XmlParser {
-	
-	private Model model;
-	/**
-	 * Default Constructor
-	 */
-	public XmlParser(Model model) {
-		this.model = model;
-	}
+public abstract class XmlParser {
 	
 	/**
-	 * Method used to parse Well-formed XML File
+	 * Method used to parse Map File XML. It modifies the graph,nodeList,sectionList passed in parameter
+	 * @param model : To Import graph,nodeList,sectionList,getLogger
+	 * @param currentFile
+	 * @throws Exception
 	 */
-	public void xmlMapParser(File currentFile) throws Exception{
+	public static void xmlMapParser(Model model,File currentFile) throws Exception{
 		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
 		ArrayList <MapNode> nodeList	= model.getGraphDeliveryManager().getNodeList();
 		ArrayList <Section> sectionList	= model.getGraphDeliveryManager().getSectionList();
@@ -97,11 +92,11 @@ public class XmlParser {
 	}
 	
 	/**
-	 * Méthod used to parse delivery File XML. It modifies the graph passed in parameter
+	 * Method used to parse delivery File XML. It modifies the graph passed in parameter
 	 * @param currentFile file to parse
 	 * @param graph graph that will be modified in the method.
 	 */
-	public void xmlDeliveriesParser(File currentFile) throws Exception
+	public static void xmlDeliveriesParser(Model model,File currentFile) throws Exception
 	{
 		Graph <MapNode, Section> graph	= model.getGraphDeliveryManager().getGraph();  
  	  

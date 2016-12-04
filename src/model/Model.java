@@ -28,7 +28,6 @@ public class Model extends IModel {
 	private GraphDeliveryManager graphDelMan;
 	private HashMap<Integer,Integer> indexDelOrdersTours;
 	private HashMap<Integer,Tour> tours;
-	private XmlParser xmlParser;
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
@@ -40,7 +39,6 @@ public class Model extends IModel {
 	 */
 	public Model(Controller controller) {
 		this.controller=controller;
-		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
 		indexDelOrdersTours = new HashMap<>();
@@ -76,7 +74,6 @@ public class Model extends IModel {
 		tours=new HashMap<>();
 		deliveryManager = new DeliveryManager();
 		graphDelMan=new GraphDeliveryManager(this);
-		xmlParser=new XmlParser(this);
 	}
 	
 	@Override
@@ -90,7 +87,7 @@ public class Model extends IModel {
 	@Override
 	public void loadMapFile(File currentFile) {
 		try{
-			xmlParser.xmlMapParser(currentFile);
+			XmlParser.xmlMapParser(this,currentFile);
 			controller.getLogger().write(currentFile.getName() + " - Map loaded");
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
@@ -108,7 +105,7 @@ public class Model extends IModel {
 		try
 		{
 			// Step1 : parsing delivery file
-			xmlParser.xmlDeliveriesParser(currentFile);
+			XmlParser.xmlDeliveriesParser(this,currentFile);
 			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
 			// Step2 : Call the engine to create a tour
 			// Step2.1 : call dijkstra
