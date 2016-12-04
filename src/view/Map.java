@@ -44,8 +44,6 @@ public class Map extends JPanel {
 		this.addMouseMotionListener(mouseListener);
 	}
 	
-
-	
 	public void resetMap()
 	{
 		points.clear();
@@ -102,7 +100,7 @@ public class Map extends JPanel {
 		// if there is only one tour, then we set it selected
 		setTourSelected(vTour.getId());
 		
-		toursColoring();
+		
 		repaint();
 	}
 	
@@ -115,13 +113,14 @@ public class Map extends JPanel {
 	 * Set selected a tour. All other tours are unselected
 	 * @param idTour
 	 */
-	private void setTourSelected(int idTour)
+	public void setTourSelected(int idTour)
 	{
 		for(ViewTour t : tours.values())
 		{
 			t.setSelected(false);
 		}
 		tours.get(idTour).setSelected(true);
+		toursColoring();
 	}
 	
 

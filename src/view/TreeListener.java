@@ -73,10 +73,20 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 			return;
 		
 		mainFrame.getMap().setAllPointHoved(false);
+		
+		// Selected Tree Node
 		if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
 		{
 			int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
 			mainFrame.getMap().getPoint(selected).setHoved(true);
+			mainFrame.getMap().repaint();
+		}
+		// Selected TourNode
+		else if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeTour")
+		{
+			
+			int selectedTour = ((TreeTour) curr.getLastSelectedPathComponent()).getId();
+			mainFrame.getMap().setTourSelected(selectedTour);
 			mainFrame.getMap().repaint();
 		}
 	}
