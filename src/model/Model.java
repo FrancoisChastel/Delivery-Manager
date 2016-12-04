@@ -69,8 +69,6 @@ public class Model extends IModel {
 	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
 															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
 
-
-		
 	@Override
 	public void resetModel()
 	{
