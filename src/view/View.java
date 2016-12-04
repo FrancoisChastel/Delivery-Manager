@@ -22,14 +22,23 @@ public class View implements Observer, IView {
 	 * @param message
 	 * @param typeIcone use JOptionPane Options. Example : JOptionPane.ERROR_MESSAGE
 	 */
-	public static void displayMessage(String message, String title, int typeIcone)
+	public static void displayMessage(String message, String title, int typeIcone, JFrame f)
 	{
 			
-		JOptionPane.showMessageDialog(null,
+		JOptionPane.showMessageDialog(f,
 				message,
 				title,
 				typeIcone);
 	}
+	
+	public static void displayMessage(String message, String title, JFrame f)
+	{
+			
+		JOptionPane.showMessageDialog(f,
+				message,
+				title,
+				JOptionPane.INFORMATION_MESSAGE);
+	}	
 	
 	/**
 	 * Normal Contructor of View class. It instanciate all Frame pages and put it in its list of pages.
@@ -87,6 +96,7 @@ public class View implements Observer, IView {
 			Integer idTour = (Integer) params.get("tour");
 			((MainFrame) pages.get(Page.Main)).displayTour(controller.getModel().getTourById(idTour));
 		}
-			
 	}
+	
+	public JFrame getPage(Page p) { return pages.get(p); }
 }

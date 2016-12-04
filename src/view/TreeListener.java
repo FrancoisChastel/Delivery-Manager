@@ -101,10 +101,7 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		if(item.getActionCommand() == "Generate trace route...") 
 		{
 			mainFrame.getView().getController().generateTraceRoute(selected.getId());
-		}
-		
-		
-		mainFrame.getView().displayMessage(item.getLabel()+" "+item.getActionCommand(), "Debug", JOptionPane.INFORMATION_MESSAGE);	
+		}		
 	}
 
 	/**

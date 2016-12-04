@@ -67,7 +67,15 @@ public class Controller implements IController{
 	 */
 	public void generateTraceRoute(int tourid)
 	{
-		model.generateTraceRoute(tourid);
+		String message ="Route for tour #"+tourid+" generated !";
+		try {
+			model.generateTraceRoute(tourid);
+		}
+		catch(Exception e)
+		{
+			message = "Exception while generating the Route for tour "+tourid;
+		}
+		view.displayMessage(message, "TraceRoute", view.getPage(Page.Main));
 	}
 	
 	public void reset()
@@ -86,7 +94,7 @@ public class Controller implements IController{
 
 	public void error(String message)
 	{
-		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE);
+		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE,null);
 		logger.write("Error : "+ message);
 	}
 
