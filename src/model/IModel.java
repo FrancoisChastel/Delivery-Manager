@@ -11,4 +11,12 @@ public interface IModel  {
 	public List<MapNode> getMapNodes();
 	public List<Section> getSections();
 	public void loadDeliveryFile(File currentFile);
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public void deleteDeliveryPoint(int id);
+	
+	public void addDeliveryPoint(int id, )
 }

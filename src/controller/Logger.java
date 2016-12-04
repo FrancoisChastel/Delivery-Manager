@@ -21,7 +21,7 @@ public class Logger {
 		logFile.createNewFile();
 		stream = new PrintStream(logFile);
 		Date now = new Date();
-		stream.println(now.toString()+" : Application launched\r\n");
+		stream.println(now.toString()+" : Application launched");
 		stream.flush();
 	}
 	

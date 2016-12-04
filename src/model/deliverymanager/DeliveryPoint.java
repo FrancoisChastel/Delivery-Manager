@@ -9,6 +9,7 @@ public class DeliveryPoint extends MapNode{
 	private Date inTime;
 	private Date outTime;
 	
+	
 	public DeliveryPoint(int idNode, int x, int y) {
 		super(idNode, x, y);
 
