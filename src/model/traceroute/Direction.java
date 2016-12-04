@@ -1,4 +1,4 @@
-package TraceRoute;
+package model.traceroute;
 
 public enum Direction {
 	LEFT,

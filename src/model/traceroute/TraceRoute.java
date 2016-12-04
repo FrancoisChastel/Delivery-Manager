@@ -1,4 +1,4 @@
-package TraceRoute;
+package model.traceroute;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,9 +24,9 @@ public abstract class TraceRoute {
 	 * @param model
 	 */
 	
-	public static List<Instruction> generateInstructions(Tour tour, Graph<MapNode, Section> map,List<Instruction> instructions)
+	public static List<Instruction> generateInstructions(Tour tour, Graph<MapNode, Section> map)
 	{
-		
+		List<Instruction> instructions = new LinkedList<Instruction>();
 		int oldX,oldY;
 		MathVector origin = new MathVector();
 		MathVector destination = new MathVector();
@@ -64,7 +64,6 @@ public abstract class TraceRoute {
 			origin.redifineVector(destination.getX1(), destination.getY1(), destination.getX2(), destination.getY2());
 			
 		}
-		
 		
 		return instructions;
 	}

@@ -1,4 +1,4 @@
-package TraceRoute;
+package model.traceroute;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,7 +38,7 @@ public abstract class HtmlGenerator {
 			
 			bufferedWriter.append("<li class='collection-item avatar'>"
 								+ 	"<img src='images/delivery-truck.png' class='circle green lighten-3'>"
-								+ 	"<span class='title'>Dirigez vous vers l'entrepôt aux coordonées GPS suivante : (" + entrepot.getX() + "," + entrepot.getY() + ")</span>"
+								+ 	"<span class='title'>Dirigez vous vers l'entrepï¿½t aux coordonï¿½es GPS suivante : (" + entrepot.getX() + "," + entrepot.getY() + ")</span>"
 								+ 	"<p>Chargez le camion et positionnez vous vers le nord</p>"
 								+ "</li>");
 			
@@ -54,13 +54,13 @@ public abstract class HtmlGenerator {
 					image = "images/straight-ahead.png";
 					break;
 				case LEFT:
-					direction = "Tournez à la " + ((instruction.getIndex() == 1) ? "1ère à gauche"
-							: instruction.getIndex() + "ème à gauche");
+					direction = "Tournez ï¿½ la " + ((instruction.getIndex() == 1) ? "1ï¿½re ï¿½ gauche"
+							: instruction.getIndex() + "ï¿½me ï¿½ gauche");
 					image = "images/turn-left.png";
 					break;
 				case RIGHT:
-					direction = "Tournez à la " + ((instruction.getIndex() == 1) ? "1ère à droite"
-							: instruction.getIndex() + "ème à droite");
+					direction = "Tournez ï¿½ la " + ((instruction.getIndex() == 1) ? "1ï¿½re ï¿½ droite"
+							: instruction.getIndex() + "ï¿½me ï¿½ droite");
 					image = "images/turn-right.png";
 					break;
 				case TURNAROUND:
@@ -74,7 +74,7 @@ public abstract class HtmlGenerator {
 				// Write bloc <li> Direction
 				bufferedWriter.append("<li class='collection-item avatar'>" + "<img src='" + image
 						+ "' class='circle green lighten-3'>" + "<span class='title'>" + direction + " direction " +instruction.getRoad() +"</span>"
-						+ "<p>Continuez pendant " + instruction.getLength() + " mètres jusqu'à l'intersection " + instruction.getIdDestination() + "</p>" + "</li>");
+						+ "<p>Continuez pendant " + instruction.getLength() + " mï¿½tres jusqu'ï¿½ l'intersection " + instruction.getIdDestination() + "</p>" + "</li>");
 				
 				if(instruction.isDestinationIsDeliveryPoint() && instruction.getIdDestination() != entrepot.getidNode())
 				{
@@ -89,7 +89,7 @@ public abstract class HtmlGenerator {
 			// Write bloc <li> Delivery
 			bufferedWriter.append("<li class='collection-item avatar'>"
 					+ 	"<img src='images/racing-flag.png' class='circle green lighten-3'>"
-					+ 	"<span class='title'>Vous avez fini votre tournée</span>"
+					+ 	"<span class='title'>Vous avez fini votre tournï¿½e</span>"
 					+ "</li>");
 			
 			// Bottom Html
