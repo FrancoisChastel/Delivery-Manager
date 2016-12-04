@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 
@@ -99,11 +100,17 @@ public class Map extends JPanel {
 		tours.put(vTour.getId(), vTour);
 		
 		// if there is only one tour, then we set it selected
-		if(tours.size()==1)
-			setTourSelected(vTour.getId());
+		setTourSelected(vTour.getId());
+		
+		toursColoring();
 		repaint();
 	}
 	
+	public void toursColoring()
+	{
+		for(Entry<Integer,ViewTour> tour : tours.entrySet())
+			tour.getValue().colorTourComponentsOnMap();
+	}
 	/**
 	 * Set selected a tour. All other tours are unselected
 	 * @param idTour
@@ -156,7 +163,6 @@ public class Map extends JPanel {
 		}
 		g.dispose();
 		
-		mainFrame.majPrefSize();
 	}
 	
 

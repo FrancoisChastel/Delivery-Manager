@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import model.Tour;
 import model.graph.MapNode;
@@ -34,7 +35,13 @@ import java.awt.Graphics;
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
+import java.awt.GridLayout;
 
+/**
+ * 
+ * @author antoine
+ *
+ */
 public class MainFrame extends JFrame implements ActionListener {
 
 	private View hamecon;
@@ -83,11 +90,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		// Instanciate Map
 		map = new Map(this);
-		contentPane.add(map);
+		contentPane.add(map, BorderLayout.CENTER);
 		
 		adapter = new Adapter(map);
 		
@@ -96,13 +103,14 @@ public class MainFrame extends JFrame implements ActionListener {
 		rightSidePanel = new JPanel();		
 		rightSidePanel.add(lblNewLabel);
 		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
-		contentPane.add(rightSidePanel);
+		contentPane.add(rightSidePanel, BorderLayout.EAST);
 		
 		// Initialization of the JTree -----------
 		//create the root node
         root = new DefaultMutableTreeNode("Deliveries");        
 		tourTree = new JTree(root);	
 		
+
 		// Manage listener
 		TreeListener treeListener = new TreeListener(this);
 		tourTree.addTreeSelectionListener(treeListener);
@@ -140,13 +148,18 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		TreeTour tourTree = adapter.getTreeTour(tour);
+
+		TreeTour tourInTree = adapter.getTreeTour(tour);
+		System.out.println("Displaying t"+tourInTree.getId());
 		for(Integer dp : tour.getDeliveryPoints())
 		{
-			tourTree.add(adapter.getTreeNode(dp));
+			tourInTree.add(adapter.getTreeNode(dp));
 		}
 		
-		root.add(tourTree);
+		root.add(tourInTree);	
+		this.tourTree.setSelectionRow(root.getChildCount()-1);
+		DefaultTreeModel model = (DefaultTreeModel) tourTree.getModel();
+		model.reload();
 	}
 
 	/**
@@ -185,28 +198,15 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		
 	}
-	
-	public void paint(Graphics g)
-	{
-		majPrefSize();
-		super.paint(g);
-	}
-	
+
 	public JTree getJtree() { return tourTree; }
+	
 	/**
 	 * 
 	 * @return
 	 */
 	public View getView() { return hamecon; }
 
-	
-	public void majPrefSize() {
-		// TODO Auto-generated method stub
-		
-		map.setPreferredSize(new Dimension(this.getSize().width*3/4,rightSidePanel.getHeight()));
-		rightSidePanel.setPreferredSize(new Dimension(this.getSize().width/4,rightSidePanel.getHeight()));
-
-	}
-
 	public Map getMap() {	return map;	}
+
 }

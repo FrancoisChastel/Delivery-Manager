@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 public class ViewTour {
 	private int id;
-	private boolean selected;
+	private boolean selected = false;
 	private LinkedHashMap<Integer,ViewEdge> concernedEdge;
 	private ArrayList<ViewPoint> concernedPoints;
 	private Color gradient;
@@ -21,7 +21,6 @@ public class ViewTour {
 	public ViewTour(int id, LinkedHashMap<Integer,ViewEdge> concernedEdge, ArrayList<ViewPoint> concernedPoints,ViewPoint entrepot)
 	{
 		this.id = id;
-		this.gradient = new Color(Color.HSBtoRGB(0, 1, 1));
 		this.concernedEdge 	 = concernedEdge;
 		this.concernedPoints = concernedPoints;
 		this.entrepot 		 = entrepot;
@@ -33,6 +32,15 @@ public class ViewTour {
 	 */
 	public void colorTourComponentsOnMap()
 	{
+		// Points management
+		for(ViewPoint p : concernedPoints)
+		{
+			p.color = Color.ORANGE;
+		}
+		
+		entrepot.color = Color.RED;
+		
+		// Edges management
 		if(selected)
 			colorSelected();
 		else
@@ -44,20 +52,16 @@ public class ViewTour {
 	 */
 	private void colorSelected()
 	{
-		// Points management
-		for(ViewPoint p : concernedPoints)
-		{
-			p.color = Color.ORANGE;
-		}
+
 		
 		// Edge management
+		gradient =  new Color(Color.HSBtoRGB(0, 1, 1));
 		Color increment = gradient;
 		for(Entry<Integer, ViewEdge> line : concernedEdge.entrySet())
 		{
 			line.getValue().setColorId(increment, line.getKey());
 			ajustColor();
 			increment = gradient;
-			line.getValue().setSelectedTour(true);
 		}
 	}
 	
@@ -70,7 +74,11 @@ public class ViewTour {
 		
 		for(Entry<Integer, ViewEdge> line : concernedEdge.entrySet())
 		{
-			line.getValue().setSelectedTour(false);
+			ViewEdge current = line.getValue();
+			
+			// Coloring with default color
+			current.clearSection(line.getKey());
+			current.setBigWeight(true);
 		}
 	}
 	
