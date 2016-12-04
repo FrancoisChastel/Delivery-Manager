@@ -2,18 +2,12 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Observable;
-import java.util.Set;
 
-import TraceRoute.HtmlGenerator;
-import TraceRoute.Instruction;
-import TraceRoute.TraceRoute;
 import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
@@ -21,11 +15,12 @@ import model.deliverymanager.DeliveryOrder;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
-import model.engine.TSP1;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
 import model.parser.XmlParser; 
+import model.traceroute.HtmlGenerator;
+import model.traceroute.TraceRoute;
 
 public class Model extends Observable implements IModel {
 
@@ -33,14 +28,11 @@ public class Model extends Observable implements IModel {
 	private GraphDeliveryManager graphDelMan;
 	private HashMap<Integer,Integer> indexDelOrdersTours;
 	private HashMap<Integer,Tour> tours;
-	private Tour tour;
 	private XmlParser xmlParser;
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
-	private LowerCosts lowCosts;
-	private List<Instruction> instructions;
-	
+	private LowerCosts lowCosts;	
 
 	/**
 	 * Normal constructor of the model
@@ -51,7 +43,6 @@ public class Model extends Observable implements IModel {
 		xmlParser 	= new XmlParser(this);
 		graphDelMan = new GraphDeliveryManager(this);
 		deliveryManager = new DeliveryManager();
-		instructions = new LinkedList<Instruction>();
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 	}
@@ -68,7 +59,7 @@ public class Model extends Observable implements IModel {
 	public void resetDeliveries()
 	{
 		indexDelOrdersTours = new HashMap<>();
-		tours=new HashMap<>();
+		tours = new HashMap<>();
 		deliveryManager = new DeliveryManager();
 	}
 
@@ -269,11 +260,11 @@ public class Model extends Observable implements IModel {
 	
 	
 	public void setTour(Tour tour) { 
-		this.tour=tour;
 		tours.put(tour.getId(), tour);
 		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId());
 	}
-	public Tour getTour() { return tour; }
+	
+	public Tour getTour(int id) { return tours.get(id); }
 	
 	
 	
@@ -305,13 +296,10 @@ public class Model extends Observable implements IModel {
 			// step2.2 : call TSP
 			TSP();
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
-			// step2.3 : call RoadMap
-			TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph(),this.instructions);
-			controller.getLogger().write(currentFile.getName()+ " : RoadMap done");
-			
+			// step2.3 : call RoadMap			
 			File htmlFile = new File("roadMap/index.html");
-			HtmlGenerator.generateHtml(instructions,this.deliveryManager,htmlFile);
-			controller.getLogger().write(currentFile.getName()+ " : Html done");
+			HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tour, this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
+			controller.getLogger().write(currentFile.getName()+ " : Instructions in HTML done");
 			
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
