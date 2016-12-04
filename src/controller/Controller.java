@@ -5,13 +5,14 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import model.IModel;
 import model.Model;
 import view.View;
 import view.View.Page;
 
 public class Controller implements IController{
 
-	private Model model;
+	private IModel model;
 	private View view;
 	private Logger logger;
 	
@@ -39,7 +40,7 @@ public class Controller implements IController{
 	 * @param currentFile
 	 */
 	public void parseMapFile(File currentFile) {
-		model.parseMapFile(currentFile);
+		model.loadMapFile(currentFile);
 	}
 	
 	/**
@@ -49,7 +50,7 @@ public class Controller implements IController{
 	 */
 	public void parseDeliveriesFile(File currentFile)
 	{
-		model.loadDeliveryFile(currentFile);
+		model.loadDeliveriesFile(currentFile);
 	}	
 
 	/**
@@ -58,7 +59,7 @@ public class Controller implements IController{
 	 */
 	public void loadDeliveryFile(File currentFile) {
 		
-		model.loadDeliveryFile(currentFile);
+		model.loadDeliveriesFile(currentFile);
 	}
 	
 	/**
@@ -90,7 +91,7 @@ public class Controller implements IController{
 	
 	// End callbacks ------------------------------
 	
-	public Model getModel() { return model; }
+	public IModel getModel() { return model; }
 
 	public void error(String message)
 	{

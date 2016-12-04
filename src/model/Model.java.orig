@@ -22,7 +22,7 @@ import model.parser.XmlParser;
 import model.traceroute.HtmlGenerator;
 import model.traceroute.TraceRoute;
 
-public class Model extends IModel {
+public class Model extends Observable implements IModel {
 
 	private Controller controller;
 	private GraphDeliveryManager graphDelMan;
@@ -67,7 +67,7 @@ public class Model extends IModel {
 	 * This method call the parsing process of the parser
 	 * @param currentFile
 	 */
-	public void loadMapFile(File currentFile) {
+	public void parseMapFile(File currentFile) {
 		try{
 			xmlParser.xmlMapParser(currentFile);
 			controller.getLogger().write(currentFile.getName() + " - Map loaded");
@@ -264,6 +264,10 @@ public class Model extends IModel {
 	
 	public Tour getTour(int id) { return tours.get(id); }
 	
+<<<<<<< 357747de058746b1a5c8a30079ae9535eb468cd2
+=======
+	
+>>>>>>> Modify - Minor issues fixed
 	public DeliveryOrder getSelected() {
 		return selected;
 	}
@@ -274,8 +278,13 @@ public class Model extends IModel {
 
 	public Tour getTourById(int id) {return tours.get(id); }
 	
+	/**
+	 * This method load a delivery file and call the corresponding process in the model.
+	 * 
+	 */
 	@Override
-	public void loadDeliveriesFile(File currentFile) {
+	public void loadDeliveryFile(File currentFile) {
+		
 		try
 		{
 			// Step1 : parsing delivery file
