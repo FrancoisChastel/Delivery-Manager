@@ -317,6 +317,7 @@ public class Model extends Observable implements IModel {
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
 			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			
 			notifyObservers(map);
 		}
 		catch(Exception e)

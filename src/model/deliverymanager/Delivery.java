@@ -28,9 +28,7 @@ public class Delivery {
 		this.length = length;
 		this.beginning= null;
 		this.end = null;
-		
 	}
-
 	
 	// Getters and Setters
 	public long getIdDelivery() {
@@ -72,13 +70,4 @@ public class Delivery {
 	public void setEnd(Date end) {
 		this.end = end;
 	}
-	
-
-	
-	
-	
-	
-	
-	
-	
 }

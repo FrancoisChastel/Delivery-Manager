@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import model.deliverymanager.Delivery;
-import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
 
