@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
@@ -21,7 +22,11 @@ public class Controller implements IController{
 	{
 		model = new Model(this);
 		view  = new View(this);
-		logger = new Logger();
+		try {
+			logger = new Logger();
+		} catch (IOException e) {
+			//TODO properly handle the exception !
+		}
 		model.addObserver(view);		
 		view.displayFrame(Page.Setting, false);
 	}

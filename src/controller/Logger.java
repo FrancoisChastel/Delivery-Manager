@@ -10,20 +10,19 @@ import java.util.Date;
 public class Logger {
 	private File logFile;
 	private PrintStream stream;
-	public Logger() 
+	public Logger() throws IOException 
 	{
+		File dir = new File("log");
+		if (!dir.exists()) {
+		    dir.mkdir();
+		}
+		
 		logFile = new File("log/delivery.log");
-		try
-		{
-			logFile.createNewFile();
-			stream = new PrintStream(logFile);
-			Date now = new Date();
-			stream.println(now.toString()+" : Application launched\r\n");
-			stream.flush();
-		}
-		catch(IOException e)
-		{
-		}
+		logFile.createNewFile();
+		stream = new PrintStream(logFile);
+		Date now = new Date();
+		stream.println(now.toString()+" : Application launched\r\n");
+		stream.flush();
 	}
 	
 	public void write(String message)
