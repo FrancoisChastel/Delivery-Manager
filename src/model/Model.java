@@ -228,12 +228,12 @@ public class Model extends IModel {
 			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId);
 			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 		} catch (Throwable e) {
-			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
+			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
 		}
 		
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("type", "UPDATE_DELIVERY");
-		map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+		map.put("tour", tourID);
 
 		this.notifyObservers(map);
 	}
