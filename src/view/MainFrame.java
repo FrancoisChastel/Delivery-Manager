@@ -20,6 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import controller.commands.CommandContext;
 import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
@@ -57,6 +58,8 @@ public class MainFrame extends JFrame implements ActionListener {
 	private Adapter adapter;
 	private JMenuItem mntmLoadDeliveryfile;
 	private JMenuItem mntmNewMap;
+	private JMenuItem mntmUndo;
+	private JMenuItem mntmRedo;
 	private JMenuItem mntmReset;
 	private JTree tourTree;
 	private TreeDefaultIconNode root;
@@ -82,6 +85,20 @@ public class MainFrame extends JFrame implements ActionListener {
 		mntmNewMap = new JMenuItem("Load New Map");
 		mnFile.add(mntmNewMap);
 		mntmNewMap.addActionListener(this);
+		
+		
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		
+		mntmUndo = new JMenuItem("Undo");
+		mnEdit.add(mntmUndo);
+		mntmUndo.addActionListener(this);
+		
+		mntmRedo = new JMenuItem("Redo");
+		mnEdit.add(mntmRedo);
+		mntmRedo.setEnabled(false);
+		mntmRedo.addActionListener(this);
+		
 		
 		JMenu mnDelivery = new JMenu("Delivery");
 		menuBar.add(mnDelivery);
@@ -194,9 +211,11 @@ public class MainFrame extends JFrame implements ActionListener {
             	hamecon.getController().parseMapFile(currentFile);
             	root.removeAllChildren();
             }
+            mntmRedo.setEnabled(false);
 		}
 		else if(arg0.getSource()==mntmReset)
 		{
+
 			root.removeAllChildren();
 			hamecon.getController().resetDeliveries();
 			// Initialization of the JTree -----------
@@ -209,6 +228,17 @@ public class MainFrame extends JFrame implements ActionListener {
 			TreeListener treeListener = new TreeListener(this);
 			tourTree.addTreeSelectionListener(treeListener);
 			tourTree.addMouseListener(treeListener);
+
+			try {
+				hamecon.getController().resetDeliveries();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//refresh tree (empty)
+			//repaint empty map
+			mntmRedo.setEnabled(false);
+
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
@@ -219,6 +249,16 @@ public class MainFrame extends JFrame implements ActionListener {
             	File currentFile = fc.getSelectedFile();            	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
+            mntmRedo.setEnabled(false);
+		}
+		else if(arg0.getSource()==mntmUndo)
+		{
+			hamecon.getController().undoCommand(CommandContext.MAIN, defaultCloseOperation);
+			mntmRedo.setEnabled(true);
+		}
+		else if(arg0.getSource()==mntmRedo)
+		{
+			hamecon.getController().redoCommand(CommandContext.MAIN, defaultCloseOperation);
 		}
 		
 	}

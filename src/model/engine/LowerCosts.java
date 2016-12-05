@@ -279,23 +279,4 @@ public class LowerCosts {
 		
 		return costsMatrix;
 	}
-	
-	/*public void setCostsMatrix(int[][] costsMatrix) {
-		this.costsMatrix = costsMatrix;
-	}*/
-	
-	/*public void refresh()
-	{
-		delOrder = model.getSelected();
-		paths = new HashMap<>();
-		
-		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
-		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
-		deliveryNodes.add(delOrder.getStoreAdress());
-		
-		for(int i=0;i<delOrder.getDeliveryList().size();i++)
-		{
-			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
-		}
-	}*/
 }

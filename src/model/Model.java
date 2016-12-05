@@ -32,7 +32,6 @@ public class Model extends IModel {
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
-	private LowerCosts lowCosts;	
 
 	/**
 	 * Normal constructor of the model
@@ -50,7 +49,6 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
@@ -83,6 +81,10 @@ public class Model extends IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 		deliveryManager = new DeliveryManager();
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_MAP");
+		notifyObservers(map);
 	}
 
 	@Override
@@ -151,16 +153,21 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		//this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+		try {
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId,graphDelMan);
+		} catch (Throwable e) {
+			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
+		}
+		this.notifyObservers(this.tours);
 	}
 
 	@Override
-	public void addDeliveryPoint(int tourId, int nodeId, int duration,
+	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		// TODO Auto-generated method stub
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
 		
 	}
-	
+		
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
@@ -293,7 +300,6 @@ public class Model extends IModel {
 		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
 		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
 		{
-			
 			ArrayList<MapNode> list = pair.getFirst();
 			
 			// retrieve the good path
