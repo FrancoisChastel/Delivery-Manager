@@ -12,6 +12,7 @@ import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
@@ -320,9 +321,16 @@ public class Model extends IModel {
 		}
 		
 		// Building IdDeliveryList
-		Integer [] listIds = new Integer[tspObject.bestSolution.length];
+		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
+		
 		for(int in =0; in<tspObject.bestSolution.length;in++)
-			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+		{
+			DeliveryPoint dp = new DeliveryPoint(delivery, arriving);
+			// recuperer une 
+			tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+			deliveryPoints.add(dp)= 
+			
+		}
 
 		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
