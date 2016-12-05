@@ -86,4 +86,21 @@ public class Tour {
 		return false;
 	}
 	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public void deleteDeliveryPoint(int deliveryPointId){
+		Integer[] finalDeliveryPointsId = new Integer[this.deliveryPointsId.length-1];
+		
+		int index = 0;
+		for (Integer id : this.deliveryPointsId)
+		{
+			if (id != deliveryPointId){
+				this.deliveryPointsId[index] = id;
+				index++;
+			}
+		}
+	}
+	
 }

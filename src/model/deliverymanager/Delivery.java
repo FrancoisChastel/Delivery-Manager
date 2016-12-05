@@ -7,24 +7,24 @@ import model.graph.MapNode;
 public class Delivery {
 	private int idDelivery;
 	private MapNode adress;
-	private int length;
+	private int duration;
 	private Date beginning;
 	private Date end;
 	
 	// Constructor for a delivery with time slot
-	public Delivery(int idDelivery, MapNode adress, int length, Date beginning, Date end) {
+	public Delivery(int idDelivery, MapNode adress, int duration, Date beginning, Date end) {
 		this.idDelivery = idDelivery;
 		this.adress = adress;
-		this.length = length;
+		this.duration = duration;
 		this.beginning = beginning;
 		this.end = end;
 	}
 
 	// Constructor for a delivery WITHOUT time slot
-	public Delivery(int idDelivery, MapNode adress, int length) {
+	public Delivery(int idDelivery, MapNode adress, int duration) {
 		this.idDelivery = idDelivery;
 		this.adress = adress;
-		this.length = length;
+		this.duration = duration;
 		this.beginning= null;
 		this.end = null;
 	}
@@ -46,12 +46,12 @@ public class Delivery {
 		this.adress = adress;
 	}
 
-	public long getLength() {
-		return length;
+	public long getDuration() {
+		return duration;
 	}
 
 	public void setLength(int length) {
-		this.length = length;
+		this.duration = length;
 	}
 
 	public Date getBeginning() {

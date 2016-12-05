@@ -66,7 +66,7 @@ public class Model extends IModel {
 	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
 	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
 															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
-
+	
 	@Override
 	public void resetModel()
 	{
@@ -142,8 +142,7 @@ public class Model extends IModel {
 	
 	@Override
 	public void generateTraceRoute(int tourid)
-	{
-				
+	{			
 		File htmlFile = new File("roadMap/index.html");
 		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
 		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
@@ -151,8 +150,7 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		// TODO Auto-generated method stub
-		
+		this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
 	}
 
 	@Override
