@@ -98,7 +98,7 @@ public class Controller implements IController{
 	{
 		// For example : 
 		// IUndoableCommand reset =  new resetCommand(model)//par exemple
-		// reset.execute();
+		// reset.execute();g
 		// this.commander.execute(CommandContext.MAIN, command);
 		model.resetDeliveries();
 	}
