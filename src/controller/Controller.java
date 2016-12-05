@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import controller.commands.CommandContext;
 import controller.commands.Commander;
+import controller.commands.undocommands.LoadDeliveryCommand;
 import controller.commands.undocommands.ResetDeliveriesCommand;
 import model.IModel;
 import model.Model;
@@ -49,22 +50,12 @@ public class Controller implements IController{
 	}
 	
 	/**
-	 * This method just call the parseDeliveriesFile method of the model. It called by the view when a click on 
-	 * Validate(SettingFrame) is caught.
-	 * @param currentFile
-	 */
-	public void parseDeliveriesFile(File currentFile)
-	{
-		model.loadDeliveriesFile(currentFile);
-	}	
-
-	/**
 	 * Loads a delivery file XML. It can be called by the View.Mainframe
 	 * @param currentFile
+	 * @throws Throwable 
 	 */
-	public void loadDeliveryFile(File currentFile) {
-		
-		model.loadDeliveriesFile(currentFile);
+	public void loadDeliveryFile(File currentFile) throws Throwable {
+		this.commander.execute(CommandContext.MAIN, new LoadDeliveryCommand(model,currentFile));
 	}
 	
 	/**
@@ -106,7 +97,7 @@ public class Controller implements IController{
 	public void undoCommand(CommandContext context, int numberOfRedo)
 	{
 		try {
-			this.commander.redo(context, numberOfRedo);
+			this.commander.undo(context, numberOfRedo);
 		} catch (Throwable e) {
 			this.logger.write(e.getMessage());
 		}

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 
 import controller.Controller;
+import controller.commands.Commander;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
@@ -35,7 +36,7 @@ public class Model extends IModel {
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
-	private LowerCosts lowCosts;
+	private Commander commander;
 
 	/**
 	 * Normal constructor of the model
@@ -47,6 +48,7 @@ public class Model extends IModel {
 		deliveryManager = new DeliveryManager();
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
+		commander = new Commander();
 	}
 
 	// Getters 
@@ -70,10 +72,33 @@ public class Model extends IModel {
 	public DeliveryOrder getSelected() { 					return selected; }
 
 	// Setters
-	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
-	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
-															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
+	public void setSelected(DeliveryOrder selected) 
+	{		
+		this.selected = selected;
+	}
 	
+	public void setTour(Tour tour) 
+	{
+		tours.put(tour.getId(), tour);
+		indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); 
+	}
+	
+	public void setGraphDelMan(GraphDeliveryManager graphDelMan) {
+		this.graphDelMan = graphDelMan;
+	}
+
+	public void setIndexDelOrdersTours(HashMap<Integer, Integer> indexDelOrdersTours) {
+		this.indexDelOrdersTours = indexDelOrdersTours;
+	}
+
+	public void setTours(HashMap<Integer, Tour> tours) {
+		this.tours = tours;
+	}
+
+	public void setDeliveryManager(DeliveryManager deliveryManager) {
+		this.deliveryManager = deliveryManager;
+	}
+
 	@Override
 	public void resetModel()
 	{
@@ -89,6 +114,30 @@ public class Model extends IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 		deliveryManager = new DeliveryManager();
+	}
+	
+	public void updateMap()
+	{
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_MAP");
+		notifyObservers(map);
+	}
+	
+	public void updateDeliveries()
+	{
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_DELIVERY");
+		if(this.selected==null)
+		{
+			map.put("tour", null);
+		}
+		else
+		{
+			map.put("tour", indexDelOrdersTours.get(this.selected.getIdOrder()));
+		}
+		notifyObservers(map);
 	}
 
 	@Override
@@ -112,7 +161,6 @@ public class Model extends IModel {
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
 	}
-	
 	@Override
 	public void loadDeliveriesFile(File currentFile) {
 		try
@@ -148,6 +196,14 @@ public class Model extends IModel {
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
+	}
+	
+	public void unloadDeliveriesFile()
+	{
+		deliveryManager.getDeliveryOrders().remove(selected);
+		tours.remove(indexDelOrdersTours.get(selected.getIdOrder()));
+		indexDelOrdersTours.remove(selected.getIdOrder());
+		selected = null;
 	}
 	
 	@Override
