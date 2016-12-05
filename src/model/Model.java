@@ -155,7 +155,12 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		//this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+		try {
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+		} catch (Throwable e) {
+			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
+		}
+		this.notifyObservers(this.tours);
 	}
 
 	@Override
@@ -297,7 +302,6 @@ public class Model extends IModel {
 		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
 		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
 		{
-			
 			ArrayList<MapNode> list = pair.getFirst();
 			
 			// retrieve the good path
