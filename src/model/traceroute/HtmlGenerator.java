@@ -4,13 +4,20 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import model.Tour;
 import model.deliverymanager.DeliveryManager;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 
 public abstract class HtmlGenerator {
+	
+	private final static DateFormat df = new SimpleDateFormat("HH:mm");
+	
 	public static void generateHtml(MapNode entrepot,Tour tour,List <Instruction> instructions,DeliveryManager deliveryManager,File fileHtml) 
 	{
 		if (fileHtml.exists()) {
@@ -55,7 +62,7 @@ public abstract class HtmlGenerator {
 				case LEFT:
 					if(instruction.isUniqueOutgoingDestination())
 					{
-						direction = "Continuez sur la route";
+						direction = "Poursuivez";
 					}
 					else
 					{
@@ -73,7 +80,7 @@ public abstract class HtmlGenerator {
 				case RIGHT:
 					if(instruction.isUniqueOutgoingDestination())
 					{
-						direction = "Continuez sur la route";
+						direction = "Poursuivez";
 					}
 					else
 					{
@@ -95,20 +102,31 @@ public abstract class HtmlGenerator {
 				default:
 					break;
 				}
-
+				
+				
 				// Write bloc <li> Direction
 				bufferedWriter.append("<li class='collection-item avatar'>" + "<img src='" + image
-						+ "' class='circle green lighten-3'>" + "<span class='title'>" + direction + " direction " +instruction.getRoad() +"</span>"
-						+ "<p>Continuez pendant " + instruction.getLength() + " metres" +instruction.getIdDestination()+ "</p>" + "</li>");
+						+ "' class='circle green lighten-3'>" + "<span class='title'>" + direction + " sur " +instruction.getRoad() +"</span>"
+						+ "<p>Continuez pendant " + instruction.getLength() + " metres" + instruction.getIdDestination()+ "</p>" + "</li>");
 				
 				if(instruction.isDestinationIsDeliveryPoint() && instruction.getIdDestination() != entrepot.getidNode())
 				{
 					// Write bloc <li> Delivery
-					tour.get
+					Date arrivingDate = null;
+					Date leavingDate = null;
+					// Get DeliveryPoint ArrivingDate and LeavingDate
+					for(DeliveryPoint deliveryPoint: tour.getDeliveryPoints())
+					{
+						if(deliveryPoint.getMapNodeId() == instruction.getIdDestination())
+						{
+							arrivingDate = deliveryPoint.getArrivingDate();
+							leavingDate = deliveryPoint.getLeavingDate();
+						}		
+					}
 					bufferedWriter.append("<li class='collection-item avatar'>"
 							+ 	"<img src='images/box.png' class='circle green lighten-3'>"
 							+ 	"<span class='title'>Vous etes arrive au point de livraison "+ instruction.getIdDestination() +"</span>"
-							+ 	"<p>Effectuez la livraison entre : "+ "heuredepart" + " et " + " heure arrive" +"</p>"
+							+ 	"<p>Effectuez la livraison entre : "+ df.format(arrivingDate) + " et " + df.format(leavingDate) +"</p>"
 							+ "</li>");
 				}
 			}
