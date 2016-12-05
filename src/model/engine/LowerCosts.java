@@ -13,39 +13,17 @@ import model.graph.MapNode;
 import model.graph.Section;
 
 public class LowerCosts {
-	private Model model;	
-	DeliveryOrder delOrder;
-	ArrayList<MapNode> deliveryNodes= new ArrayList<MapNode>();
-	Graph<MapNode, Section> graph;
-	HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths;
-	int costsMatrix[][];
-	
-	/**
-	 * Normal Constructor.
-	 * @param model
-	 */
-	public LowerCosts(Model model)
-	{
-		this.model = model;
-		this.graph = model.getGraphDeliveryManager().getGraph();
-		delOrder = model.getDeliveryManager().getDeliveryOrders().get(0);
-		paths = new HashMap<>();
-		
-		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
-		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
-		deliveryNodes.add(delOrder.getStoreAdress());
-		
-		for(int i=0;i<delOrder.getDeliveryList().size();i++)
-		{
-			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
-		}
-	}
 	
 	/**
 	 * Generate square Matrix with the delivery points as indexes, diagonal empty
+	 * @param GraphDeliveryManager graph
+	 * @param DeliveryOrder delOrder
+	 * @param HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths
 	 */
-	public void generateCosts()
+	public static HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> generateCosts(GraphDeliveryManager graph, DeliveryOrder delOrder)
 	{
+		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = new HashMap<>();
+		
 		//Init HashMap with nearly infinites
 		
 		delOrder.getDeliveryList().add(0,new Delivery(0,delOrder.getStoreAdress(),0,null,null));
@@ -70,21 +48,26 @@ public class LowerCosts {
 			while(!deliveryNodes.isEmpty())
 			{
 				//Appel dijkstra
-				Pair<ArrayList<MapNode>,Integer> dijkstra = this.dijkstra(beginning,deliveryNodes.get(0));
+				Pair<ArrayList<MapNode>,Integer> dijkstra = dijkstra(graph,beginning,deliveryNodes.get(0));
 				paths.get(beginning).add(dijkstra);
 				deliveryNodes.remove(0);
 			}
 		}
+		
+		return paths;
 	}
 	
 	/**
 	 * Dijkstra
-	 * @param origin
-	 * @param target
+	 * @param GraphDeliveryManager graphManager
+	 * @param MapNode origin
+	 * @param MapNode target
 	 * @return
 	 */
-	public Pair<ArrayList<MapNode>,Double> dijkstra2 (MapNode origin, MapNode target)
+	public static Pair<ArrayList<MapNode>,Double> dijkstra2 (GraphDeliveryManager graphManager, MapNode origin, MapNode target)
 	{
+		Graph<MapNode,Section> graph = graphManager.getGraph();
+		
 		HashMap<MapNode,Pair<Double,MapNode>> weightTemp = new HashMap<>();
 		HashMap<MapNode, Pair<ArrayList<MapNode>,Double>> dijkstraTemp = new HashMap<>(); 
 		weightTemp.put(origin, new Pair<Double, MapNode>(0.0,origin));
@@ -145,10 +128,16 @@ public class LowerCosts {
 		return dijkstraTemp.get(target);
 	}
 	
-	public Pair<ArrayList<MapNode>, Integer> dijkstra (MapNode origin, MapNode target)
+	/**
+	 * 
+	 * @param GraphDeliveryManager graphManager
+	 * @param MapNode origin
+	 * @param MapNode target
+	 * @return
+	 */
+	public static Pair<ArrayList<MapNode>, Integer> dijkstra (GraphDeliveryManager graphManager, MapNode origin, MapNode target)
 	{
-		GraphDeliveryManager graphe = model.getGraphDeliveryManager();
-
+		Graph<MapNode,Section> graph = graphManager.getGraph();
 		
 		HashMap<MapNode,Integer> couts = new HashMap<>();
 		HashMap<MapNode,MapNode> pi = new HashMap<>();
@@ -158,7 +147,7 @@ public class LowerCosts {
 		ArrayList<MapNode> whiteNodes = new ArrayList<>();
 		
 		// On initialise les couts et la liste de noeuds blancs
-		for(MapNode m : graphe.getNodeList())
+		for(MapNode m : graphManager.getNodeList())
 		{
 			couts.put(m, Integer.MAX_VALUE);
 			whiteNodes.add(m);
@@ -186,7 +175,7 @@ public class LowerCosts {
 				// Si le successeur est blanc
 				if( whiteNodes.contains(sj) || greyNodes.contains(sj))
 				{
-					relacher(si,sj,couts,pi);
+					relacher(graph,si,sj,couts,pi);
 					
 					if(whiteNodes.contains(sj))
 					{
@@ -222,7 +211,7 @@ public class LowerCosts {
 	 * Used for Djikstra
 	 * @return
 	 */
-	public MapNode getSommetMinimal(ArrayList<MapNode> Sommets, HashMap<MapNode,Integer> couts)
+	public static MapNode getSommetMinimal(ArrayList<MapNode> Sommets, HashMap<MapNode,Integer> couts)
 	{
 		int min = couts.get(Sommets.get(0));
 		MapNode minNode = Sommets.get(0);
@@ -245,7 +234,7 @@ public class LowerCosts {
 	 * @param couts
 	 * @param pi
 	 */
-	public void relacher(MapNode si, MapNode sj, HashMap<MapNode,Integer> couts, HashMap<MapNode,MapNode> pi)
+	public static void relacher(Graph<MapNode,Section> graph, MapNode si, MapNode sj, HashMap<MapNode,Integer> couts, HashMap<MapNode,MapNode> pi)
 	{
 		Section secIJ = graph.getEdge(si, sj);
 		int coutIJ = (secIJ.getLength()/secIJ.getSpeed());
@@ -258,7 +247,20 @@ public class LowerCosts {
 	}
 	
 	
-	public int[][] getCostsMatrix() {
+	public static int[][] getCostsMatrix(DeliveryOrder delOrder, HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths) {
+		//delOrder = model.getDeliveryManager().getDeliveryOrders().get(0);
+		
+		//Add all delivery nodes to the arrayList
+		ArrayList<MapNode> deliveryNodes = new ArrayList<>();
+		deliveryNodes.add(delOrder.getStoreAdress());
+		for(int i=0;i<delOrder.getDeliveryList().size();i++)
+		{
+			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
+		}
+		
+		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
+		int costsMatrix[][] = new int[numberOfDeliveries][numberOfDeliveries];
+		
 		for(Entry<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> origin : paths.entrySet())
 		{
 			if(deliveryNodes.indexOf(origin.getKey()) != -1)
@@ -276,53 +278,5 @@ public class LowerCosts {
 		}
 		
 		return costsMatrix;
-	}
-	
-	public void printCost(){
-		int IDi, IDj;		
-		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
-		{			
-			IDi = entry.getKey().getidNode();
-			
-			for(Pair<ArrayList<MapNode>,Integer> pair : entry.getValue())
-			{
-				ArrayList<MapNode> list = pair.getFirst();				
-				IDj = list.get(list.size()-1).getidNode();
-				
-				// get the cost of the pair
-				int cost =  (pair.getSecond()).intValue();
-				
-				System.out.print("<"+IDi+","+IDj+"> = " +cost + " : ");
-				for(MapNode map : list)
-				{
-					System.out.print(" - " + map.getidNode()  + " - ");
-				}
-				System.out.println("");
-			}				
-		}		
-	}
-	
-	public void setCostsMatrix(int[][] costsMatrix) {
-		this.costsMatrix = costsMatrix;
-	}
-	public HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> getPaths() {
-		return paths;
-	}
-	public void setPaths(HashMap<MapNode, ArrayList<Pair<ArrayList<MapNode>, Integer>>> paths) {
-		this.paths = paths;
-	}	
-	public void refresh()
-	{
-		delOrder = model.getSelected();
-		paths = new HashMap<>();
-		
-		int numberOfDeliveries = delOrder.getDeliveryList().size()+1;
-		costsMatrix = new int[numberOfDeliveries][numberOfDeliveries];
-		deliveryNodes.add(delOrder.getStoreAdress());
-		
-		for(int i=0;i<delOrder.getDeliveryList().size();i++)
-		{
-			deliveryNodes.add(delOrder.getDeliveryList().get(i).getAdress());
-		}
 	}
 }

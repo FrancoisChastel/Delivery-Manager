@@ -5,11 +5,17 @@ import java.util.Iterator;
 
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
+import model.engine.LowerCosts;
+import model.graph.GraphDeliveryManager;
+import model.graph.MapNode;
 import model.graph.Section;
+
+import java.util.List;
 
 public class Tour {
 	private ArrayList<Section> sections;
-	private Integer[] deliveryPointsId;
+	private ArrayList<DeliveryPoint> deliveryPoints;
 	private int id;
 	private static int factoryId = 0;
 	private int entrepotId;
@@ -18,11 +24,11 @@ public class Tour {
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, Integer[] deliveryPointsId, int entrepotId)
+	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId)
 	{
 		this.entrepotId=entrepotId;
 		this.sections = sections;
-		this.deliveryPointsId = deliveryPointsId;
+		this.deliveryPoints = deliveryPoints;
 		this.id=factoryId;
 		factoryId++;
 	}
@@ -30,16 +36,24 @@ public class Tour {
 	//Getters
 	public ArrayList<Section> getSections() { 	return sections;}
 	public int getId(){ 						return id; }
-	public Integer[] getDeliveryPoints() {		return deliveryPointsId;}
 	public int getEntrepotId() {				return entrepotId;}
-
+	public ArrayList<DeliveryPoint> getDeliveryPoints(){ return this.deliveryPoints;}
 	/**
 	 * Get total duration of the whole tour
 	 * @return duration of the whole tour
 	 */
 	public int getTotalDuration()
 	{
-		return 10;
+		int totalDuration = 0;
+		
+		for (Section section : this.sections)
+			totalDuration += section.getLength()/section.getSpeed();
+		
+		
+		for (DeliveryPoint deliveryPoint : this.deliveryPoints)
+			totalDuration += deliveryPoint.getDelivery().getDuration();
+		
+		return totalDuration;
 	}
 	
 	/**
@@ -58,7 +72,12 @@ public class Tour {
 	 */
 	public int getTotalLength()
 	{
-		return 50;
+		int totalLength = 0;
+		
+		for (Section section : this.sections)
+			totalLength += section.getLength();
+		
+		return totalLength;
 	}
 	
 	/**
@@ -78,12 +97,66 @@ public class Tour {
 	 */
 	public boolean isDeliveryPoint(int idPoint)
 	{	
-		for(int i = 0; i<deliveryPointsId.length;i++)
-		{
-			if(deliveryPointsId[i]==idPoint)
+		for (DeliveryPoint deliveryPoint : this.deliveryPoints)
+			if (deliveryPoint.getMapNodeId() == idPoint)
 				return true;
-		}
+		
 		return false;
 	}
 	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public int deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
+		int deliveryPosition = this.deletePathById(deliveryPointId, deliveryPointId+1);
+		this.updateSection(deliveryPosition, deliveryPointId, graphManager);		
+		throw new Throwable("Error, there is no delivery point with the id "+deliveryPointId+", cannot delete a non-existing delivery point in a tour");
+	}
+	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint){	
+		this.deliveryPoints.add(index, deliveryPoint);
+	}
+	
+	private int deletePathById(int originDeliveryId, int destinationDeliveryId) throws Throwable{
+		int beginningId = -1;
+		int destinationId = -1;
+		
+		for (int cursor=0; cursor<this.getSections().size(); cursor++)
+			if (this.getSections().get(cursor).getIdOrigin() == originDeliveryId)
+				beginningId = cursor;
+				
+		for (int cursor=beginningId; cursor<this.getSections().size(); cursor++)
+			if (this.getSections().get(cursor).getIdOrigin() == destinationDeliveryId)
+				destinationId = cursor;
+		
+		if (beginningId == -1) throw new Throwable(originDeliveryId+" origin id does not exist");
+		if (destinationDeliveryId == -1) throw new Throwable(destinationDeliveryId+" destination id does not exist");
+		
+		deletePath(beginningId, destinationId);
+		return beginningId;
+	}
+	
+	private void deletePath(int beginningId, int endingId)
+	{
+		for (int cursor=beginningId; cursor<endingId; cursor++){
+			this.getDeliveryPoints().remove(cursor);
+		}
+	}
+	
+	private void updateSection(int sectionIndex, int originDelivery, GraphDeliveryManager graphManager)
+	{
+		ArrayList<MapNode> solution = LowerCosts.dijkstra(graphManager, 
+				this.deliveryPoints.get(originDelivery).getDelivery().getAdress(),
+				this.deliveryPoints.get(originDelivery+1).getDelivery().getAdress()).getFirst();
+		
+		for(int cursor = 0; cursor<solution.size()-1; cursor++)
+		{
+			this.sections.add(sectionIndex++, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
+		}
+	}
 }
