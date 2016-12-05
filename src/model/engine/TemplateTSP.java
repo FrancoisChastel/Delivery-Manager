@@ -101,6 +101,7 @@ public abstract class TemplateTSP implements TSP {
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
 	    	actualDate = new Date(actualDate.getTime() + cout[sommetCrt][0]);
+	    	datesLivraisons[0] = actualDate;
 	    	if (actualDate.before(meilleureSolutionDate)){ // on a trouve une solution meilleure que meilleureSolution
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
