@@ -164,11 +164,8 @@ public class Tour {
 				if (section.getIdOrigin() == deliveryPointId)
 				{
 					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
-					System.out.println("before delete "+this.getSections().size());
 					this.deletePath(association.getFirst(), association.getSecond());
-					System.out.println("after delete "+this.getSections().size());
 					this.updateSection(sectionIndex, currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
-					System.out.println("after update "+this.getSections().size());
 				}
 				currentDeliveryPoint++;
 			}
