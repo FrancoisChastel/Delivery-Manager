@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import controller.commands.Commander;
+import controller.commands.ICommander;
 import model.IModel;
 import model.Model;
 import view.View;
@@ -15,6 +17,7 @@ public class Controller implements IController{
 	private IModel model;
 	private View view;
 	private Logger logger;
+	private ICommander commander;
 	
 	/**
 	 * Default constructor of the controller. It instanciate model and view, and set up observer/observable pattern
@@ -23,6 +26,7 @@ public class Controller implements IController{
 	{
 		model = new Model(this);
 		view  = new View(this);
+		this.commander = Commander.getInstance();
 		try {
 			logger = new Logger();
 		} catch (IOException e) {
@@ -97,19 +101,18 @@ public class Controller implements IController{
 	/**
 	 * Undo the last command executed by the user
 	 */
-	public void undoCommand()
+	public void undoCommand(CommandContext context)
 	{
-		
+		this
 	}
 	
 	/**
 	 * Redo the last command cancelled by an Undo
 	 */
-	public void redoCommand()
+	public void redoCommand(CommandContext context)
 	{
 		
 	}
-	
 	
 	
 	// End callbacks ------------------------------
