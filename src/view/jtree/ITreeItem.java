@@ -13,7 +13,7 @@ public interface ITreeItem {
 	/**
 	 * This enum is used to manage RightClic PopupMenu. 
 	 */
-	public static enum Menu {TourMenu, NodeMenu};
+	public static enum Menu {TourMenu, NodeMenu, WaitingTimeMenu};
 	
 	/**
 	 * Items should return their id;

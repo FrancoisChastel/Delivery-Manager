@@ -129,6 +129,25 @@ public class Tour {
 		
 		return duration;
 	}
+	
+	/**
+	 * 
+	 * @param p1
+	 * @param p
+	 * @return
+	 */
+	public long getAvailableTimeBeweenTwoPoints(DeliveryPoint p1, DeliveryPoint p2)
+	{
+		// Get the time travel between p1 and p2
+		long travelTimeSec = travelTimeBetweenTwoPoints(p1,p2);
+		
+		// Get the effective time between p1 and p2
+		long effectiveTime = (p2.getArrivingDate().getTime()/1000) - (p1.getLeavingDate().getTime()/1000);
+		
+		long waitingTime = effectiveTime-travelTimeSec;
+			
+		return waitingTime;
+	}
 	/**
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted

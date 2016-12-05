@@ -62,6 +62,16 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		nodeMenu.add(deletePoint);
 		
 		mapPopupMenu.put(Menu.NodeMenu, nodeMenu);
+		
+		// WaitingTime menu -----------------------------------------
+		JPopupMenu wMenu = new JPopupMenu();
+		// TDelete point
+		JMenuItem addPoint = new JMenuItem("Add delivery point here");
+		addPoint.addActionListener(this);
+		wMenu.add(addPoint);
+		
+		mapPopupMenu.put(Menu.WaitingTimeMenu, wMenu);
+				
 	}
 	
 	/**
@@ -121,7 +131,20 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 			int tourId  = ( (TreeTour) ((DefaultMutableTreeNode) selected).getParent()).getId();
 			mainFrame.getView().getController().deletePoint(tourId, pointId);
 		}
+		else if(item.getActionCommand() == "Add delivery point here")
+		{
+			// Get selectedTreeWaitingTime
+			TreeWaitingTime selectedTWT = (TreeWaitingTime) selected;
 			
+			// Get id of the tour
+			int tourId  = ( (TreeTour) selectedTWT.getParent()).getId();
+			
+			// Get the available Time
+			int idPoint = selectedTWT.getId();
+			
+			// Call the callback in mainFrame
+			mainFrame.AddDeliveryPoint(idPoint, tourId, selectedTWT.getPositionInTour(), selectedTWT.getAvailableTime() );
+		}
 	}
 
 	/**

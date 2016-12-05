@@ -84,7 +84,24 @@ public class View implements Observer, IView {
 		return controller;
 	}
 
-	
+	/**
+	 * This method format a string "mm min, ss sec" from a time in seconds
+	 * @param totalSeconds
+	 * @return
+	 */
+	public static String formatDateFromSecond(long totalSeconds)
+	{
+		// Formating
+		int seconds 	 = (int) (totalSeconds % 60);
+	    int totalMinutes = (int) (totalSeconds / 60);
+	    
+	    
+		String formatedWaitingTime = String.format("%02d min, %02d sec", 
+				totalMinutes,
+				seconds
+			);
+		return formatedWaitingTime;
+	}
 	/** 
 	 * Method of Observer/Observable pattern
 	 */
