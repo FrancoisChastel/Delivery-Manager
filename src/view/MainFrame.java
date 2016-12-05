@@ -189,6 +189,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		{
 			root.removeAllChildren();
 			hamecon.getController().resetDeliveries();
+			// Initialization of the JTree -----------
+			//create the root node
+	        root = new DefaultMutableTreeNode("Deliveries");        
+			tourTree = new JTree(root);	
+			
+
+			// Manage listener
+			TreeListener treeListener = new TreeListener(this);
+			tourTree.addTreeSelectionListener(treeListener);
+			tourTree.addMouseListener(treeListener);
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{

@@ -151,7 +151,7 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+		//this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
 	}
 
 	@Override
@@ -313,17 +313,17 @@ public class Model extends IModel {
 		// Building IdDeliveryList
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
 		
-		for(int in =0; in<tspObject.bestSolution.length;in++)
+		/*for(int in =0; in<tspObject.bestSolution.length;in++)
 		{
 			DeliveryPoint dp = new DeliveryPoint(delivery, arriving);
 			// recuperer une 
 			tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
 			deliveryPoints.add(dp)= 
 			
-		}
+		}*/
 
-		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
-		model.setTour(tour);
+		//Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
+		//model.setTour(tour);
 	}
 }
 
