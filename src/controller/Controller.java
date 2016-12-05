@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import controller.commands.CommandContext;
 import controller.commands.Commander;
-import controller.commands.ICommander;
 import controller.commands.undocommands.ResetDeliveriesCommand;
 import model.IModel;
 import model.Model;
@@ -109,7 +108,7 @@ public class Controller implements IController{
 	public void undoCommand(CommandContext context, int numberOfRedo)
 	{
 		try {
-			this.commander.undo(context);
+			this.commander.redo(context, numberOfRedo);
 		} catch (Throwable e) {
 			this.logger.write(e.getMessage());
 		}

@@ -217,7 +217,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		{
 
 			root.removeAllChildren();
-			hamecon.getController().resetDeliveries();
+			
 			// Initialization of the JTree -----------
 			//create the root node
 	        root = new TreeDefaultIconNode("Deliveries",null);        
@@ -253,12 +253,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		else if(arg0.getSource()==mntmUndo)
 		{
-			hamecon.getController().undoCommand(CommandContext.MAIN, defaultCloseOperation);
+			hamecon.getController().undoCommand(CommandContext.MAIN, 1);
 			mntmRedo.setEnabled(true);
 		}
 		else if(arg0.getSource()==mntmRedo)
 		{
-			hamecon.getController().redoCommand(CommandContext.MAIN, defaultCloseOperation);
+			hamecon.getController().redoCommand(CommandContext.MAIN, 1);
 		}
 		
 	}
