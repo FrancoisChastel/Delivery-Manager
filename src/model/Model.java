@@ -162,12 +162,12 @@ public class Model extends IModel {
 	}
 
 	@Override
-	public void addDeliveryPoint(int tourId, int nodeId, int duration,
+	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		// TODO Auto-generated method stub
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
 		
 	}
-	
+		
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */

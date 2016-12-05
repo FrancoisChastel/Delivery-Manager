@@ -83,10 +83,11 @@ public abstract class IModel extends Observable {
 	/**
 	 * Create and add a delivery point to a specific tour.
 	 * @param tourId which is concerned by the add of the delivery point
+	 * @param index where the delivery point will be added in the path
 	 * @param nodeId where the delivery point will be set
 	 * @param duration of delivery 
 	 * @param availabilityBeginning of the delivery  
 	 * @param availabilityEnd of the delivery
 	 */
-	public abstract void addDeliveryPoint(int tourId,int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd);
+	public abstract void addDeliveryPoint(int tourId, int index,int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd);
 }
