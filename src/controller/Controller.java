@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import controller.commands.CommandContext;
 import controller.commands.Commander;
 import controller.commands.ICommander;
 import model.IModel;
@@ -95,6 +96,10 @@ public class Controller implements IController{
 	 */
 	public void resetDeliveries()
 	{
+		// For example : 
+		// IUndoableCommand reset =  new resetCommand(model)//par exemple
+		// reset.execute();
+		// this.commander.execute(CommandContext.MAIN, command);
 		model.resetDeliveries();
 	}
 	
@@ -103,7 +108,11 @@ public class Controller implements IController{
 	 */
 	public void undoCommand(CommandContext context)
 	{
-		this
+		try {
+			this.commander.undo(context);
+		} catch (Throwable e) {
+			this.logger.write(e.getMessage());
+		}
 	}
 	
 	/**
@@ -111,7 +120,11 @@ public class Controller implements IController{
 	 */
 	public void redoCommand(CommandContext context)
 	{
-		
+		try {
+			this.commander.redo(context);
+		} catch (Throwable e) {
+			this.logger.write(e.getMessage());
+		}
 	}
 	
 	
