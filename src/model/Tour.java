@@ -102,6 +102,31 @@ public class Tour {
 	}
 	
 	/**
+	 * Calculate the travel time between two points
+	 * @param d1
+	 * @param d2
+	 * @return
+	 */
+	public long travelTimeBetweenTwoPoints(DeliveryPoint d1, DeliveryPoint d2)
+	{
+		long duration = 0;
+		boolean beginCount=false;
+		
+		for(Section s : sections)
+		{
+			if(s.getIdOrigin() == d1.getMapNodeId()) // we begin the sum when we have found the origin d1
+				beginCount = true;
+			
+			if(beginCount) // if the sum has begun
+				duration+= s.getLength()/s.getSpeed();
+			
+			if(s.getIdDestination()==d2.getMapNodeId()) // we stop when we have found the second point
+				break;
+		}
+		
+		return duration;
+	}
+	/**
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */

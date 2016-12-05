@@ -24,6 +24,10 @@ import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
+import view.jtree.JTreeRenderer;
+import view.jtree.TreeDefaultIconNode;
+import view.jtree.TreeListener;
+import view.jtree.TreeTour;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -55,7 +59,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem mntmNewMap;
 	private JMenuItem mntmReset;
 	private JTree tourTree;
-	private DefaultMutableTreeNode root;
+	private TreeDefaultIconNode root;
 	private JPanel rightSidePanel;
 	
 	/**
@@ -110,9 +114,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		// Initialization of the JTree -----------
 		//create the root node
-        root = new DefaultMutableTreeNode("Deliveries");        
+        root = new TreeDefaultIconNode("Deliveries",null);        
 		tourTree = new JTree(root);	
-		
+		tourTree.setCellRenderer(new JTreeRenderer());
 
 		// Manage listener
 		TreeListener treeListener = new TreeListener(this);
@@ -155,10 +159,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		TreeTour tourInTree = adapter.getTreeTour(tour);
 		System.out.println("Displaying t"+tourInTree.getId());
 		
-		for(DeliveryPoint dp : tour.getDeliveryPoints())
+		for(int i =0; i<tour.getDeliveryPoints().size()-1;i++)
 		{
-			tourInTree.add(adapter.getTreeNode(dp));
+			// Add the DeliveryPointNode
+			tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(i)));
+			// Add the waiting Time node
+			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour));
 		}
+		
+		// Add the last deliveryPoint
+		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
 		
 		root.add(tourInTree);	
 		this.tourTree.setSelectionRow(root.getChildCount()-1);
@@ -191,7 +201,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			hamecon.getController().resetDeliveries();
 			// Initialization of the JTree -----------
 			//create the root node
-	        root = new DefaultMutableTreeNode("Deliveries");        
+	        root = new TreeDefaultIconNode("Deliveries",null);        
 			tourTree = new JTree(root);	
 			
 

@@ -32,7 +32,10 @@ public class DeliveryPoint {
 	}
 	
 	public Date getLeavingDate(){
-		return new Date(this.arrivingDate.getTime()+(this.delivery.getDuration()*1000));
+		Long timeLeaving = arrivingDate.getTime()+delivery.getDuration()*1000;
+		
+		System.out.println("dep"+arrivingDate+"  "+new Date(timeLeaving));
+		return new Date(timeLeaving);
 	}
 
 	public int getMapNodeId() {

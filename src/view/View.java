@@ -1,5 +1,7 @@
 package view;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Observable;
@@ -38,7 +40,13 @@ public class View implements Observer, IView {
 				message,
 				title,
 				JOptionPane.INFORMATION_MESSAGE);
-	}	
+	} 
+	
+	public static String  getDate(Date d)
+	{
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		return formatter.format(d);
+	}
 	
 	/**
 	 * Normal Contructor of View class. It instanciate all Frame pages and put it in its list of pages.

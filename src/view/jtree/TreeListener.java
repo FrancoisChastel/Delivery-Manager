@@ -1,4 +1,4 @@
-package view;
+package view.jtree;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,8 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.omg.PortableServer.POA;
 
-import view.ITreeItem.Menu;
+import view.MainFrame;
+import view.jtree.ITreeItem.Menu;
 
 public class TreeListener implements TreeSelectionListener, ActionListener, MouseListener {
 

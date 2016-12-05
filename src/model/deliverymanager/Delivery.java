@@ -30,9 +30,7 @@ public class Delivery {
 	}
 	
 	// Getters and Setters
-	public long getIdDelivery() {
-		return idDelivery;
-	}
+	public long getIdDelivery() {	return idDelivery;	}
 
 	public void setIdDelivery(int idDelivery) {
 		this.idDelivery = idDelivery;
