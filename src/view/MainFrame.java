@@ -64,6 +64,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JTree tourTree;
 	private TreeDefaultIconNode root;
 	private JPanel rightSidePanel;
+	private AddDeliveryFrame addDeliveryFrame;
 	
 	/**
 	 * Normal Construcor
@@ -145,7 +146,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		rightSidePanel.add(treeView);
 		
 		repaint();
+		
+		addDeliveryFrame = new AddDeliveryFrame(this);
 	}
+	
+	
 	
 	/**
 	 * Draw the frame with adapted from model objects. Called by update
@@ -181,7 +186,7 @@ public class MainFrame extends JFrame implements ActionListener {
 			// Add the DeliveryPointNode
 			tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(i)));
 			// Add the waiting Time node
-			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour));
+			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour,i));
 		}
 		
 		// Add the last deliveryPoint
@@ -247,7 +252,12 @@ public class MainFrame extends JFrame implements ActionListener {
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             	File currentFile = fc.getSelectedFile();            	
-            	hamecon.getController().loadDeliveryFile(currentFile);
+            	try {
+					hamecon.getController().loadDeliveryFile(currentFile);
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
             mntmRedo.setEnabled(false);
 		}
@@ -262,15 +272,38 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		
 	}
-
-	public JTree getJtree() { return tourTree; }
 	
 	/**
-	 * 
-	 * @return
+	 * This method display the AddDeliveryPointFrame
+	 * @param idPoint
+	 * @param tourId
+	 * @param index
+	 * @param availableTime
 	 */
-	public View getView() { return hamecon; }
+	public void AddDeliveryPoint(int idPoint, int tourId, int index, long availableTime)
+	{
+		if(addDeliveryFrame.isVisible())
+		{
+			View.displayMessage("Add delivery frame is already opened", "Error", null);
+			return;
+		}
+		System.out.println(availableTime+" --");
+		addDeliveryFrame.setVisible(true);
+		addDeliveryFrame.setAvailableTime(availableTime);
+		addDeliveryFrame.setIndex(index);
+		addDeliveryFrame.setTourId(tourId);
+	}
 
+	// Accessors
+	public JTree getJtree() { return tourTree; }
+	public View getView() { return hamecon; }
 	public Map getMap() {	return map;	}
+
+
+
+	public void setPickedPointAddDelivery(ViewPoint point) {
+		// TODO Auto-generated method stub
+		addDeliveryFrame.setPickedPointId(point.getId());
+	}
 
 }

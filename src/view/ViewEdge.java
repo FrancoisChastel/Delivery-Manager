@@ -14,16 +14,19 @@ import java.util.Set;
 public class ViewEdge implements IShape {
 	
 	// Constantes ------
-	private static int BigLineWeight = 5;
+	private static int BigLineWeight = 3;
 	private static int DefaultLineWeight = 1;
 	private static int epsilon = 8;
 	private static Color defaultColor = Color.WHITE;	
 	private static int idFactory = 0;
+	private static int PassedLineWeight = 8;
 	
 	// Attributes ------
 	private ViewPoint pointOrigin;
 	private ViewPoint pointTarget;
 	private boolean	bigWeight = false;
+	private boolean alreadyPassed = false;
+	
 	
 	// This map represents the sections on this Troncon. It could be sized 2 or 1.
 	// The key is the ID of the section and the value its color.
@@ -90,7 +93,12 @@ public class ViewEdge implements IShape {
 			g2d.setColor(section1);
 			
 			if(section1 == defaultColor  && !bigWeight)
-				g2d.setStroke(new BasicStroke(DefaultLineWeight));
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight));
+				else
+					g2d.setStroke(new BasicStroke(DefaultLineWeight));
+			else if (section1 != defaultColor && alreadyPassed)
+				g2d.setStroke(new BasicStroke(PassedLineWeight));
 			else if (section1 != defaultColor || bigWeight)
 				g2d.setStroke(new BasicStroke(BigLineWeight));
 			g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
@@ -102,8 +110,9 @@ public class ViewEdge implements IShape {
 			if(section2 == defaultColor && section1 == defaultColor) 
 			{
 				g2d.setColor(section1);
-				
-				if(bigWeight)
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight));
+				else if(bigWeight)
 					g2d.setStroke(new BasicStroke(BigLineWeight));
 				else
 					g2d.setStroke(new BasicStroke(DefaultLineWeight));
@@ -114,27 +123,39 @@ public class ViewEdge implements IShape {
 			else if(section1 == defaultColor && section2 != defaultColor)
 			{
 				g2d.setColor(section2);
-				g2d.setStroke(new BasicStroke(BigLineWeight));
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight));
+				else
+					g2d.setStroke(new BasicStroke(BigLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 			// if section2 is default and section1 is not , then we draw section1 color 
 			else if(section1 != defaultColor && section2 == defaultColor)
 			{
 				g2d.setColor(section1);
-				g2d.setStroke(new BasicStroke(BigLineWeight));
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight));
+				else
+					g2d.setStroke(new BasicStroke(BigLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 			// if both are not default, then color with stroke line
 			else if(section1 != defaultColor && section2 != defaultColor)
 			{
 				// we draw normal first line
-				g2d.setColor(section1);				
-				g2d.setStroke(new BasicStroke(BigLineWeight));
+				g2d.setColor(section1);
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight));
+				else
+					g2d.setStroke(new BasicStroke(BigLineWeight));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 				
 				// Then we draw stroke second line
 				g2d.setColor(section2);
-				g2d.setStroke(new BasicStroke(BigLineWeight, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f }, 0.0f));
+				if(alreadyPassed)
+					g2d.setStroke(new BasicStroke(PassedLineWeight, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f }, 0.0f));
+				else
+					g2d.setStroke(new BasicStroke(BigLineWeight, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f, 10.0f }, 0.0f));
 				g2d.drawLine(pointOrigin.getCalculedX(), pointOrigin.getCalculedY(), pointTarget.getCalculedX(), pointTarget.getCalculedY());
 			}
 		}
@@ -148,4 +169,5 @@ public class ViewEdge implements IShape {
 	public ViewPoint getTarget() {return pointTarget;}
 	public void setBigWeight(boolean value) {bigWeight=value; }
 	public void clearSection(int id) {sections.put(id, defaultColor); }
+	public void setAlreadyPassed(boolean value){ this.alreadyPassed = value; }
 }
