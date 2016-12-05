@@ -222,11 +222,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		else if(arg0.getSource()==mntmUndo)
 		{
+			hamecon.getController().undoCommand();
 			mntmRedo.setEnabled(true);
 		}
 		else if(arg0.getSource()==mntmRedo)
 		{
-			
+			hamecon.getController().redoCommand();
 		}
 		
 	}
