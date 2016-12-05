@@ -1,5 +1,4 @@
-package view;
-import view.jtree.*;
+package view.jtree;
 
 import java.awt.event.ActionEvent;
 
