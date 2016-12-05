@@ -147,6 +147,7 @@ public class Map extends JPanel {
 		repaint();
 	}
 	
+	
 	public void toursColoring()
 	{
 		ViewTour selected=null;
@@ -299,6 +300,20 @@ public class Map extends JPanel {
 	public HashMap<Integer, ViewEdge> getEdges() {
 		// TODO Auto-generated method stub
 		return edges;
+	}
+	
+	public int getSelectedTour()
+	{
+		for(Entry<Integer,ViewTour> tour : tours.entrySet())
+		{
+			ViewTour vT = tour.getValue();
+			if(vT.isSelected())
+			{
+				return vT.getId();
+			}
+				
+		}
+		return -1;
 	}
 	
 	public MainFrame getMainFrame() { return mainFrame; }

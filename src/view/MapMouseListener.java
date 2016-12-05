@@ -5,8 +5,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
+
+import model.Tour;
 
 public class MapMouseListener implements MouseListener, MouseMotionListener {
 
@@ -85,6 +88,15 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 			ViewLabel label = new ViewLabel(point.getCalculedX()+shiftInformationFromMouse,point.getCalculedY()-shiftInformationFromMouse,information);
 			map.removeAllLabels();
 			map.addLabel(label);
+			
+			map.getMainFrame().getMap().removeAllAlreadyPassedEdges();
+			int idTour = map.getSelectedTour();
+			if(idTour != -1)
+			{
+				Tour ti = map.getMainFrame().getView().getController().getModel().getTourById(idTour);
+				map.getMainFrame().getMap().displayEdgesAlreadyPassed(ti, point.getId());
+			}	
+			
 			map.repaint();
 		}
 		else
@@ -92,9 +104,15 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 			if(!map.labelsIsEmpty())
 			{
 				map.removeAllLabels();
+				map.removeAllAlreadyPassedEdges();
 				map.repaint();
 			}
 		}
+		
+		
+		
+		//map.getMainFrame().getMap().setTourSelected(idTour);
+		map.repaint();
 	}
 
 }
