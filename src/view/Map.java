@@ -22,6 +22,8 @@ public class Map extends JPanel {
 	private ArrayList<ViewLabel> labels;
 	private Color gradient;
 	private MainFrame mainFrame;
+	private ArrayList<ViewEdge> alreadyPassedEdges;
+	
 	
 	/**
 	 * Create the panel.
@@ -31,6 +33,7 @@ public class Map extends JPanel {
 		points = new ArrayList<ViewPoint>();
 		edges = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
+		alreadyPassedEdges = new ArrayList<ViewEdge>();
 		//gradient = new Color(255,0,0);
 		gradient = new Color(Color.HSBtoRGB(0, 1, 1));
 		
@@ -63,7 +66,48 @@ public class Map extends JPanel {
 	public void addLabel(ViewLabel s){
 		labels.add(s);
 	}
-	 
+	
+	/**
+	 * Change weight of edges already passed
+	 * @param tour
+	 * @param targetPoint
+	 */
+	public void displayEdgesAlreadyPassed(Tour tour, int idPoint)
+	{
+		Iterator<Section> sectionIterator = tour.getSections().iterator();
+		boolean foundedPoint = false;
+		ViewEdge edge;
+		while(sectionIterator.hasNext())
+		{
+			edge = edges.get(((Section)sectionIterator.next()).getId());
+			if(edge.getTarget().getId() == idPoint || edge.getOrigin().getId() == idPoint)
+			{
+				foundedPoint = true;
+			}
+		}
+		if(foundedPoint)
+		{
+			sectionIterator = tour.getSections().iterator();
+			int countRound= 0;
+			while(sectionIterator.hasNext())
+			{
+				edge = edges.get(((Section)sectionIterator.next()).getId());
+				if(((edge.getTarget().getId() == idPoint || edge.getOrigin().getId() == idPoint) && countRound > 0) || (countRound == 0 && edge.getTarget().getId() == idPoint))
+				{
+					edge.setAlreadyPassed(true);
+					addAlreadyPassedEdge(edge);
+					break;
+				}
+				else
+				{
+					edge.setAlreadyPassed(true);
+					addAlreadyPassedEdge(edge);
+				}
+				countRound++;
+			}
+		}
+	}
+	
 	
 	
 	/**
@@ -201,6 +245,21 @@ public class Map extends JPanel {
 	
 	public void removeAllLabels(){
 		labels.clear();
+	}
+	
+	private void addAlreadyPassedEdge(ViewEdge edge)
+	{
+		alreadyPassedEdges.add(edge);
+	}
+	
+	public void removeAllAlreadyPassedEdges(){
+		Iterator<ViewEdge> i = alreadyPassedEdges.iterator();
+		while(i.hasNext())
+		{
+			ViewEdge e = i.next();
+			e.setAlreadyPassed(false);
+		}
+		alreadyPassedEdges.clear();
 	}
 	
 	public MainFrame getMainFrame() { return mainFrame; }

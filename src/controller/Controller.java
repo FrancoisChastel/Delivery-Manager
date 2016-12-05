@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import model.Model;
+import model.Tour;
 import view.View;
 import view.View.Page;
 
@@ -58,4 +59,6 @@ public class Controller implements IController{
 	{
 		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
+	
+	public Tour getModelTour() { return model.getTour(); }
 }

@@ -108,6 +108,22 @@ public class MainFrame extends JFrame implements ActionListener {
 				{
 					int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
 					map.getPoint(selected).setHoved(true);
+					
+				
+					
+					//modify weight of sections already passed
+					map.removeAllAlreadyPassedEdges();
+					Tour t = getView().getController().getModelTour();
+					if(t != null)
+					{
+						//System.out.println("tour getted");
+						map.displayEdgesAlreadyPassed(t, selected);
+					}
+					map.repaint();
+				}
+				else
+				{
+					map.removeAllAlreadyPassedEdges();
 					map.repaint();
 				}
 			}
