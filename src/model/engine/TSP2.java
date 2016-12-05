@@ -19,12 +19,12 @@ public class TSP2 extends TemplateTSP {
 		Date in;
 		long deliveryTime = actualDate.getTime()+(cout[sommmetCrt][sommetProchain]+duree[sommmetCrt])*1000;
 		Date delivery = new Date(deliveryTime);
-		
-		
 		limit = window.get(sommetProchain).getSecond();
-		in = window.get(sommetProchain).getFirst();
+		
 		if(limit != null)
 		{
+			
+			in = window.get(sommetProchain).getFirst();
 			if(!delivery.after(limit))
 			{
 				if(delivery.before(in))
@@ -63,20 +63,29 @@ public class TSP2 extends TemplateTSP {
 	
 	@Override
 	protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-		int coutMin = Integer.MAX_VALUE;
-		Iterator<Integer> iter = nonVus.iterator();
-		Iterator<Integer> iter2 = nonVus.iterator();
+		ArrayList<Integer> sommetRestants = new ArrayList<>(nonVus);
+		int sommetCrt = sommetCourant; // sommet de départ
+		int bestNext = 0; // eventuel sommet suivant
+		int coutMin=duree[sommetCourant]; // cout mini total
 		
-		while (iter.hasNext()) {
-			Integer iter_val = iter.next();
-			int coutMinSommet = Integer.MAX_VALUE;
+		
+		while(!sommetRestants.isEmpty())
+		{
+			int coutArc=Integer.MAX_VALUE; // cout pour chaque parcours le plus court
+			for(Integer next : sommetRestants)
+			{
+				if(cout[sommetCrt][next]<coutArc)
+				{
+					bestNext = next;
+					coutArc=cout[sommetCrt][next];
+				}
 			
-			while (iter2.hasNext()) {
-				Integer iter2_val = iter2.next();
-				if (cout[iter_val][iter2_val]<coutMin){coutMin=cout[iter_val][iter2_val];}
 			}
-			coutMin+= coutMinSommet + duree[iter_val];
-		}	
-		return coutMin;
+			coutMin = coutMin + coutArc + duree[bestNext];
+			sommetRestants.remove((Object)new Integer(bestNext));
+			sommetCrt = bestNext;
+			
+		}
+		return coutMin+cout[bestNext][0];
 	}
 }

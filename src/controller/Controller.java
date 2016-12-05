@@ -107,7 +107,7 @@ public class Controller implements IController{
 	/**
 	 * Undo the last command executed by the user
 	 */
-	public void undoCommand(CommandContext context)
+	public void undoCommand(CommandContext context, int numberOfRedo)
 	{
 		try {
 			this.commander.undo(context);
@@ -119,10 +119,10 @@ public class Controller implements IController{
 	/**
 	 * Redo the last command cancelled by an Undo
 	 */
-	public void redoCommand(CommandContext context)
+	public void redoCommand(CommandContext context, int numberOfRedo)
 	{
 		try {
-			this.commander.redo(context);
+			this.commander.redo(context, numberOfRedo);
 		} catch (Throwable e) {
 			this.logger.write(e.getMessage());
 		}
