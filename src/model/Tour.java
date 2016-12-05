@@ -105,18 +105,21 @@ public class Tour {
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */
-	/**public void deleteDeliveryPoint(int deliveryPointId){
-		Integer[] finalDeliveryPointsId = new Integer[this.deliveryPointsId.length-1];
-		
-		int index = 0;
-		for (Integer id : this.deliveryPointsId)
-		{
-			if (id != deliveryPointId){
-				this.deliveryPointsId[index] = id;
-				index++;
+	public int deleteDeliveryPoint(int deliveryPointId) throws Throwable{		
+		for (int cursor=0; cursor<this.deliveryPoints.size(); cursor++)
+			if (id == this.deliveryPoints.get(cursor).getMapNodeId())
+			{
+				this.deliveryPoints.remove(cursor);
+				return id;
 			}
-		}
-		this.deliveryPointsId = finalDeliveryPointsId
-	}**/
+		throw new Throwable("Error, there is no delivery point with the id "+deliveryPointId+", cannot delete a non-existing delivery point in a tour");
+	}
 	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint){	
+		this.deliveryPoints.add(index, deliveryPoint);
+	}
 }
