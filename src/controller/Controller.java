@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
-<<<<<<< HEAD
-=======
-
 import controller.commands.CommandContext;
 import controller.commands.Commander;
 import controller.commands.ICommander;
 import controller.commands.undocommands.ResetDeliveriesCommand;
->>>>>>> branch 'master' of https://github.com/FrancoisChastel/Delivery-Manager.git
 import model.IModel;
 import model.Model;
 import view.View;
