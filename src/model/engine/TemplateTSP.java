@@ -106,14 +106,14 @@ public abstract class TemplateTSP implements TSP {
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-	    		for(int i=0;i<datesLivraisons.length;i++)
+/*	    		for(int i=0;i<datesLivraisons.length;i++)
 	    		{
 	    			System.out.println("@ Node "+ i + " " + datesLivraisons[i]);
-	    		}
+	    		}*/
 	    	}
 	    	
 	    	
-		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
+		 } else if (vus.get(0) == 0 && checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
 	        	Integer prochainSommet = it.next();
