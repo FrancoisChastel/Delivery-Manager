@@ -32,6 +32,7 @@ public class Model extends IModel {
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
+	private LowerCosts lowCosts;	
 
 	/**
 	 * Normal constructor of the model
@@ -49,6 +50,7 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
+	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
@@ -81,10 +83,6 @@ public class Model extends IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 		deliveryManager = new DeliveryManager();
-		setChanged();
-		HashMap<String,Object> map = new HashMap<>();
-		map.put("type", "UPDATE_MAP");
-		notifyObservers(map);
 	}
 
 	@Override
@@ -154,7 +152,7 @@ public class Model extends IModel {
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId,graphDelMan);
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}
