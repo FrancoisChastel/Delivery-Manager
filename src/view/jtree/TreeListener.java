@@ -1,8 +1,6 @@
-package view;
-import view.jtree.*;
+package view.jtree;
 
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,17 +13,18 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.omg.PortableServer.POA;
 
-//import view.ITreeItem.Menu;
+import view.MainFrame;
+import view.jtree.ITreeItem.Menu;
 
 public class TreeListener implements TreeSelectionListener, ActionListener, MouseListener {
 
 	// Attributes
 	private MainFrame mainFrame;
-	private HashMap<ITreeItem.Menu,JPopupMenu> mapPopupMenu;
-	private int lastIdTourSelected =0;
+	private HashMap<Menu,JPopupMenu> mapPopupMenu;
 	
 	/**
 	 * Normal Constructor
@@ -52,7 +51,7 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		generateTourItem.addActionListener(this);
 		tourPopupMenu.add(generateTourItem);
 		
-		mapPopupMenu.put(ITreeItem.Menu.TourMenu, tourPopupMenu);
+		mapPopupMenu.put(Menu.TourMenu, tourPopupMenu);
 		
 		// MapNode menu -----------------------------------------
 		JPopupMenu nodeMenu = new JPopupMenu();
@@ -62,7 +61,17 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		tourPopupMenu.add(deletePoint);
 		nodeMenu.add(deletePoint);
 		
-		mapPopupMenu.put(ITreeItem.Menu.NodeMenu, nodeMenu);
+		mapPopupMenu.put(Menu.NodeMenu, nodeMenu);
+		
+		// WaitingTime menu -----------------------------------------
+		JPopupMenu wMenu = new JPopupMenu();
+		// TDelete point
+		JMenuItem addPoint = new JMenuItem("Add delivery point here");
+		addPoint.addActionListener(this);
+		wMenu.add(addPoint);
+		
+		mapPopupMenu.put(Menu.WaitingTimeMenu, wMenu);
+				
 	}
 	
 	/**
@@ -70,33 +79,25 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		System.out.println("aaUfhsdfhsldfhsdfh");
+
 		JTree curr = (JTree) e.getSource();
-		if(curr == null){
-			System.out.println(curr.getLastSelectedPathComponent().getClass().getName());
+		if(curr == null)
 			return;
-		}
 		
 		mainFrame.getMap().setAllPointHoved(false);
-		System.out.println(curr.getLastSelectedPathComponent().getClass().getName());
+		
 		// Selected Tree Node
-		if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.jtree.TreeMapNode")
+		if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
 		{
-			int selectedTour = ((TreeTour)curr.getSelectionPaths()[0].getPathComponent(1)).getId();
-			lastIdTourSelected = selectedTour;
 			int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
-			mainFrame.getMap().removeAllAlreadyPassedEdges();
-			mainFrame.getMap().displayEdgesAlreadyPassed(mainFrame.getView().getController().getModel().getTourById(lastIdTourSelected), selected);
 			mainFrame.getMap().getPoint(selected).setHoved(true);
-			mainFrame.getMap().setTourSelected(selectedTour);
 			mainFrame.getMap().repaint();
 		}
 		// Selected TourNode
-		else if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.jtree.TreeTour")
+		else if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeTour")
 		{
 			
 			int selectedTour = ((TreeTour) curr.getLastSelectedPathComponent()).getId();
-			lastIdTourSelected = selectedTour;
 			mainFrame.getMap().setTourSelected(selectedTour);
 			mainFrame.getMap().repaint();
 		}
@@ -123,6 +124,27 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		{
 			mainFrame.getView().getController().generateTraceRoute(selected.getId());
 		}		
+		else if(item.getActionCommand() == "Delete this point")
+		{
+			int pointId = selected.getId();
+			// Get the tour ID
+			int tourId  = ( (TreeTour) ((DefaultMutableTreeNode) selected).getParent()).getId();
+			mainFrame.getView().getController().deletePoint(tourId, pointId);
+		}
+		else if(item.getActionCommand() == "Add delivery point here")
+		{
+			// Get selectedTreeWaitingTime
+			TreeWaitingTime selectedTWT = (TreeWaitingTime) selected;
+			
+			// Get id of the tour
+			int tourId  = ( (TreeTour) selectedTWT.getParent()).getId();
+			
+			// Get the available Time
+			int idPoint = selectedTWT.getId();
+			
+			// Call the callback in mainFrame
+			mainFrame.AddDeliveryPoint(idPoint, tourId, selectedTWT.getPositionInTour(), selectedTWT.getAvailableTime() );
+		}
 	}
 
 	/**

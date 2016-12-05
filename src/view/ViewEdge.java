@@ -28,7 +28,8 @@ public class ViewEdge implements IShape {
 	private boolean alreadyPassed = false;
 	
 	
-	// This map represents the sections on this Troncon. It could be sized 2 or 1. The key is the ID of the section and the value its color.
+	// This map represents the sections on this Troncon. It could be sized 2 or 1.
+	// The key is the ID of the section and the value its color.
 	private HashMap <Integer,Color> sections;
 
 	/**

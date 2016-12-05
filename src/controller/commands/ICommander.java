@@ -45,13 +45,13 @@ public interface ICommander {
 	 * @param context targeted by the undo
 	 * @throws Throwable
 	 */
-	public void undo(CommandContext context) throws Throwable;
+	public void undo(CommandContext context, int numberOfUndo) throws Throwable;
 	
 	/**
 	 * redo the last command of the context
 	 * @param context targeted by the redo
 	 * @throws Throwable
 	 */
-	public void redo(CommandContext context) throws Throwable;
+	public void redo(CommandContext context, int numberOfRedo) throws Throwable;
 	
 }

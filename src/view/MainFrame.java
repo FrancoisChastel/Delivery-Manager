@@ -20,10 +20,15 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import controller.commands.CommandContext;
 import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
+import view.jtree.JTreeRenderer;
+import view.jtree.TreeDefaultIconNode;
+import view.jtree.TreeListener;
+import view.jtree.TreeTour;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -53,10 +58,13 @@ public class MainFrame extends JFrame implements ActionListener {
 	private Adapter adapter;
 	private JMenuItem mntmLoadDeliveryfile;
 	private JMenuItem mntmNewMap;
+	private JMenuItem mntmUndo;
+	private JMenuItem mntmRedo;
 	private JMenuItem mntmReset;
 	private JTree tourTree;
-	private DefaultMutableTreeNode root;
+	private TreeDefaultIconNode root;
 	private JPanel rightSidePanel;
+	private AddDeliveryFrame addDeliveryFrame;
 	
 	/**
 	 * Normal Construcor
@@ -78,6 +86,20 @@ public class MainFrame extends JFrame implements ActionListener {
 		mntmNewMap = new JMenuItem("Load New Map");
 		mnFile.add(mntmNewMap);
 		mntmNewMap.addActionListener(this);
+		
+		
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		
+		mntmUndo = new JMenuItem("Undo");
+		mnEdit.add(mntmUndo);
+		mntmUndo.addActionListener(this);
+		
+		mntmRedo = new JMenuItem("Redo");
+		mnEdit.add(mntmRedo);
+		mntmRedo.setEnabled(false);
+		mntmRedo.addActionListener(this);
+		
 		
 		JMenu mnDelivery = new JMenu("Delivery");
 		menuBar.add(mnDelivery);
@@ -110,9 +132,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		// Initialization of the JTree -----------
 		//create the root node
-        root = new DefaultMutableTreeNode("Deliveries");        
+        root = new TreeDefaultIconNode("Deliveries",null);        
 		tourTree = new JTree(root);	
-		
+		tourTree.setCellRenderer(new JTreeRenderer());
 
 		// Manage listener
 		TreeListener treeListener = new TreeListener(this);
@@ -124,7 +146,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		rightSidePanel.add(treeView);
 		
 		repaint();
+		
+		addDeliveryFrame = new AddDeliveryFrame(this);
 	}
+	
+	
 	
 	/**
 	 * Draw the frame with adapted from model objects. Called by update
@@ -155,10 +181,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		TreeTour tourInTree = adapter.getTreeTour(tour);
 		System.out.println("Displaying t"+tourInTree.getId());
 		
-		for(DeliveryPoint dp : tour.getDeliveryPoints())
+		for(int i =0; i<tour.getDeliveryPoints().size()-1;i++)
 		{
-			tourInTree.add(adapter.getTreeNode(dp));
+			// Add the DeliveryPointNode
+			tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(i)));
+			// Add the waiting Time node
+			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour,i));
 		}
+		
+		// Add the last deliveryPoint
+		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
 		
 		root.add(tourInTree);	
 		this.tourTree.setSelectionRow(root.getChildCount()-1);
@@ -184,14 +216,16 @@ public class MainFrame extends JFrame implements ActionListener {
             	hamecon.getController().parseMapFile(currentFile);
             	root.removeAllChildren();
             }
+            mntmRedo.setEnabled(false);
 		}
 		else if(arg0.getSource()==mntmReset)
 		{
+
 			root.removeAllChildren();
-			hamecon.getController().resetDeliveries();
+			
 			// Initialization of the JTree -----------
 			//create the root node
-	        root = new DefaultMutableTreeNode("Deliveries");        
+	        root = new TreeDefaultIconNode("Deliveries",null);        
 			tourTree = new JTree(root);	
 			
 
@@ -199,6 +233,17 @@ public class MainFrame extends JFrame implements ActionListener {
 			TreeListener treeListener = new TreeListener(this);
 			tourTree.addTreeSelectionListener(treeListener);
 			tourTree.addMouseListener(treeListener);
+
+			try {
+				hamecon.getController().resetDeliveries();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//refresh tree (empty)
+			//repaint empty map
+			mntmRedo.setEnabled(false);
+
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
@@ -209,18 +254,51 @@ public class MainFrame extends JFrame implements ActionListener {
             	File currentFile = fc.getSelectedFile();            	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
+            mntmRedo.setEnabled(false);
+		}
+		else if(arg0.getSource()==mntmUndo)
+		{
+			hamecon.getController().undoCommand(CommandContext.MAIN, 1);
+			mntmRedo.setEnabled(true);
+		}
+		else if(arg0.getSource()==mntmRedo)
+		{
+			hamecon.getController().redoCommand(CommandContext.MAIN, 1);
 		}
 		
 	}
-
-	public JTree getJtree() { return tourTree; }
 	
 	/**
-	 * 
-	 * @return
+	 * This method display the AddDeliveryPointFrame
+	 * @param idPoint
+	 * @param tourId
+	 * @param index
+	 * @param availableTime
 	 */
-	public View getView() { return hamecon; }
+	public void AddDeliveryPoint(int idPoint, int tourId, int index, long availableTime)
+	{
+		if(addDeliveryFrame.isVisible())
+		{
+			View.displayMessage("Add delivery frame is already opened", "Error", null);
+			return;
+		}
+		System.out.println(availableTime+" --");
+		addDeliveryFrame.setVisible(true);
+		addDeliveryFrame.setAvailableTime(availableTime);
+		addDeliveryFrame.setIndex(index);
+		addDeliveryFrame.setTourId(tourId);
+	}
 
+	// Accessors
+	public JTree getJtree() { return tourTree; }
+	public View getView() { return hamecon; }
 	public Map getMap() {	return map;	}
+
+
+
+	public void setPickedPointAddDelivery(ViewPoint point) {
+		// TODO Auto-generated method stub
+		addDeliveryFrame.setPickedPointId(point.getId());
+	}
 
 }

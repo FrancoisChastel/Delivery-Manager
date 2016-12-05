@@ -3,7 +3,9 @@ package view;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import model.Tour;
@@ -11,6 +13,10 @@ import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
+import view.jtree.TreeDefaultIconNode;
+import view.jtree.TreeMapNode;
+import view.jtree.TreeTour;
+import view.jtree.TreeWaitingTime;
 
 /**
  * 
@@ -22,6 +28,12 @@ public class Adapter {
 	private int minX, minY, maxX, maxY;
 	private int etendueX, etendueY;
 	private Map map;
+	
+	// this enum is used to use JTree Icon -----------------------------
+	public static enum Icons {DELIVERY_ARRIVING,DELIVERY_LEAVING, DELIVERY, TOUR, ADDRESS, SCHEDULES, WAITING};
+	// you can use icon through this map.
+	private HashMap<Icons,ImageIcon> icons;
+	// -----------------------------------------------------------------
 	
 	/**
 	 * This method get the extremums of deliveryPoints in order to calibrate the size of the map.  
@@ -130,35 +142,64 @@ public class Adapter {
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	
+	/**
+	 * Create a TreeMapNode from a deliveryPoint
+	 * @param dp
+	 * @return
+	 */
 	public TreeMapNode getTreeNode(DeliveryPoint dp)
 	{		
-		TreeMapNode node = new TreeMapNode("Point "+dp.getMapNodeId(), dp.getMapNodeId());
-				
+		TreeMapNode node = new TreeMapNode("Point "+dp.getMapNodeId(), dp.getMapNodeId(), icons.get(Icons.DELIVERY));
 		
 		// Get back the corresponding deliveryNode
 		Delivery delivery = dp.getDelivery();
 		
 		// Address
-		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
+		node.add(new TreeDefaultIconNode( "Address : "+ delivery.getAdress().getidNode(),icons.get(Icons.ADDRESS)) );
 		
 		// Plage
-		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
-		plage.add(new DefaultMutableTreeNode("in : "+dp.getArrivingDate()));
-		plage.add(new DefaultMutableTreeNode("out : "+dp.getLeavingDate()));
+		TreeDefaultIconNode plage = new TreeDefaultIconNode("Schedules",icons.get(Icons.SCHEDULES));
+		
+		// Schedules
+		plage.add(new TreeDefaultIconNode(View.getDate(dp.getArrivingDate()), icons.get(Icons.DELIVERY_ARRIVING)));
+		plage.add(new TreeDefaultIconNode(View.getDate(dp.getLeavingDate()), icons.get(Icons.DELIVERY_LEAVING)));
 		
 		node.add(plage);
 		
 		return node;
 	}
 	
+	/**
+	 * Return a TreeWaitingTime.
+	 * @param p1
+	 * @param p2
+	 * @return
+	 */
+	public TreeWaitingTime getTreeWaitingTime(DeliveryPoint p1, DeliveryPoint p2, Tour t, int positionInTour)
+	{
+		long waitingTime = t.getAvailableTimeBeweenTwoPoints(p1, p2);	
+		
+		return new TreeWaitingTime("waiting : "+View.formatDateFromSecond(waitingTime), icons.get(Icons.WAITING), p1.getMapNodeId(),positionInTour,waitingTime);
+	}
+	
+	/**
+	 * Create a TreeTour from tour.
+	 * @param t
+	 * @return
+	 */
 	public TreeTour getTreeTour(Tour t)
 	{
-		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId());
+		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId(), icons.get(Icons.TOUR));
 		// TODO add meta data of tour
 		
 		return res;
 	}
 	
+	/**
+	 * Create de ViewEdge from a Section.
+	 * @param section
+	 * @return
+	 */
 	public ViewEdge getView(Section section)
 	{		
 		return new ViewEdge(map.getPoint(section.getIdOrigin()), map.getPoint(section.getIdDestination()), section.getId());		
@@ -172,5 +213,21 @@ public class Adapter {
 	public Adapter(Map map)
 	{
 		this.map = map;
+		loadIcons();
+	}
+	
+	/**
+	 * This method manages all Image Icon creations.
+	 */
+	private void loadIcons()
+	{
+		icons = new HashMap<>();
+		icons.put(Icons.DELIVERY_ARRIVING, new ImageIcon("icone/next.png"));
+		icons.put(Icons.DELIVERY_LEAVING, new ImageIcon("icone/back.png"));
+		icons.put(Icons.DELIVERY, new ImageIcon("icone/box.png"));
+		icons.put(Icons.TOUR, new ImageIcon("icone/trucking.png"));
+		icons.put(Icons.ADDRESS, new ImageIcon("icone/street-map.png"));
+		icons.put(Icons.SCHEDULES, new ImageIcon("icone/stopwatch.png"));
+		icons.put(Icons.WAITING, new ImageIcon("icone/sand-clock.png"));
 	}
 }
