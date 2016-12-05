@@ -143,8 +143,8 @@ public class Adapter {
 		
 		// Plage
 		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
-		plage.add(new DefaultMutableTreeNode("in : "+delivery.getBeginning()));
-		plage.add(new DefaultMutableTreeNode("out : "+delivery.getEnd()));
+		plage.add(new DefaultMutableTreeNode("in : "+dp.getArrivingDate()));
+		plage.add(new DefaultMutableTreeNode("out : "+dp.getLeavingDate()));
 		
 		node.add(plage);
 		

@@ -313,17 +313,20 @@ public class Model extends IModel {
 		// Building IdDeliveryList
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
 		
-		/*for(int in =0; in<tspObject.bestSolution.length;in++)
+		for(int in =0; in<tspObject.bestSolution.length;in++)
 		{
-			DeliveryPoint dp = new DeliveryPoint(delivery, arriving);
-			// recuperer une 
-			tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
-			deliveryPoints.add(dp)= 
+			// Get the current delivery Node Id
+			int idNode = tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+			// get the corresponding delivery in model
+			Delivery delivery = model.selected.getDeliveryById(idNode);
+			// Create the right deliveryPoint
+			DeliveryPoint dp  = new DeliveryPoint(delivery, tspObject.datesLivraisons[in]);
 			
-		}*/
+			deliveryPoints.add(dp);
+		}
 
-		//Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
-		//model.setTour(tour);
+		Tour tour = new Tour(sections,deliveryPoints,model.selected.getStoreAdress().getidNode());	
+		model.setTour(tour);
 	}
 }
 
