@@ -25,21 +25,12 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 		
 		if(point != null)
 		{
-			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE,null);
-			map.repaint();
+			map.getMainFrame().setPickedPointAddDelivery(point);
 		}
 					
 		if(troncon != null)
 		{
-			String ids = "";
-			Iterator<Integer> i = troncon.getIds().iterator();
-			
-			while (i.hasNext())
-			{
-				ids+=i.next()+" ";
-			}
-			View.displayMessage("Clic on "+ids, "Debug", JOptionPane.INFORMATION_MESSAGE,null);
-			map.repaint();
+
 		}
 				
 	}

@@ -175,27 +175,11 @@ public class Adapter {
 	 * @param p2
 	 * @return
 	 */
-	public TreeWaitingTime getTreeWaitingTime(DeliveryPoint p1, DeliveryPoint p2, Tour t)
+	public TreeWaitingTime getTreeWaitingTime(DeliveryPoint p1, DeliveryPoint p2, Tour t, int positionInTour)
 	{
-		// Get the time travel between p1 and p2
-		long travelTimeSec = t.travelTimeBetweenTwoPoints(p1,p2);
+		long waitingTime = t.getAvailableTimeBeweenTwoPoints(p1, p2);	
 		
-		// Get the effective time between p1 and p2
-		long effectiveTime = (p2.getArrivingDate().getTime()/1000) - (p1.getLeavingDate().getTime()/1000);
-		
-		long waitingTime = effectiveTime-travelTimeSec;
-				
-		// Formating
-		int seconds 	 = (int) (waitingTime % 60);
-	    int totalMinutes = (int) (waitingTime / 60);
-	    
-	    
-		String formatedWaitingTime = String.format("%02d min, %02d sec", 
-				totalMinutes,
-				seconds
-			);
-		
-		return new TreeWaitingTime("waiting : "+formatedWaitingTime, icons.get(Icons.WAITING), p1.getMapNodeId());
+		return new TreeWaitingTime("waiting : "+View.formatDateFromSecond(waitingTime), icons.get(Icons.WAITING), p1.getMapNodeId(),positionInTour,waitingTime);
 	}
 	
 	/**

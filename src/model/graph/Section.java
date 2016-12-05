@@ -76,8 +76,9 @@ public class Section implements Comparable<Section>{
 		return 0;
 	}
 	
-	public String toString()
-	{
-		return "<"+idOrigin+","+idDestination+">";
+	@Override
+	public String toString() {
+		return "Section [idOrigin=" + idOrigin + ", idDestination="
+				+ idDestination + "]";
 	}
 }
