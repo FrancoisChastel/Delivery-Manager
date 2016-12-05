@@ -52,7 +52,10 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
+	public GraphDeliveryManager getGraphDelMan() {			return graphDelMan;}
+	public HashMap<Integer, Integer> getIndexDelOrdersTours() {	return indexDelOrdersTours; }
+	public HashMap<Integer, Tour> getTours() {				return tours; }
+
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
@@ -160,20 +163,25 @@ public class Model extends IModel {
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}
-		this.notifyObservers(this.tours);
+		
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_DELIVERY");
+		map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+
+		this.notifyObservers(map);
 	}
 
 	@Override
-	public void addDeliveryPoint(int tourId, int nodeId, int duration,
+	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		// TODO Auto-generated method stub
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
 		
 	}
-	
+		
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
@@ -235,6 +243,8 @@ public class Model extends IModel {
 		out.duree = model.selected.getTimes();
 		out.departureDate = model.selected.getStartingTime();
 		
+		// adding delivery node first
+		out.getIByMapNode(model.selected.getStoreAdress());
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
 		{			
@@ -388,4 +398,6 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
+	
+	
 }

@@ -19,9 +19,6 @@ public class Section implements Comparable<Section>{
 		this.id = factoryId;
 		factoryId++;
 	}
-
-
-	
 	
 	// Getters and Setters
 

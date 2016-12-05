@@ -60,7 +60,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @return une borne inferieure du cout des permutations commencant par sommetCourant, 
 	 * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
 	 */
-	protected abstract int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
+	protected abstract  int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
 	
 	protected abstract Date updateDate(ArrayList<Pair<Date,Date>> window,int sommmetCrt,int sommetProchain,int[][] cout,int[] duree,Date actualDate);
 	
@@ -100,19 +100,16 @@ public abstract class TemplateTSP implements TSP {
 		 }
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
-	    	actualDate = new Date(actualDate.getTime() + cout[sommetCrt][0]);
-	    	datesLivraisons[0] = actualDate;
+	    	datesLivraisons[0] = new Date(actualDate.getTime() + (cout[sommetCrt][0])*1000);
 	    	if (actualDate.before(meilleureSolutionDate)){ // on a trouve une solution meilleure que meilleureSolution
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
 	    		for(int i=0;i<datesLivraisons.length;i++)
 	    		{
-	    			System.out.println("@ Node "+ i + " " + datesLivraisons[i]);
+	    			System.out.println(datesLivraisons[i]);
 	    		}
 	    	}
-	    	
-	    	
 		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
@@ -122,12 +119,16 @@ public abstract class TemplateTSP implements TSP {
 	        	{
 	        		vus.add(prochainSommet);
 	        		nonVus.remove(prochainSommet);
-	        		datesLivraisons[sommetCrt] = actualDate;
+	        		datesLivraisons[prochainSommet] = nextDate;
 	        		branchAndBound(prochainSommet, nonVus, vus, cout, duree,window, tpsDebut, tpsLimite,nextDate);
 	        		vus.remove(prochainSommet);
 	        		nonVus.add(prochainSommet);
 	        	}
-	        }	    
+	        	else
+	        	{
+	        		break;
+	        	}
+	        }
 	    }
 	}
 }

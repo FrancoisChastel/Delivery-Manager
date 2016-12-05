@@ -2,10 +2,14 @@ package model;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 
+import controller.Controller;
+import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
+import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
 
@@ -83,10 +87,11 @@ public abstract class IModel extends Observable {
 	/**
 	 * Create and add a delivery point to a specific tour.
 	 * @param tourId which is concerned by the add of the delivery point
+	 * @param index where the delivery point will be added in the path
 	 * @param nodeId where the delivery point will be set
 	 * @param duration of delivery 
 	 * @param availabilityBeginning of the delivery  
 	 * @param availabilityEnd of the delivery
 	 */
-	public abstract void addDeliveryPoint(int tourId,int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd);
+	public abstract void addDeliveryPoint(int tourId, int index,int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd);
 }
