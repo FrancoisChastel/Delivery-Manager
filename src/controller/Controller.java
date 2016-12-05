@@ -97,10 +97,7 @@ public class Controller implements IController{
 	 */
 	public void resetDeliveries() throws Throwable
 	{
-		// For example : 
-		ResetDeliveriesCommand reset = new ResetDeliveriesCommand(model);
-		reset.execute();
-		this.commander.execute(CommandContext.MAIN, reset);
+		this.commander.execute(CommandContext.MAIN, new ResetDeliveriesCommand(model));
 	}
 	
 	/**
