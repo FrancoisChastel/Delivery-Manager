@@ -83,6 +83,10 @@ public class Model extends IModel {
 		indexDelOrdersTours = new HashMap<>();
 		tours = new HashMap<>();
 		deliveryManager = new DeliveryManager();
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_MAP");
+		notifyObservers(map);
 	}
 
 	@Override
