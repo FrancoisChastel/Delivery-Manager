@@ -1,6 +1,8 @@
 package model;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,7 +53,10 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
+	public GraphDeliveryManager getGraphDelMan() {			return graphDelMan;}
+	public HashMap<Integer, Integer> getIndexDelOrdersTours() {	return indexDelOrdersTours; }
+	public HashMap<Integer, Tour> getTours() {				return tours; }
+
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
@@ -131,7 +136,7 @@ public class Model extends IModel {
 			// step2.3 : call TSP
 			TSP(paths,pathsDistance);
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
-						
+			generateTraceRoute(0);
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
@@ -149,18 +154,32 @@ public class Model extends IModel {
 	public void generateTraceRoute(int tourid)
 	{			
 		File htmlFile = new File("roadMap/index.html");
-		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
-		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
+		HtmlGenerator.generateHtml(this.getGraphDeliveryManager().getGraph().getNodeById(tours.get(tourid).getEntrepotId()),this.tours.get(tourid),TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
+		controller.getLogger().write("Tour "+ tours.get(tourid)+ " : Instructions in HTML done");
+		/*
+		try {
+			Desktop.getDesktop().browse(htmlFile.toURI());
+			controller.getLogger().write("HTML print");
+		} catch (IOException e) {
+			controller.error("Print HTML : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 		
+		}
+		*/
 	}
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
+			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId);
 			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}
-		this.notifyObservers(this.tours);
+		
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_DELIVERY");
+		map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+
+		this.notifyObservers(map);
 	}
 
 	@Override
@@ -417,4 +436,6 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
+	
+	
 }

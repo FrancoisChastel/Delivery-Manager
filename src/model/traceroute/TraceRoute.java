@@ -1,6 +1,5 @@
 package model.traceroute;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,14 +41,19 @@ public abstract class TraceRoute {
 		{
 			nextNode        = map.getNodeById(section.getIdDestination());
 			allDestinations = map.getDestinations(map.getNodeById(section.getIdOrigin()));
-			List <DeliveryPoint> deleveryPoint = tour.getDeliveryPoints();
-			
+			boolean uniqueOutgoingDestination = false;
+			if(allDestinations.size() == 2)
+			{
+				uniqueOutgoingDestination = true;
+			}
+			//List <Integer> deleveryPoint = Arrays.asList(tour.getDeliveryPoints());
+
 			//Compute New Vector
 			destination.redifineVector(oldX, oldY, nextNode.getX(),  nextNode.getY());
 					
 			instructions.add(instruction(origin, destination, 
 								section.getName(),section.getLength(),section.getIdOrigin(), section.getIdDestination(), 
-								contains(tour.getDeliveryPoints(), section.getIdDestination()),
+								contains(tour.getDeliveryPoints(), section.getIdDestination()),uniqueOutgoingDestination,
 								allDestinations.keySet()));
 			/*
 			System.out.println(instruction(origin, destination, 
@@ -79,17 +83,19 @@ public abstract class TraceRoute {
 	private static Instruction instruction(MathVector origin, MathVector destination, 
 			String roadName, Integer length,
 			int idOrigin, int idDestination,
-			boolean isDeliveryPoint, Set<MapNode> nodesDestination)
+			boolean isDeliveryPoint,boolean uniqueOutgoingDestination, Set<MapNode> nodesDestination)
 	{
 		double angle = origin.getAngle(destination);
 		int counter = 1;
-		if(Math.abs(angle) < 5)
+		int nodeInArea =0;
+		boolean uniqueOutgoingDestinationInItsArea = false;
+		if(Math.abs(angle) < 10)
 		{
-			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName);
+			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
 		}
 		else if(Math.abs(angle) == 180)
 		{
-			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint,roadName);
+			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
 		}
 		else if(angle < 0)
 		{
@@ -98,12 +104,20 @@ public abstract class TraceRoute {
 			{
 				tmp.redifineVector(destination.getX1(), destination.getY1(), node.getX(), node.getY());
 				double nodeAngle = origin.getAngle(tmp);
+				if(nodeAngle < -10)
+				{
+					nodeInArea++;
+				}
 				if( nodeAngle < angle && !(tmp.getX2() == origin.getX1() && tmp.getY2() == origin.getY1()))
 				{
 					counter++;
 				}
 			}
-			return new Instruction(Direction.LEFT, counter,length,idDestination,isDeliveryPoint, roadName);
+			if(nodeInArea == 1)
+			{
+				uniqueOutgoingDestinationInItsArea = true;
+			}
+			return new Instruction(Direction.LEFT, counter,length,idDestination,isDeliveryPoint,roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
 		}
 		else
 		{
@@ -112,12 +126,20 @@ public abstract class TraceRoute {
 			{
 				tmp.redifineVector(destination.getX1(), destination.getY1(), node.getX(), node.getY());
 				double nodeAngle = origin.getAngle(tmp);
+				if(nodeAngle > 10)
+				{
+					nodeInArea++;
+				}
 				if( nodeAngle > angle && !(tmp.getX2() == origin.getX1() && tmp.getY2() == origin.getY1()))
 				{
 					counter++;
 				}
 			}
-			return new Instruction(Direction.RIGHT, counter,length,idDestination,isDeliveryPoint, roadName);
+			if(nodeInArea == 1)
+			{
+				uniqueOutgoingDestinationInItsArea = true;
+			}
+			return new Instruction(Direction.RIGHT, counter,length,idDestination,isDeliveryPoint,roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
 		}		
 	}
 }

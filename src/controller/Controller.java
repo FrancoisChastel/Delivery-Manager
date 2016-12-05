@@ -2,6 +2,7 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 import controller.commands.CommandContext;
@@ -96,10 +97,7 @@ public class Controller implements IController{
 	 */
 	public void resetDeliveries() throws Throwable
 	{
-		// For example : 
-		ResetDeliveriesCommand reset = new ResetDeliveriesCommand(model);
-		reset.execute();
-		this.commander.execute(CommandContext.MAIN, reset);
+		this.commander.execute(CommandContext.MAIN, new ResetDeliveriesCommand(model));
 	}
 	
 	/**
@@ -112,6 +110,28 @@ public class Controller implements IController{
 		} catch (Throwable e) {
 			this.logger.write(e.getMessage());
 		}
+	}
+	
+	/**
+	 * This callBack calls model delete DeliveryPoint. It is called by the view TreeListener
+	 */
+	public void deletePoint(int tourID, int deliveryPointId)
+	{
+		model.deleteDeliveryPoint(tourID, deliveryPointId);
+	}
+	
+	/**
+	 * This callback calls model addPoint, it is called by the view Delivery Adder.
+	 * @param tourId
+	 * @param index
+	 * @param nodeId
+	 * @param duration
+	 * @param availabilityBeginning
+	 * @param availabilityEnd
+	 */
+	public void addPoint(int tourId, int index, int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd )
+	{
+		model.addDeliveryPoint(tourId, index, nodeId, duration, availabilityBeginning, availabilityEnd);
 	}
 	
 	/**
