@@ -60,7 +60,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @return une borne inferieure du cout des permutations commencant par sommetCourant, 
 	 * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
 	 */
-	protected abstract int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
+	protected abstract  int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree);
 	
 	protected abstract Date updateDate(ArrayList<Pair<Date,Date>> window,int sommmetCrt,int sommetProchain,int[][] cout,int[] duree,Date actualDate);
 	
@@ -106,14 +106,12 @@ public abstract class TemplateTSP implements TSP {
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-	    		for(int i=0;i<datesLivraisons.length;i++)
+/*	    		for(int i=0;i<datesLivraisons.length;i++)
 	    		{
 	    			System.out.println("@ Node "+ i + " " + meilleureSolution[i]);
-	    		}
+	    		}*/
 	    	}
-	    	
-	    	
-		 } else if (vus.get(0) == 0 && checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
+		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
 	        	Integer prochainSommet = it.next();
@@ -131,7 +129,7 @@ public abstract class TemplateTSP implements TSP {
 	        	{
 	        		break;
 	        	}
-	        }	    
+	        }
 	    }
 	}
 }
