@@ -13,6 +13,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.omg.PortableServer.POA;
 
@@ -113,6 +114,14 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		{
 			mainFrame.getView().getController().generateTraceRoute(selected.getId());
 		}		
+		else if(item.getActionCommand() == "Delete this point")
+		{
+			int pointId = selected.getId();
+			// Get the tour ID
+			int tourId  = ( (TreeTour) ((DefaultMutableTreeNode) selected).getParent()).getId();
+			mainFrame.getView().getController().deletePoint(tourId, pointId);
+		}
+			
 	}
 
 	/**
