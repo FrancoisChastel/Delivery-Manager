@@ -23,6 +23,7 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 	// Attributes
 	private MainFrame mainFrame;
 	private HashMap<Menu,JPopupMenu> mapPopupMenu;
+	private int lastIdTourSelected =0;
 	
 	/**
 	 * Normal Constructor
@@ -77,8 +78,13 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		// Selected Tree Node
 		if (curr.getLastSelectedPathComponent() != null && curr.getLastSelectedPathComponent().getClass().getName() == "view.TreeMapNode")
 		{
+			int selectedTour = ((TreeTour)curr.getSelectionPaths()[0].getPathComponent(1)).getId();
+			lastIdTourSelected = selectedTour;
 			int selected = ((TreeMapNode) curr.getLastSelectedPathComponent()).getId();
+			mainFrame.getMap().removeAllAlreadyPassedEdges();
+			mainFrame.getMap().displayEdgesAlreadyPassed(mainFrame.getView().getController().getModel().getTourById(lastIdTourSelected), selected);
 			mainFrame.getMap().getPoint(selected).setHoved(true);
+			mainFrame.getMap().setTourSelected(selectedTour);
 			mainFrame.getMap().repaint();
 		}
 		// Selected TourNode
@@ -86,6 +92,7 @@ public class TreeListener implements TreeSelectionListener, ActionListener, Mous
 		{
 			
 			int selectedTour = ((TreeTour) curr.getLastSelectedPathComponent()).getId();
+			lastIdTourSelected = selectedTour;
 			mainFrame.getMap().setTourSelected(selectedTour);
 			mainFrame.getMap().repaint();
 		}

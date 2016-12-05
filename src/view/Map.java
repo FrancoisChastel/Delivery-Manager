@@ -23,6 +23,7 @@ public class Map extends JPanel {
 	// the key of this map is the ID of the section
 	private HashMap<Integer,ViewEdge> edges;
 	private ArrayList<ViewLabel> labels;
+	private ArrayList<ViewEdge> alreadyPassedEdges;
 
 	private HashMap<Integer,ViewTour> tours;
 	private MainFrame mainFrame;
@@ -36,13 +37,54 @@ public class Map extends JPanel {
 		edges  = new HashMap<Integer,ViewEdge>();
 		labels = new ArrayList<ViewLabel>();
 		tours  = new HashMap<>();
-		
+		alreadyPassedEdges = new ArrayList<ViewEdge>();
 		this.setBackground(Color.DARK_GRAY);
 		// Action Listener
 		MapMouseListener mouseListener = new MapMouseListener(this);
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
 	}
+	
+	/**
+	 	 * Change weight of edges already passed
+	 	 * @param tour
+	 	 * @param targetPoint
+	 	 */
+	 	public void displayEdgesAlreadyPassed(Tour tour, int idPoint)
+	 	{
+	 		Iterator<Section> sectionIterator = tour.getSections().iterator();
+	 		boolean foundedPoint = false;
+	 		ViewEdge edge;
+	 		while(sectionIterator.hasNext())
+	 		{
+	 			edge = edges.get(((Section)sectionIterator.next()).getId());
+	 			if(edge.getTarget().getId() == idPoint || edge.getOrigin().getId() == idPoint)
+	 			{
+	 				foundedPoint = true;
+	 			}
+	 		}
+	 		if(foundedPoint)
+	 		{
+	 			sectionIterator = tour.getSections().iterator();
+	 			int countRound= 0;
+	 			while(sectionIterator.hasNext())
+	 			{
+	 				edge = edges.get(((Section)sectionIterator.next()).getId());
+	 				if(((edge.getTarget().getId() == idPoint || edge.getOrigin().getId() == idPoint) && countRound > 0) || (countRound == 0 && edge.getTarget().getId() == idPoint))
+	 				{
+	 					edge.setAlreadyPassed(true);
+	 					addAlreadyPassedEdge(edge);
+	 					break;
+	 				}
+	 				else
+	 				{
+	 					edge.setAlreadyPassed(true);
+	 					addAlreadyPassedEdge(edge);
+	 				}
+	 				countRound++;
+	 			}
+	 		}
+	 	}
 	
 	public void resetMap()
 	{
@@ -106,8 +148,19 @@ public class Map extends JPanel {
 	
 	public void toursColoring()
 	{
+		ViewTour selected=null;
 		for(Entry<Integer,ViewTour> tour : tours.entrySet())
-			tour.getValue().colorTourComponentsOnMap();
+		{
+			ViewTour vT = tour.getValue();
+			if(vT.isSelected())
+				selected = vT;
+			else
+				vT.colorTourComponentsOnMap();
+			
+		}
+		if(selected != null)
+			selected.colorTourComponentsOnMap();
+			
 	}
 	/**
 	 * Set selected a tour. All other tours are unselected
@@ -186,6 +239,22 @@ public class Map extends JPanel {
 	{
 		return (ViewPoint) points.get(id);
 	}
+	
+	
+	private void addAlreadyPassedEdge(ViewEdge edge)
+ 	{
+ 		alreadyPassedEdges.add(edge);
+ 	}
+	 	
+ 	public void removeAllAlreadyPassedEdges(){
+ 		Iterator<ViewEdge> i = alreadyPassedEdges.iterator();
+ 		while(i.hasNext())
+ 		{
+ 			ViewEdge e = i.next();
+ 			e.setAlreadyPassed(false);
+ 		}
+ 		alreadyPassedEdges.clear();
+ 	}
 	
 	/**
 	 * Return the first matching Section.
