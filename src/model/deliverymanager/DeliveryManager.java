@@ -17,7 +17,7 @@ public class DeliveryManager {
 		deliveryOrder.setIdOrder(factoryId);
 		id=factoryId++;
 	}
-
+	
 	public HashMap<Integer,DeliveryOrder> getDeliveryOrders() {	return delOrders;	}
 	public int getId() { return id; }
 }

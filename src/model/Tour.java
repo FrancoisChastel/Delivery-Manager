@@ -5,11 +5,14 @@ import java.util.Iterator;
 
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.Section;
+
+import java.util.List;
 
 public class Tour {
 	private ArrayList<Section> sections;
-	private Integer[] deliveryPointsId;
+	private ArrayList<DeliveryPoint> deliveryPoints;
 	private int id;
 	private static int factoryId = 0;
 	private int entrepotId;
@@ -18,11 +21,11 @@ public class Tour {
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, Integer[] deliveryPointsId, int entrepotId)
+	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId)
 	{
 		this.entrepotId=entrepotId;
 		this.sections = sections;
-		this.deliveryPointsId = deliveryPointsId;
+		this.deliveryPoints = deliveryPoints;
 		this.id=factoryId;
 		factoryId++;
 	}
@@ -30,16 +33,24 @@ public class Tour {
 	//Getters
 	public ArrayList<Section> getSections() { 	return sections;}
 	public int getId(){ 						return id; }
-	public Integer[] getDeliveryPoints() {		return deliveryPointsId;}
 	public int getEntrepotId() {				return entrepotId;}
-
+	public ArrayList<DeliveryPoint> getDeliveryPoints(){ return this.deliveryPoints;}
 	/**
 	 * Get total duration of the whole tour
 	 * @return duration of the whole tour
 	 */
 	public int getTotalDuration()
 	{
-		return 10;
+		int totalDuration = 0;
+		
+		for (Section section : this.sections)
+			totalDuration += section.getLength()/section.getSpeed();
+		
+		
+		for (DeliveryPoint deliveryPoint : this.deliveryPoints)
+			totalDuration += deliveryPoint.getDelivery().getDuration();
+		
+		return totalDuration;
 	}
 	
 	/**
@@ -58,7 +69,12 @@ public class Tour {
 	 */
 	public int getTotalLength()
 	{
-		return 50;
+		int totalLength = 0;
+		
+		for (Section section : this.sections)
+			totalLength += section.getLength();
+		
+		return totalLength;
 	}
 	
 	/**
@@ -78,12 +94,32 @@ public class Tour {
 	 */
 	public boolean isDeliveryPoint(int idPoint)
 	{	
-		for(int i = 0; i<deliveryPointsId.length;i++)
-		{
-			if(deliveryPointsId[i]==idPoint)
+		for (DeliveryPoint deliveryPoint : this.deliveryPoints)
+			if (deliveryPoint.getMapNodeId() == idPoint)
 				return true;
-		}
+		
 		return false;
 	}
 	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public int deleteDeliveryPoint(int deliveryPointId) throws Throwable{		
+		for (int cursor=0; cursor<this.deliveryPoints.size(); cursor++)
+			if (id == this.deliveryPoints.get(cursor).getMapNodeId())
+			{
+				this.deliveryPoints.remove(cursor);
+				return id;
+			}
+		throw new Throwable("Error, there is no delivery point with the id "+deliveryPointId+", cannot delete a non-existing delivery point in a tour");
+	}
+	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint){	
+		this.deliveryPoints.add(index, deliveryPoint);
+	}
 }

@@ -12,6 +12,7 @@ import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
@@ -66,7 +67,7 @@ public class Model extends IModel {
 	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
 	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
 															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
-
+	
 	@Override
 	public void resetModel()
 	{
@@ -121,10 +122,10 @@ public class Model extends IModel {
 			controller.getLogger().write(currentFile.getName()+ " : Deliveries loaded");
 			// Step2 : Call the engine to create a tour
 			// Step2.1 : call dijkstra
-			dijkstra();
+			HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = dijkstra();
 			controller.getLogger().write(currentFile.getName()+ " : Dijkstra computed");
 			// step2.2 : call TSP
-			TSP();
+			TSP(paths);
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
 						
 			setChanged();
@@ -142,8 +143,7 @@ public class Model extends IModel {
 	
 	@Override
 	public void generateTraceRoute(int tourid)
-	{
-				
+	{			
 		File htmlFile = new File("roadMap/index.html");
 		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
 		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
@@ -151,8 +151,12 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		// TODO Auto-generated method stub
-		
+		try {
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+		} catch (Throwable e) {
+			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
+		}
+		this.notifyObservers(this.tours);
 	}
 
 	@Override
@@ -165,28 +169,20 @@ public class Model extends IModel {
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
-	private void dijkstra()
+	private HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> dijkstra()
 	{
-		if(lowCosts == null)
-		{
-			lowCosts = new LowerCosts(this);
-		}
-		else
-		{
-			lowCosts.refresh();
-		}
-		lowCosts.generateCosts();
+		return LowerCosts.generateCosts(graphDelMan,selected);
 	}
 	
 	/**
 	 * Step 2 of the engine. Call TSP
 	 */	
-	private void TSP()
+	private void TSP(HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths)
 	{
 		tsp = new TSP2();
 		
 		// Adapte the TSP Object
-		TSPObject tspObject = AdapterModelTSP(this);
+		TSPObject tspObject = AdapterModelTSP(this, paths);
 		
 		// Call the TSP module
 		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
@@ -204,7 +200,7 @@ public class Model extends IModel {
 		System.out.println(TSP);
 		
 		// Constructing a Tour
-		AdapterTSPModel(this, tspObject);
+		AdapterTSPModel(this, tspObject, paths);
 		}
 		catch (Exception e) {
 			controller.error("Impossible de calculer la tournée en respectant les conditions");
@@ -217,9 +213,8 @@ public class Model extends IModel {
 	 * @param paths
 	 * @return
 	 */
-	public static TSPObject AdapterModelTSP(Model model)
+	public static TSPObject AdapterModelTSP(Model model, HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths)
 	{		
-		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = model.getLowerCosts().getPaths();
 		int nbSommets = paths.size();
 		
 		TSPObject out = new TSPObject(nbSommets);
@@ -268,9 +263,8 @@ public class Model extends IModel {
 	 * @param model 
 	 * @param tspObject
 	 */
-	public static void AdapterTSPModel(Model model, TSPObject tspObject)
+	public static void AdapterTSPModel(Model model, TSPObject tspObject,HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths)
 	{
-		HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths = model.getLowerCosts().getPaths();
 		ArrayList<Section> sections= new ArrayList<>();
 		int i;
 		
@@ -304,7 +298,6 @@ public class Model extends IModel {
 		MapNode d = tspObject.mappingId.get(tspObject.bestSolution[0]);
 		for(Pair<ArrayList<MapNode>,Integer> pair : paths.get(o))
 		{
-			
 			ArrayList<MapNode> list = pair.getFirst();
 			
 			// retrieve the good path
@@ -322,11 +315,21 @@ public class Model extends IModel {
 		}
 		
 		// Building IdDeliveryList
-		Integer [] listIds = new Integer[tspObject.bestSolution.length];
+		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
+		
 		for(int in =0; in<tspObject.bestSolution.length;in++)
-			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+		{
+			// Get the current delivery Node Id
+			int idNode = tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+			// get the corresponding delivery in model
+			Delivery delivery = model.selected.getDeliveryById(idNode);
+			// Create the right deliveryPoint
+			DeliveryPoint dp  = new DeliveryPoint(delivery, tspObject.datesLivraisons[in]);
+			
+			deliveryPoints.add(dp);
+		}
 
-		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
+		Tour tour = new Tour(sections,deliveryPoints,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
 	}
 }
