@@ -78,21 +78,48 @@ public class Controller implements IController{
 		}
 		view.displayMessage(message, "TraceRoute", view.getPage(Page.Main));
 	}
-	
+	/**
+	 * Reset the entire model with new managers
+	 */
 	public void reset()
 	{
 		model.resetModel();
 	}
 	
+	/**
+	 *  Reset all the model excepted the map associated to the graph
+	 */
 	public void resetDeliveries()
 	{
 		model.resetDeliveries();
 	}
 	
+	/**
+	 * Undo the last command executed by the user
+	 */
+	public void undoCommand()
+	{
+		
+	}
+	
+	/**
+	 * Redo the last command cancelled by an Undo
+	 */
+	public void redoCommand()
+	{
+		
+	}
+	
+	
+	
 	// End callbacks ------------------------------
 	
 	public IModel getModel() { return model; }
 
+	/**
+	 * Display error in a popup frame and write it in the log file
+	 * @param message
+	 */
 	public void error(String message)
 	{
 		View.displayMessage(message, "Error", JOptionPane.ERROR_MESSAGE,null);
