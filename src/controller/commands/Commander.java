@@ -54,17 +54,23 @@ public class Commander implements ICommander{
 	}
 
 	@Override
-	public void undo(CommandContext context) throws Throwable {
-		this.historics.get(context).get(0).undo();
-		this.undoHistorics.get(context).add(historics.get(context).get(0));
-		this.historics.get(context).remove(0);
+	public void undo(CommandContext context, int numberOfUndo) throws Throwable {
+		for (int counter=0; counter<numberOfUndo; counter++)
+		{
+			this.historics.get(context).get(0).undo();
+			this.undoHistorics.get(context).add(historics.get(context).get(0));
+			this.historics.get(context).remove(0);
+		}
 	}
 	
 	@Override
-	public void redo(CommandContext context) throws Throwable {
-		this.undoHistorics.get(context).get(0).execute();
-		this.historics.get(context).add(undoHistorics.get(context).get(0));
-		this.undoHistorics.get(context).remove(0);
+	public void redo(CommandContext context,	int numberOfUndo) throws Throwable {
+		for (int counter=0; counter<numberOfUndo; counter++)
+		{
+			this.undoHistorics.get(context).get(0).execute();
+			this.historics.get(context).add(undoHistorics.get(context).get(0));
+			this.undoHistorics.get(context).remove(0);
+		}
 	}
 
 
