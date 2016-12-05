@@ -50,7 +50,10 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
+	public GraphDeliveryManager getGraphDelMan() {			return graphDelMan;}
+	public HashMap<Integer, Integer> getIndexDelOrdersTours() {	return indexDelOrdersTours; }
+	public HashMap<Integer, Tour> getTours() {				return tours; }
+
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
@@ -156,7 +159,12 @@ public class Model extends IModel {
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}
-		this.notifyObservers(this.tours);
+		
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_DELIVERY");
+		map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+
+		this.notifyObservers(map);
 	}
 
 	@Override
@@ -382,4 +390,6 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
+	
+	
 }

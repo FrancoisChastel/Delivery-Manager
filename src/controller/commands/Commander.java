@@ -49,7 +49,6 @@ public class Commander implements ICommander{
 	@Override
 	public void execute(CommandContext context, IUndoableCommand command) throws Throwable {
 		command.execute();
-
 		historics.get(context).add(command);
 	}
 
