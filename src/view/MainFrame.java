@@ -247,7 +247,12 @@ public class MainFrame extends JFrame implements ActionListener {
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             	File currentFile = fc.getSelectedFile();            	
-            	hamecon.getController().loadDeliveryFile(currentFile);
+            	try {
+					hamecon.getController().loadDeliveryFile(currentFile);
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
             mntmRedo.setEnabled(false);
 		}
