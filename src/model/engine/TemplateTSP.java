@@ -100,16 +100,15 @@ public abstract class TemplateTSP implements TSP {
 		 }
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
-	    	actualDate = new Date(actualDate.getTime() + cout[sommetCrt][0]);
-	    	datesLivraisons[0] = actualDate;
+	    	datesLivraisons[0] = new Date(actualDate.getTime() + (cout[sommetCrt][0])*1000);
 	    	if (actualDate.before(meilleureSolutionDate)){ // on a trouve une solution meilleure que meilleureSolution
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-/*	    		for(int i=0;i<datesLivraisons.length;i++)
+	    		for(int i=0;i<datesLivraisons.length;i++)
 	    		{
-	    			System.out.println("@ Node "+ i + " " + meilleureSolution[i]);
-	    		}*/
+	    			System.out.println(datesLivraisons[i]);
+	    		}
 	    	}
 		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
@@ -120,7 +119,7 @@ public abstract class TemplateTSP implements TSP {
 	        	{
 	        		vus.add(prochainSommet);
 	        		nonVus.remove(prochainSommet);
-	        		datesLivraisons[sommetCrt] = actualDate;
+	        		datesLivraisons[prochainSommet] = nextDate;
 	        		branchAndBound(prochainSommet, nonVus, vus, cout, duree,window, tpsDebut, tpsLimite,nextDate);
 	        		vus.remove(prochainSommet);
 	        		nonVus.add(prochainSommet);
