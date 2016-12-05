@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import model.Tour;
 import model.graph.MapNode;
@@ -28,10 +30,18 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
+import java.awt.GridLayout;
 
+/**
+ * 
+ * @author antoine
+ *
+ */
 public class MainFrame extends JFrame implements ActionListener {
 
 	private View hamecon;
@@ -39,14 +49,18 @@ public class MainFrame extends JFrame implements ActionListener {
 	private Map map;
 	private Adapter adapter;
 	private JMenuItem mntmLoadDeliveryfile;
+	private JMenuItem mntmNewMap;
+	private JMenuItem mntmReset;
 	private JTree tourTree;
 	private DefaultMutableTreeNode root;
+	private JPanel rightSidePanel;
 	
 	/**
 	 * Normal Construcor
 	 * @param view
 	 */
 	public MainFrame(View view) {
+		setTitle("Delivery Manager");
 		this.hamecon = view;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,6 +72,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
+		mntmNewMap = new JMenuItem("Load New Map");
+		mnFile.add(mntmNewMap);
+		mntmNewMap.addActionListener(this);
+		
 		JMenu mnDelivery = new JMenu("Delivery");
 		menuBar.add(mnDelivery);
 		
@@ -65,34 +83,44 @@ public class MainFrame extends JFrame implements ActionListener {
 		mnDelivery.add(mntmLoadDeliveryfile);
 		mntmLoadDeliveryfile.addActionListener(this);
 		
-		JMenuItem mntmNewDelivery = new JMenuItem("New delivery");
-		mnDelivery.add(mntmNewDelivery);
+		mntmReset = new JMenuItem("Reset");
+		mnDelivery.add(mntmReset);
+		mntmReset.addActionListener(this);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		// Instanciate Map
-		map = new Map();
-		contentPane.add(map);
+		map = new Map(this);
+		contentPane.add(map, BorderLayout.CENTER);
 		
 		adapter = new Adapter(map);
 		
-		JPanel rightSidePanel = new JPanel();
-		contentPane.add(rightSidePanel, BorderLayout.EAST);
-		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
-		
-		
+		// RightSizePanel
 		JLabel lblNewLabel = new JLabel("Calculed Tour");
+		rightSidePanel = new JPanel();		
 		rightSidePanel.add(lblNewLabel);
+		rightSidePanel.setLayout(new BoxLayout(rightSidePanel, BoxLayout.PAGE_AXIS));
+		contentPane.add(rightSidePanel, BorderLayout.EAST);
 		
 		// Initialization of the JTree -----------
 		//create the root node
         root = new DefaultMutableTreeNode("Deliveries");        
-		tourTree = new JTree(root);		
+		tourTree = new JTree(root);	
+		
+
+		// Manage listener
+		TreeListener treeListener = new TreeListener(this);
+		tourTree.addTreeSelectionListener(treeListener);
+		tourTree.addMouseListener(treeListener);
+		
+		// Add to right pane
         JScrollPane treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
-
+		
+		repaint();
 	}
 	
 	/**
@@ -120,14 +148,18 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */	
 	public void addTourTree(Tour tour)
 	{		
-		DefaultMutableTreeNode tourTree = new DefaultMutableTreeNode("Tour "+tour.getId());
-		
+
+		TreeTour tourInTree = adapter.getTreeTour(tour);
+		System.out.println("Displaying t"+tourInTree.getId());
 		for(Integer dp : tour.getDeliveryPoints())
 		{
-			tourTree.add(new DefaultMutableTreeNode("Point "+dp));
+			tourInTree.add(adapter.getTreeNode(dp));
 		}
 		
-		root.add(tourTree);
+		root.add(tourInTree);	
+		this.tourTree.setSelectionRow(root.getChildCount()-1);
+		DefaultTreeModel model = (DefaultTreeModel) tourTree.getModel();
+		model.reload();
 	}
 
 	/**
@@ -137,16 +169,44 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		
 		// Load Livraison
-		if(arg0.getSource()==mntmLoadDeliveryfile)
+		if(arg0.getSource()==mntmNewMap)
 		{
 			JFileChooser fc = new JFileChooser();	
             int returnVal = fc.showOpenDialog(MainFrame.this);
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             	File currentFile = fc.getSelectedFile();
-            	
+            	hamecon.getController().reset();
+            	hamecon.getController().parseMapFile(currentFile);
+            	root.removeAllChildren();
+            }
+		}
+		else if(arg0.getSource()==mntmReset)
+		{
+			root.removeAllChildren();
+			hamecon.getController().resetDeliveries();
+		}
+		else if(arg0.getSource()==mntmLoadDeliveryfile)
+		{
+			JFileChooser fc = new JFileChooser();	
+            int returnVal = fc.showOpenDialog(MainFrame.this);
+            
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            	File currentFile = fc.getSelectedFile();            	
             	hamecon.getController().loadDeliveryFile(currentFile);
             }
-		}			
+		}
+		
 	}
+
+	public JTree getJtree() { return tourTree; }
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public View getView() { return hamecon; }
+
+	public Map getMap() {	return map;	}
+
 }

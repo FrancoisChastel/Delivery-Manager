@@ -25,7 +25,7 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 		
 		if(point != null)
 		{
-			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE);
+			View.displayMessage("Click on "+((ViewPoint)point).getId(), "Debug", JOptionPane.INFORMATION_MESSAGE,null);
 			map.repaint();
 		}
 					
@@ -38,8 +38,7 @@ public class MapMouseListener implements MouseListener, MouseMotionListener {
 			{
 				ids+=i.next()+" ";
 			}
-			View.displayMessage("Clic on "+ids, "Debug", JOptionPane.INFORMATION_MESSAGE);
-			troncon.setColorId(Color.RED, (int)troncon.getIds().toArray()[0]);
+			View.displayMessage("Clic on "+ids, "Debug", JOptionPane.INFORMATION_MESSAGE,null);
 			map.repaint();
 		}
 				

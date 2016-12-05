@@ -5,7 +5,6 @@ import java.util.Date;
 import model.graph.MapNode;
 
 public class Delivery {
-
 	private int idDelivery;
 	private MapNode adress;
 	private int length;
@@ -28,9 +27,7 @@ public class Delivery {
 		this.length = length;
 		this.beginning= null;
 		this.end = null;
-		
 	}
-
 	
 	// Getters and Setters
 	public long getIdDelivery() {
@@ -72,13 +69,4 @@ public class Delivery {
 	public void setEnd(Date end) {
 		this.end = end;
 	}
-	
-
-	
-	
-	
-	
-	
-	
-	
 }

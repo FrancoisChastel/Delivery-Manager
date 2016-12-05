@@ -4,11 +4,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import model.deliverymanager.DeliveryPoint;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import model.Tour;
+import model.deliverymanager.Delivery;
 import model.graph.MapNode;
 import model.graph.Section;
 
-
+/**
+ * 
+ * @author antoine
+ *
+ */
 public class Adapter {
 	
 	private int minX, minY, maxX, maxY;
@@ -54,6 +61,8 @@ public class Adapter {
 	 */
 	public void drawModel(List<MapNode> node, List<Section> sections)
 	{
+		map.resetMap();
+		
 		calibration(node);
 		
 		Iterator<MapNode> i = node.iterator();
@@ -73,7 +82,7 @@ public class Adapter {
 			Section currSection = j.next();
 			
 			// Try to get the edge corresponding to the section
-			ViewEdge edge = getIfalreadyExist(map.edges, currSection);
+			ViewEdge edge = getIfalreadyExist(map.getEdges(), currSection);
 			
 			// If it does not exists, then we create it.
 			if(edge == null)
@@ -120,12 +129,44 @@ public class Adapter {
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	
+	public TreeMapNode getTreeNode(Integer id)
+	{		
+		TreeMapNode node = new TreeMapNode("Point "+id, id);
+				
+		// Get back the corresponding deliveryNode
+		Delivery delivery = map.getMainFrame().getView().getController().getModel().getSelected().getDeliveryById(id);
+		
+		// Address
+		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
+		
+		// Plage
+		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
+		plage.add(new DefaultMutableTreeNode("in : "+delivery.getBeginning()));
+		plage.add(new DefaultMutableTreeNode("out : "+delivery.getEnd()));
+		
+		node.add(plage);
+		
+		return node;
+	}
+	
+	public TreeTour getTreeTour(Tour t)
+	{
+		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId());
+		// TODO add meta data of tour
+		
+		return res;
+	}
+	
 	public ViewEdge getView(Section section)
 	{		
 		return new ViewEdge(map.getPoint(section.getIdOrigin()), map.getPoint(section.getIdDestination()), section.getId());		
 	}
 	
 	
+	/**
+	 * Constructor
+	 * @param map
+	 */
 	public Adapter(Map map)
 	{
 		this.map = map;
