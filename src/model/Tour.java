@@ -7,6 +7,7 @@ import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryOrder;
 import model.deliverymanager.DeliveryPoint;
 import model.engine.LowerCosts;
+import model.engine.Pair;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -152,10 +153,17 @@ public class Tour {
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */
-	public int deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
-		int deliveryPosition = this.deletePathById(deliveryPointId, deliveryPointId+1);
-		this.updateSection(deliveryPosition, deliveryPointId, graphManager);		
-		throw new Throwable("Error, there is no delivery point with the id "+deliveryPointId+", cannot delete a non-existing delivery point in a tour");
+	public void deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
+		for (int cursor=0; cursor<this.getSections().size(); cursor++)
+			if (this.getSections().get(cursor).getIdOrigin() == deliveryPointId)
+			{
+				Pair<Integer,Integer> association = getNearestDeliveryPointId(cursor);
+				deletePath(association.getFirst(), association.getSecond());
+				//this.updateSection(cursor, association.getFirst(), graphManager);	
+				System.out.println(this.getSections().toString());
+				
+				cursor-=association.getSecond()-association.getFirst();
+			}
 	}
 	
 	/**
@@ -166,37 +174,36 @@ public class Tour {
 		this.deliveryPoints.add(index, deliveryPoint);
 	}
 	
-	private int deletePathById(int originDeliveryId, int destinationDeliveryId) throws Throwable{
-		int beginningId = -1;
-		int destinationId = -1;
+	private Pair<Integer,Integer> getNearestDeliveryPointId(int deliveryPointId){
+		int beginning=0;
+		int ending=0;
 		
-		for (int cursor=0; cursor<this.getSections().size(); cursor++)
-			if (this.getSections().get(cursor).getIdOrigin() == originDeliveryId)
-				beginningId = cursor;
-				
-		for (int cursor=beginningId; cursor<this.getSections().size(); cursor++)
-			if (this.getSections().get(cursor).getIdOrigin() == destinationDeliveryId)
-				destinationId = cursor;
+		for (int cursor=deliveryPointId; cursor>=-1; cursor--)
+			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdOrigin()) || cursor ==-1){
+				beginning = cursor;
+				break;
+			}
 		
-		if (beginningId == -1) throw new Throwable(originDeliveryId+" origin id does not exist");
-		if (destinationDeliveryId == -1) throw new Throwable(destinationDeliveryId+" destination id does not exist");
+		for (int cursor=deliveryPointId; cursor<this.getSections().size(); cursor++)
+			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination())){
+				ending = cursor;
+				break;
+			}
 		
-		deletePath(beginningId, destinationId);
-		return beginningId;
+		return new Pair<>(beginning,ending);	
 	}
 	
 	private void deletePath(int beginningId, int endingId)
 	{
-		for (int cursor=beginningId; cursor<endingId; cursor++){
-			this.getDeliveryPoints().remove(cursor);
-		}
+		for (int cursor=beginningId; cursor<=endingId; cursor++)
+			this.getSections().remove(beginningId);
 	}
 	
 	private void updateSection(int sectionIndex, int originDelivery, GraphDeliveryManager graphManager)
 	{
 		ArrayList<MapNode> solution = LowerCosts.dijkstra(graphManager, 
 				this.deliveryPoints.get(originDelivery).getDelivery().getAdress(),
-				this.deliveryPoints.get(originDelivery+1).getDelivery().getAdress()).getFirst();
+				this.deliveryPoints.get(originDelivery+2).getDelivery().getAdress()).getFirst();
 		
 		for(int cursor = 0; cursor<solution.size()-1; cursor++)
 		{
