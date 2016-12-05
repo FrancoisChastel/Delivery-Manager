@@ -12,6 +12,7 @@ import controller.Controller;
 import model.deliverymanager.Delivery;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
 import model.engine.LowerCosts;
 import model.engine.Pair;
 import model.engine.TSP2;
@@ -66,7 +67,7 @@ public class Model extends IModel {
 	public void setSelected(DeliveryOrder selected) {		this.selected = selected; }
 	public void setTour(Tour tour) {  						tours.put(tour.getId(), tour);
 															indexDelOrdersTours.put(selected.getIdOrder(),tour.getId()); }
-
+	
 	@Override
 	public void resetModel()
 	{
@@ -142,8 +143,7 @@ public class Model extends IModel {
 	
 	@Override
 	public void generateTraceRoute(int tourid)
-	{
-				
+	{			
 		File htmlFile = new File("roadMap/index.html");
 		HtmlGenerator.generateHtml(TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
 		controller.getLogger().write("Tour "+tours.get(tourid)+ " : Instructions in HTML done");
@@ -151,8 +151,7 @@ public class Model extends IModel {
 
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
-		// TODO Auto-generated method stub
-		
+		this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
 	}
 
 	@Override
@@ -183,6 +182,7 @@ public class Model extends IModel {
 		// Call the TSP module
 		tsp.chercheSolution(tspObject.departureDate,10000, tspObject.cout.length, tspObject.cout, tspObject.duree,tspObject.window);
 		tspObject.bestSolution = tsp.getMeilleureSolution();
+		tspObject.datesLivraisons = tsp.getDatesLivraisons();
 
 		// Print TSP Result
 		String TSP = "TSP: ";
@@ -311,9 +311,16 @@ public class Model extends IModel {
 		}
 		
 		// Building IdDeliveryList
-		Integer [] listIds = new Integer[tspObject.bestSolution.length];
+		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
+		
 		for(int in =0; in<tspObject.bestSolution.length;in++)
-			listIds[in]= tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+		{
+			DeliveryPoint dp = new DeliveryPoint(delivery, arriving);
+			// recuperer une 
+			tspObject.mappingId.get(tspObject.bestSolution[in]).getidNode();
+			deliveryPoints.add(dp)= 
+			
+		}
 
 		Tour tour = new Tour(sections,listIds,model.selected.getStoreAdress().getidNode());	
 		model.setTour(tour);
@@ -335,7 +342,8 @@ class TSPObject
 		
 	// TSP result
 	public Integer[] bestSolution;
-	
+	public Date [] datesLivraisons;
+	 
 	// Mapping between NodeId and index in matrix
 	public ArrayList<MapNode> mappingId;
 	

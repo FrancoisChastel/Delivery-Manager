@@ -7,15 +7,13 @@ import java.util.LinkedList;
 import model.graph.MapNode;
 
 public class DeliveryOrder {
-
+	
 	private int idOrder;
 	private MapNode storeAdress;
 	private Date startingTime;
 	private ArrayList<Delivery> deliveryList;
 	private int maxIdNode;
 	private int[] times; 
-	
-	
 	
 	public DeliveryOrder(int idOrder, MapNode storeAdress, Date startingTime, ArrayList<Delivery> deliveryList) {
 		super();
@@ -29,9 +27,10 @@ public class DeliveryOrder {
 		}
 		this.times = new int[deliveryList.size()+1];
 		for (int iter = 0; iter<deliveryList.size(); iter++){
-			times[iter+1] = (int) deliveryList.get(iter).getLength();
+			times[iter+1] = (int) deliveryList.get(iter).getDuration();
 		}
 	}
+	
 	
 	/**
 	 * Return a Delivery from an Id

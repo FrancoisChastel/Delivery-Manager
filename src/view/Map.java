@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import javax.swing.JPanel;
 
 import model.Tour;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.Section;
 
 public class Map extends JPanel {
@@ -75,8 +76,8 @@ public class Map extends JPanel {
 		// Getting a list of concerned points that will be used for the used tour
 		ArrayList<ViewPoint> concernedPoints = new ArrayList<>();
 		
-		for(Integer id: tour.getDeliveryPoints())
-			concernedPoints.add(points.get(id));
+		for(DeliveryPoint id: tour.getDeliveryPoints())
+			concernedPoints.add(points.get(id.getMapNodeId()));
 		
 		// Getting a map of concerned edges
 		LinkedHashMap<Integer, ViewEdge> concernedEdge = new LinkedHashMap<>();
