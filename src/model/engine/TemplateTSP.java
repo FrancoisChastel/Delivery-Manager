@@ -8,48 +8,65 @@ import java.util.Iterator;
 
 public abstract class TemplateTSP implements TSP {
 	
-	private Integer[] meilleureSolution;
-	private Date meilleureSolutionDate;
+	// used for the time TSP
+	private Integer[] meilleureSolutionTime;
+	private Date meilleureDate;
+	private Date[] datesLivraisonsTime;
+	//used for the distance TSP
+	private Integer[] meilleureSolutionDistance;
+	private int meilleureDistance;
+	private Date[] datesLivraisonsDistance;
+	
 	private Boolean tempsLimiteAtteint;
-	private Date departureDate;
 	private Date[] datesLivraisons;
+	
 	
 	public Boolean getTempsLimiteAtteint(){
 		return tempsLimiteAtteint;
 	}
+
 	
-	public Date[] getDatesLivraisons(){
-		return datesLivraisons;
-	}
  	
-	public void chercheSolution(Date departureDate,int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window){
+	public Integer[] getMeilleureSolutionTime() {
+		return meilleureSolutionTime;
+	}
+
+
+
+	public Date[] getDatesLivraisonsTime() {
+		return datesLivraisonsTime;
+	}
+
+
+
+	public Integer[] getMeilleureSolutionDistance() {
+		return meilleureSolutionDistance;
+	}
+
+
+
+	public Date[] getDatesLivraisonsDistance() {
+		return datesLivraisonsDistance;
+	}
+
+
+
+	public void chercheSolution(Date departureDate,int tpsLimite, int nbSommets, int[][] cout,int[][] distances, int[] duree,ArrayList<Pair<Date,Date>> window){
 		tempsLimiteAtteint = false;
-		meilleureSolutionDate = new Date(Integer.MAX_VALUE);
-		meilleureSolution = new Integer[nbSommets];
+		meilleureDate = new Date(Integer.MAX_VALUE);
+		meilleureDistance = Integer.MAX_VALUE;
+		meilleureSolutionTime = new Integer[nbSommets];
+		meilleureSolutionDistance = new Integer[nbSommets];
+		datesLivraisonsDistance = new Date[nbSommets];
+		datesLivraisonsTime = new Date[nbSommets];
 		datesLivraisons = new Date[nbSommets];
-		this.departureDate= departureDate;
 		ArrayList<Integer> nonVus = new ArrayList<Integer>();
 		for (int i=1; i<nbSommets; i++) nonVus.add(i);
 		ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
 		vus.add(0); // le premier sommet visite est 0
-		branchAndBound(0, nonVus, vus,cout, duree,window, System.currentTimeMillis(), tpsLimite,departureDate);
-		
-		
+		branchAndBound(0, nonVus, vus,cout,distances, duree,window, System.currentTimeMillis(), tpsLimite,departureDate,0);
 	}
 	
-	public Integer getMeilleureSolution(int i){
-		if ((meilleureSolution == null) || (i<0) || (i>=meilleureSolution.length))
-			return null;
-		return meilleureSolution[i];
-	}
-	
-	public Integer[] getMeilleureSolution(){
-		return meilleureSolution;
-	}
-	
-	public Date getDateMeilleureSolution(){
-		return meilleureSolutionDate;
-	}
 	
 	/**
 	 * Methode devant etre redefinie par les sous-classes de TemplateTSP
@@ -89,8 +106,9 @@ public abstract class TemplateTSP implements TSP {
 	 * @param tpsDebut : moment ou la resolution a commence
 	 * @param tpsLimite : limite de temps pour la resolution
 	 */	
-	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite,Date actualDate){
+	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int[][] cout,int[][]distances, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite,Date actualDate,int actualDistance){
 		 Date nextDate;
+		 
 		 /*
 		 if (System.currentTimeMillis() - tpsDebut > tpsLimite)
 		 {
@@ -101,16 +119,20 @@ public abstract class TemplateTSP implements TSP {
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
 	    	datesLivraisons[0] = new Date(actualDate.getTime() + (cout[sommetCrt][0])*1000);
-	    	if (actualDate.before(meilleureSolutionDate)){ // on a trouve une solution meilleure que meilleureSolution
-	    		vus.toArray(meilleureSolution);
-	    		meilleureSolutionDate = actualDate;
+	    	if (actualDate.before(meilleureDate)){ // on a trouve une solution meilleure en temps
+	    		vus.toArray(meilleureSolutionTime);
+	    		meilleureDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-	    		for(int i=0;i<datesLivraisons.length;i++)
-	    		{
-	    			System.out.println(datesLivraisons[i]);
-	    		}
+	    		datesLivraisonsTime = datesLivraisons;
 	    	}
-		 } else if (checkWindow(window,nonVus,sommetCrt) && (actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureSolutionDate.getTime()/1000)){
+	    	else if(actualDistance<meilleureDistance){ // on a trouve une solution meilleure en distance
+	    		vus.toArray(meilleureSolutionDistance);
+	    		meilleureDistance = actualDistance;
+	    		datesLivraisons[sommetCrt]= actualDate;
+	    		datesLivraisonsDistance = datesLivraisons;
+	    	}
+	    		
+		 } else if (checkWindow(window,nonVus,sommetCrt) && ((actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureDate.getTime()/1000) || ( (actualDistance + bound(sommetCrt, nonVus, distances, new int[duree.length])<meilleureDistance) ))){
 	        Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	        while (it.hasNext()){
 	        	Integer prochainSommet = it.next();
@@ -120,7 +142,7 @@ public abstract class TemplateTSP implements TSP {
 	        		vus.add(prochainSommet);
 	        		nonVus.remove(prochainSommet);
 	        		datesLivraisons[prochainSommet] = nextDate;
-	        		branchAndBound(prochainSommet, nonVus, vus, cout, duree,window, tpsDebut, tpsLimite,nextDate);
+	        		branchAndBound(prochainSommet, nonVus, vus, cout,distances, duree,window, tpsDebut, tpsLimite,nextDate,actualDistance + distances[sommetCrt][prochainSommet]);
 	        		vus.remove(prochainSommet);
 	        		nonVus.add(prochainSommet);
 	        	}

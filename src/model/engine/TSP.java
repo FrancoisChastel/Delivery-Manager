@@ -18,18 +18,18 @@ public interface TSP {
 	 * @param cout : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
 	 * @param duree : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
 	 */
-	public  void chercheSolution(Date departureDate,int tpsLimite, int nbSommets, int[][] cout, int[] duree,ArrayList<Pair<Date,Date>> window);
+	public  void chercheSolution(Date departureDate,int tpsLimite, int nbSommets, int[][] cout,int[][] distances, int[] duree,ArrayList<Pair<Date,Date>> window);
 	
 	/**
 	 * @param i
 	 * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
 	 */
-	public  Integer getMeilleureSolution(int i);
+	public Integer[] getMeilleureSolutionTime();
 	
-	public  Integer[] getMeilleureSolution();
+	public Date[] getDatesLivraisonsTime();
 	
-	/** 
-	 * @return la duree de la solution calculee par chercheSolution
-	 */
-	public Date getDateMeilleureSolution();
+	public Integer[] getMeilleureSolutionDistance();
+	
+	public Date[] getDatesLivraisonsDistance() ;
+	
 }
