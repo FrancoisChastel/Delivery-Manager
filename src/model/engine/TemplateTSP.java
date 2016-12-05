@@ -106,10 +106,10 @@ public abstract class TemplateTSP implements TSP {
 	    		vus.toArray(meilleureSolution);
 	    		meilleureSolutionDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-/*	    		for(int i=0;i<datesLivraisons.length;i++)
+	    		for(int i=0;i<datesLivraisons.length;i++)
 	    		{
-	    			System.out.println("@ Node "+ i + " " + datesLivraisons[i]);
-	    		}*/
+	    			System.out.println("@ Node "+ i + " " + meilleureSolution[i]);
+	    		}
 	    	}
 	    	
 	    	
@@ -126,6 +126,10 @@ public abstract class TemplateTSP implements TSP {
 	        		branchAndBound(prochainSommet, nonVus, vus, cout, duree,window, tpsDebut, tpsLimite,nextDate);
 	        		vus.remove(prochainSommet);
 	        		nonVus.add(prochainSommet);
+	        	}
+	        	else
+	        	{
+	        		break;
 	        	}
 	        }	    
 	    }

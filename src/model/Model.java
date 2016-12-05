@@ -232,6 +232,8 @@ public class Model extends IModel {
 		out.duree = model.selected.getTimes();
 		out.departureDate = model.selected.getStartingTime();
 		
+		// adding delivery node first
+		out.getIByMapNode(model.selected.getStoreAdress());
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
 		{			
