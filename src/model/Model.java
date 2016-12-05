@@ -152,7 +152,7 @@ public class Model extends IModel {
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}
@@ -162,7 +162,7 @@ public class Model extends IModel {
 	@Override
 	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
 		
 	}
 		
