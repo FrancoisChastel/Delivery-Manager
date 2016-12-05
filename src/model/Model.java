@@ -152,12 +152,14 @@ public class Model extends IModel {
 		File htmlFile = new File("roadMap/index.html");
 		HtmlGenerator.generateHtml(this.getGraphDeliveryManager().getGraph().getNodeById(tours.get(tourid).getEntrepotId()),this.tours.get(tourid),TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
 		controller.getLogger().write("Tour "+ tours.get(tourid)+ " : Instructions in HTML done");
+		/*
 		try {
 			Desktop.getDesktop().browse(htmlFile.toURI());
 			controller.getLogger().write("HTML print");
 		} catch (IOException e) {
 			controller.error("Print HTML : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 		
 		}
+		*/
 	}
 
 	@Override

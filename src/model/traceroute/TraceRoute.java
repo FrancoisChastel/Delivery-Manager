@@ -47,8 +47,7 @@ public abstract class TraceRoute {
 				uniqueOutgoingDestination = true;
 			}
 			//List <Integer> deleveryPoint = Arrays.asList(tour.getDeliveryPoints());
-			List <DeliveryPoint> deleveryPoint = tour.getDeliveryPoints();
-			
+
 			//Compute New Vector
 			destination.redifineVector(oldX, oldY, nextNode.getX(),  nextNode.getY());
 					
