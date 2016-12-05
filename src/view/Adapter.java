@@ -8,6 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import model.Tour;
 import model.deliverymanager.Delivery;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
 
@@ -129,20 +130,21 @@ public class Adapter {
 		return new ViewPoint(x,y,p.getidNode());		
 	}
 	
-	public TreeMapNode getTreeNode(Integer id)
+	public TreeMapNode getTreeNode(DeliveryPoint dp)
 	{		
-		TreeMapNode node = new TreeMapNode("Point "+id, id);
+		TreeMapNode node = new TreeMapNode("Point "+dp.getMapNodeId(), dp.getMapNodeId());
 				
+		
 		// Get back the corresponding deliveryNode
-		Delivery delivery = map.getMainFrame().getView().getController().getModel().getSelected().getDeliveryById(id);
+		Delivery delivery = dp.getDelivery();
 		
 		// Address
 		node.add(new DefaultMutableTreeNode( "Address : "+ delivery.getAdress().getidNode()) );
 		
 		// Plage
 		DefaultMutableTreeNode plage = new DefaultMutableTreeNode("Plage");
-		plage.add(new DefaultMutableTreeNode("in : "+delivery.getBeginning()));
-		plage.add(new DefaultMutableTreeNode("out : "+delivery.getEnd()));
+		plage.add(new DefaultMutableTreeNode("in : "+dp.getArrivingDate()));
+		plage.add(new DefaultMutableTreeNode("out : "+dp.getLeavingDate()));
 		
 		node.add(plage);
 		

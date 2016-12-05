@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import model.Tour;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.Graph;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -46,6 +47,7 @@ public abstract class TraceRoute {
 				uniqueOutgoingDestination = true;
 			}
 			//List <Integer> deleveryPoint = Arrays.asList(tour.getDeliveryPoints());
+			List <DeliveryPoint> deleveryPoint = tour.getDeliveryPoints();
 			
 			//Compute New Vector
 			destination.redifineVector(oldX, oldY, nextNode.getX(),  nextNode.getY());
@@ -72,10 +74,10 @@ public abstract class TraceRoute {
 		return instructions;
 	}
 	
-	private static boolean contains(Integer[] integers, Integer target)
+	private static boolean contains(List<DeliveryPoint> deliveryPoints, Integer target)
 	{
-		for (Integer integer : integers)
-			if (integer.equals(target)) return true;
+		for (DeliveryPoint deliveryPoint : deliveryPoints)
+			if (deliveryPoint.getMapNodeId() == target) return true;
 		return false;
 	}
 	

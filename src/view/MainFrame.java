@@ -21,6 +21,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import model.Tour;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
 
@@ -29,12 +30,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JLabel;
+
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 
 import javax.swing.JList;
 import javax.swing.BoxLayout;
 import javax.swing.JTree;
+
 import java.awt.GridLayout;
 
 /**
@@ -151,7 +154,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		TreeTour tourInTree = adapter.getTreeTour(tour);
 		System.out.println("Displaying t"+tourInTree.getId());
-		for(Integer dp : tour.getDeliveryPoints())
+		
+		for(DeliveryPoint dp : tour.getDeliveryPoints())
 		{
 			tourInTree.add(adapter.getTreeNode(dp));
 		}
@@ -185,6 +189,16 @@ public class MainFrame extends JFrame implements ActionListener {
 		{
 			root.removeAllChildren();
 			hamecon.getController().resetDeliveries();
+			// Initialization of the JTree -----------
+			//create the root node
+	        root = new DefaultMutableTreeNode("Deliveries");        
+			tourTree = new JTree(root);	
+			
+
+			// Manage listener
+			TreeListener treeListener = new TreeListener(this);
+			tourTree.addTreeSelectionListener(treeListener);
+			tourTree.addMouseListener(treeListener);
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
