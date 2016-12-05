@@ -20,6 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import controller.commands.CommandContext;
 import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
@@ -204,7 +205,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		else if(arg0.getSource()==mntmReset)
 		{
-			hamecon.getController().resetDeliveries();
+			try {
+				hamecon.getController().resetDeliveries();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//refresh tree (empty)
 			//repaint empty map
 			mntmRedo.setEnabled(false);
@@ -222,12 +228,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 		else if(arg0.getSource()==mntmUndo)
 		{
-			hamecon.getController().undoCommand();
+			hamecon.getController().undoCommand(CommandContext.MAIN);
 			mntmRedo.setEnabled(true);
 		}
 		else if(arg0.getSource()==mntmRedo)
 		{
-			hamecon.getController().redoCommand();
+			hamecon.getController().redoCommand(CommandContext.MAIN);
 		}
 		
 	}

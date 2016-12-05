@@ -154,7 +154,7 @@ public class Model extends IModel {
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId);
+			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId,graphDelMan);
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Error in model : "+e.getMessage()+"");
 		}

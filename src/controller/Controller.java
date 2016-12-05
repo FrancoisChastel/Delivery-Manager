@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import controller.commands.CommandContext;
 import controller.commands.Commander;
 import controller.commands.ICommander;
+import controller.commands.undocommands.ResetDeliveriesCommand;
 import model.IModel;
 import model.Model;
 import view.View;
@@ -15,10 +16,10 @@ import view.View.Page;
 
 public class Controller implements IController{
 
-	private IModel model;
+	private Model model;
 	private View view;
 	private Logger logger;
-	private ICommander commander;
+	private Commander commander;
 	
 	/**
 	 * Default constructor of the controller. It instanciate model and view, and set up observer/observable pattern
@@ -93,14 +94,14 @@ public class Controller implements IController{
 	
 	/**
 	 *  Reset all the model excepted the map associated to the graph
+	 * @throws Throwable 
 	 */
-	public void resetDeliveries()
+	public void resetDeliveries() throws Throwable
 	{
 		// For example : 
-		// IUndoableCommand reset =  new resetCommand(model)//par exemple
-		// reset.execute();g
-		// this.commander.execute(CommandContext.MAIN, command);
-		model.resetDeliveries();
+		ResetDeliveriesCommand reset = new ResetDeliveriesCommand(model);
+		reset.execute();
+		this.commander.execute(CommandContext.MAIN, reset);
 	}
 	
 	/**
