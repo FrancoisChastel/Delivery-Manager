@@ -32,7 +32,6 @@ public class Model extends IModel {
 	private DeliveryOrder selected;
 	private DeliveryManager deliveryManager;
 	private TSP2 tsp;
-	private LowerCosts lowCosts;	
 
 	/**
 	 * Normal constructor of the model
@@ -50,7 +49,6 @@ public class Model extends IModel {
 	public Controller getController() { 					return controller; }
 	public GraphDeliveryManager getGraphDeliveryManager() { return graphDelMan; }
 	public DeliveryManager getDeliveryManager() { 			return deliveryManager; }
-	public LowerCosts getLowerCosts() 	{ 					return lowCosts; }
 	public Tour getTour(int id) { 							return tours.get(id); }
 	@Override
 	public List<MapNode> getMapNodes() {					return graphDelMan.getNodeList();	}
