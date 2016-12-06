@@ -195,7 +195,15 @@ public class Model extends IModel {
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			map.put("tour", 0);
+			
+			
+			notifyObservers(map);
+			updateDeliveries();
+			map = new HashMap<>();
+			
+			map.put("type", "UPDATE_DELIVERY");
+			map.put("tour", 1);
 			
 			notifyObservers(map);
 		}
