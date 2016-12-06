@@ -196,7 +196,15 @@ public class Model extends IModel {
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", indexDelOrdersTours.get(selected.getIdOrder()));
+			map.put("tour", 0);
+			
+			
+			notifyObservers(map);
+			updateDeliveries();
+			map = new HashMap<>();
+			
+			map.put("type", "UPDATE_DELIVERY");
+			map.put("tour", 1);
 			
 			notifyObservers(map);
 		}
@@ -246,7 +254,7 @@ public class Model extends IModel {
 			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
 		}
 		
-		System.out.println("Deleting a deliveryPoint");
+		System.out.println("Deleting a deliveryPoint t"+tourID+" d"+deliveryPointId);
 		setChanged();
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("type", "UPDATE_DELIVERY");
@@ -259,7 +267,28 @@ public class Model extends IModel {
 	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
 		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Delivery(), new Date()), this.getGraphDeliveryManager());
+		// Create new Delivery;
+		MapNode address = this.getGraphDeliveryManager().getGraph().getNodeById(nodeId);
+		int idNewDel = selected.getDeliveryList().size();
+		Delivery del = new Delivery(idNewDel,address, duration, availabilityBeginning, availabilityEnd);
+		selected.getDeliveryList().add(del);
 		
+		try {
+			tours.get(tourId).add2DeliveryPoint(index, new DeliveryPoint(del, new Date()), graphDelMan);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			View.displayMessage("Error while adding a point :"+e.getMessage(), "Error", null);
+		}
+		
+		System.out.println("Adding del point"+nodeId);
+		
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "UPDATE_DELIVERY");
+		map.put("tour", tourId);
+
+		this.notifyObservers(map);
 	}
 		
 	/**

@@ -57,7 +57,17 @@ public class Tour {
 		
 		return totalDuration;
 	}
-
+	
+	/**
+	 * Obtain the duration of the path to reach the id delivery point
+	 * @param id to stop the computation of the duration
+	 * @return duration of the path
+	 */
+	public int getDuration(int id)
+	{
+		return 2;
+	}
+	
 	/**
 	 * OBtain the total length of the tour
 	 * @return length of the tour
@@ -70,6 +80,16 @@ public class Tour {
 			totalLength += section.getLength();
 		
 		return totalLength;
+	}
+	
+	/**
+	 * Obtain the length of the path to reach the id delivery point
+	 * @param id
+	 * @return
+	 */
+	public int getLength(int id)
+	{
+		return 1;
 	}
 	
 	/**
@@ -145,7 +165,7 @@ public class Tour {
 				{
 					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
 					this.deletePath(association.getFirst(), association.getSecond());
-					this.updateSection(association.getFirst(), currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
+					this.updateSection(sectionIndex-(association.getSecond()-association.getFirst()), currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
 					break;
 				}
 				currentDeliveryPoint++;
@@ -155,6 +175,44 @@ public class Tour {
 		this.getDeliveryPoints().remove(currentDeliveryPoint);
 	}
 	
+	/**
+	 * Delete a specific delivery point based on his id
+	 * @param deliveryPointsId that will be deleted
+	 */
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager graphManager){	
+		int deliveryPointId = this.getDeliveryPoints().get(index).getMapNodeId();
+		int currentDeliveryPoint = 0;
+		
+		Pair<Integer,Integer> association = null;
+		
+
+		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
+			Section section = this.getSections().get(sectionIndex);
+			if (this.isDeliveryPoint(section.getIdOrigin()) && this.getDeliveryPoints().get(currentDeliveryPoint).getMapNodeId() == section.getIdOrigin()) 
+			{	
+				if (section.getIdOrigin() == deliveryPointId)
+				{
+					try {
+						association = getNearestDeliveryPointId(sectionIndex);
+					} catch (Throwable e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.deletePath(sectionIndex, association.getSecond());
+					//this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
+					break;
+				}
+				currentDeliveryPoint++;
+			}
+		}
+		this.deliveryPoints.add(index, deliveryPoint);
+		
+		this.updateSection(association.getFirst(), index-1, index, graphManager);
+		this.updateSection(association.getFirst(), index, index+1, graphManager);
+
+	}
+	
+<<<<<<< HEAD
 	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	
 		DeliveryPoint previous = deliveryPoints.get(index);
 		DeliveryPoint next = deliveryPoints.get(index+1);
@@ -234,9 +292,14 @@ public class Tour {
 		deliveryPoints = newDelPoint;		
 	}
 	
+	private Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
+		int precedent = -1;
+		int next = -1;
+=======
 	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
 		int precedent = 0;
-		int next = -1;
+		int next = 0;
+>>>>>>> Add - nearly working delete
 		
 		for (int cursor=sectionIndex-1; cursor>=0; cursor--){
 			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdOrigin()))
@@ -246,7 +309,6 @@ public class Tour {
 			}
 		}	
 		
-	
 		
 		
 		for (int cursor=sectionIndex; cursor<this.getSections().size(); cursor++){

@@ -144,7 +144,11 @@ public class Map extends JPanel {
 		while(sectionIterator.hasNext())
 		{			
 			currSection = sectionIterator.next();
-			concernedEdge.put(currSection.getId(), edges.get(currSection.getId()));
+			if(currSection == null)
+				System.out.println("Ca chie dans la colle");
+			System.out.println(currSection.getId());
+			edge = edges.get(currSection.getId());
+			concernedEdge.put(currSection.getId(), edge);
 		}
 		
 		// Creating the tour object
