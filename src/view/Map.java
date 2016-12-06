@@ -113,7 +113,6 @@ public class Map extends JPanel {
 	}
 	 
 	
-	
 	/**
 	 * This method display a tour on the map. If the tour already exists and you just want to modify it, it undraw previous tour and redraw the up-to-date one.
 	 * @param tour
@@ -146,9 +145,6 @@ public class Map extends JPanel {
 		while(sectionIterator.hasNext())
 		{			
 			currSection = sectionIterator.next();
-			if(currSection == null)
-				System.out.println("Ca chie dans la colle");
-			System.out.println(currSection.getId());
 			edge = edges.get(currSection.getId());
 			concernedEdge.put(currSection.getId(), edge);
 		}
