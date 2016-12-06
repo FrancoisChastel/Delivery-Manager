@@ -173,7 +173,7 @@ public class Model extends IModel {
 	public void loadDeliveriesFile(File currentFile) {
 		try
 		{
-			// Step1 : parsing delivery file
+			// Step1 : parsing delivery file((MainFrame) p;
 			Date dateBeforeParser = new Date();
 			DeliveryOrder newOrder = XmlParser.xmlDeliveriesParser(this.getGraphDeliveryManager().getGraph(),currentFile);
 			this.getDeliveryManager().addDeliveryOrder(newOrder);
@@ -245,6 +245,8 @@ public class Model extends IModel {
 			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
 		}
 		
+		System.out.println("Deleting a deliveryPoint");
+		setChanged();
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("type", "UPDATE_DELIVERY");
 		map.put("tour", tourID);
