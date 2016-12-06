@@ -165,7 +165,7 @@ public class Tour {
 				{
 					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
 					this.deletePath(association.getFirst(), association.getSecond());
-					this.updateSection(sectionIndex, currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
+					this.updateSection(sectionIndex-(association.getSecond()-association.getFirst()), currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
 					break;
 				}
 				currentDeliveryPoint++;
@@ -199,7 +199,7 @@ public class Tour {
 						e.printStackTrace();
 					}
 					this.deletePath(sectionIndex, association.getSecond());
-					this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
+					//this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
 					break;
 				}
 				currentDeliveryPoint++;
@@ -212,9 +212,9 @@ public class Tour {
 
 	}
 	
-	private Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
-		int precedent = -1;
-		int next = -1;
+	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
+		int precedent = 0;
+		int next = 0;
 		
 		for (int cursor=sectionIndex-1; cursor>=0; cursor--){
 			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdOrigin()))
@@ -222,7 +222,9 @@ public class Tour {
 				precedent = cursor;
 				break;
 			}
-		}
+		}	
+		
+		
 		
 		for (int cursor=sectionIndex; cursor<this.getSections().size(); cursor++){
 			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination()))
@@ -249,7 +251,7 @@ public class Tour {
 		
 		for(int cursor = 0; cursor<solution.size()-1; cursor++)
 		{
-			this.sections.add(sectionIndex, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
+			this.sections.add(sectionIndex+cursor, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
 		}
 	}
 	

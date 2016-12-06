@@ -34,8 +34,27 @@ public class GraphDeliveryManager {
 	{
 		return graph.getEdge(o, d);
 	}
-	// Accessors
+	// Getters
 	public ArrayList<MapNode> getNodeList() 		{	return nodes;	}
 	public ArrayList<Section> getSectionList() 	{	return sections;	}
 	public Graph<MapNode, Section> getGraph() {return graph;}
+	//Setters
+
+	public void setGraph(Graph<MapNode, Section> graph) {
+		this.graph = graph;
+	}
+
+	public void setSections(ArrayList<Section> sections) {
+		this.sections = sections;
+	}
+
+	public void setNodes(ArrayList<MapNode> nodes) {
+		this.nodes = nodes;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
+	
 }
