@@ -252,4 +252,6 @@ public class Tour {
 			this.sections.add(sectionIndex, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
 		}
 	}
+	
+	public static void resetFactory() { factoryId=0; }
 }

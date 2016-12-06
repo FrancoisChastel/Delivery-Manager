@@ -26,6 +26,7 @@ import model.graph.Section;
 import model.parser.XmlParser; 
 import model.traceroute.HtmlGenerator;
 import model.traceroute.TraceRoute;
+import view.View;
 
 public class Model extends IModel {
 
@@ -392,7 +393,8 @@ public class Model extends IModel {
 	{
 		ArrayList<Section> sections= new ArrayList<>();
 		int i;
-		
+		int storeId =  tspObject.mappingId.get(bestSolution[0]).getidNode();
+				
 		// Iterating over TSP result
 		for(i=0; i<bestSolution.length-1;i++)
 		{
@@ -436,13 +438,12 @@ public class Model extends IModel {
 					sections.add(s);	
 				}
 			}
-			
 		}
 		
 		// Building IdDeliveryList
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
 		
-		for(int in =0; in<bestSolution.length;in++)
+		for(int in =1; in<bestSolution.length;in++)
 		{
 			// Get the current delivery Node Id
 			int idNode = tspObject.mappingId.get(bestSolution[in]).getidNode();
@@ -454,7 +455,9 @@ public class Model extends IModel {
 			deliveryPoints.add(dp);
 		}
 
-		Tour tour = new Tour(sections,deliveryPoints,model.selected.getStoreAdress().getidNode());	
+		if(model.selected.getStoreAdress().getidNode() !=storeId)
+			View.displayMessage("Error", "The entrepot out of the TSP is not the same as the selected tour", null);
+		Tour tour = new Tour(sections,deliveryPoints,storeId);	
 		model.setTour(tour);
 	}
 }
@@ -510,6 +513,4 @@ class TSPObject
 
 		return mappingId.size()-1;
 	}
-	
-	
 }

@@ -30,7 +30,7 @@ public class Adapter {
 	private Map map;
 	
 	// this enum is used to use JTree Icon -----------------------------
-	public static enum Icons {DELIVERY_ARRIVING,DELIVERY_LEAVING, DELIVERY, TOUR, ADDRESS, SCHEDULES, WAITING};
+	public static enum Icons {DELIVERY_ARRIVING,DELIVERY_LEAVING, DELIVERY, TOUR, ADDRESS, SCHEDULES, WAITING, WAREHOUSE};
 	// you can use icon through this map.
 	private HashMap<Icons,ImageIcon> icons;
 	// -----------------------------------------------------------------
@@ -189,9 +189,7 @@ public class Adapter {
 	 */
 	public TreeTour getTreeTour(Tour t)
 	{
-		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId(), icons.get(Icons.TOUR));
-		// TODO add meta data of tour
-		
+		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId(), icons.get(Icons.TOUR));	
 		return res;
 	}
 	
@@ -229,5 +227,13 @@ public class Adapter {
 		icons.put(Icons.ADDRESS, new ImageIcon("icone/street-map.png"));
 		icons.put(Icons.SCHEDULES, new ImageIcon("icone/stopwatch.png"));
 		icons.put(Icons.WAITING, new ImageIcon("icone/sand-clock.png"));
+		icons.put(Icons.WAREHOUSE, new ImageIcon("icone/warehouse.png"));
+	}
+	
+	public TreeDefaultIconNode getWarehouseView(int nodeId)
+	{
+		TreeDefaultIconNode warehouse = new TreeDefaultIconNode("Warehouse", icons.get(Icons.WAREHOUSE));
+		warehouse.add(new TreeDefaultIconNode("Point "+nodeId, icons.get(Icons.ADDRESS)));
+		return warehouse;
 	}
 }

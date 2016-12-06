@@ -161,7 +161,6 @@ public class MainFrame extends JFrame implements ActionListener {
 	 */
 	public void displayTour(Tour tour)
 	{
-		System.out.println("Displaying tour "+tour.getId());
 		map.displayTour(tour);
 		tourTree.displayTourInTree(tour);		
 	}

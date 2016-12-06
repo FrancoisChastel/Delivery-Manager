@@ -27,5 +27,4 @@ public class TreeTour extends DefaultMutableTreeNode implements ITreeItem{
 		// TODO Auto-generated method stub
 		return icon;
 	}
-
 }

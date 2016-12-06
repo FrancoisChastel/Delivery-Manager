@@ -117,4 +117,21 @@ public class ViewTour {
 		for(ViewPoint point : concernedPoints)
 			point.clearPoint();
 	}
+	
+	/**
+	 * ToString method.
+	 * Ex: tour:{id:1, store:2, concernedPoints:[{id:10, color:colored}, {id:10, color:colored}]
+	 */
+	public String toString()
+	{
+		String res = "tour:{";
+		res+= "id:"+id+", store:"+entrepot.getId()+", concernedPoints:[";
+		
+		for(int i = 0; i< concernedPoints.size()-1; i++)
+			res += concernedPoints.get(i).toString()+", ";
+		
+		res += concernedPoints.get(concernedPoints.size()-1).toString()+"]";
+		
+		return res;
+	}
 }

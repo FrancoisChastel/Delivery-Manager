@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.Section;
+import tests.unitaires.view.ViewTest;
 
 public class Map extends JPanel {
 
@@ -95,6 +96,7 @@ public class Map extends JPanel {
 		points.clear();
 		edges.clear();
 		labels.clear();
+		tours.clear();
 	}
 	
 	public void addPoint(ViewPoint s,int id)
@@ -118,15 +120,20 @@ public class Map extends JPanel {
 	 */
 	public void displayTour(Tour tour)
 	{		
-	//	System.out.println("Displaying a tour "+tour.getId());
+		System.out.println("Displaying t"+tour.getId()+" ids:"+ViewTest.getIdStringFromTour(tour));
 		if(tours.containsKey(tour.getId())) // IF TOUR ALREADY EXIST THEN WE UNDRAW IT
+		{ System.out.println("Updating an existing tour");
 			tours.get(tour.getId()).undrawTour();
+			tours.remove(tour.getId());
+		}
 		
 		// Getting a list of concerned points that will be used for the used tour
 		ArrayList<ViewPoint> concernedPoints = new ArrayList<>();
 		
-		for(DeliveryPoint id: tour.getDeliveryPoints())
-			concernedPoints.add(points.get(id.getMapNodeId()));
+		for(DeliveryPoint dp: tour.getDeliveryPoints())
+		{
+			concernedPoints.add(points.get(dp.getMapNodeId()));
+		}
 		
 		// Getting a map of concerned edges
 		LinkedHashMap<Integer, ViewEdge> concernedEdge = new LinkedHashMap<>();
@@ -150,7 +157,7 @@ public class Map extends JPanel {
 		// if there is only one tour, then we set it selected
 		setTourSelected(vTour.getId());
 		
-		
+		System.out.println(vTour);
 		repaint();
 	}
 	
@@ -349,5 +356,6 @@ public class Map extends JPanel {
 		repaint();
 	}
 	
+	public ViewTour getViewTour(int id) { return tours.get(id); }
 	public MainFrame getMainFrame() { return mainFrame; }
 }
