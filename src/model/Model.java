@@ -225,8 +225,9 @@ public class Model extends IModel {
 	@Override
 	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
 		try {
-			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId);
+			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
 			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
+			this.controller.getLogger().write("Deleted in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
 		}

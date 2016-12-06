@@ -166,10 +166,13 @@ public class Tour {
 					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
 					this.deletePath(association.getFirst(), association.getSecond());
 					this.updateSection(sectionIndex, currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
+					break;
 				}
 				currentDeliveryPoint++;
 			}
 		}
+		
+		this.getDeliveryPoints().remove(currentDeliveryPoint);
 	}
 	
 	/**
