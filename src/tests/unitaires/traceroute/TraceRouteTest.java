@@ -48,7 +48,7 @@ public class TraceRouteTest {
 		graph.addDestination(node2, section23, node3);
 		graph.addDestination(node3, section32, node2);
 		graph.addDestination(node2, section24, node4);
-		graph.addDestination(node2, section24, node0);
+		graph.addDestination(node2, section20, node0);
 		graph.addDestination(node4, section40, node0);
 		
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();

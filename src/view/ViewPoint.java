@@ -63,6 +63,20 @@ public class ViewPoint implements IShape{
 		
 	}
 	
+	/**
+	 * ToString of a point.
+	 * Example : {id:10, color:default}
+	 * 
+	 */
+	public String toString()
+	{
+		String colorS = "colored";
+		if(this.color == colorDefault)
+			colorS = "default";
+		
+		return "{id:"+id+", color:"+colorS+"}";
+	}
+	
 	public int getId() { return id;}
 	
 	public int getCalculedX(){ return calculedX;}
