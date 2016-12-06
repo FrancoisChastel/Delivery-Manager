@@ -193,7 +193,6 @@ public class Model extends IModel {
 			// step2.3 : call TSP
 			TSP(paths,pathsDistance);
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
-			generateTraceRoute(0);
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
@@ -217,9 +216,10 @@ public class Model extends IModel {
 	
 	@Override
 	public void generateTraceRoute(int tourid)
-	{			
+	{	
+		File htmlFile=null;
 		try{
-			File htmlFile = new File("roadMap/index.html");
+			htmlFile = new File("roadMap/index.html");
 			HtmlGenerator.generateHtml(this.getGraphDeliveryManager().getGraph().getNodeById(tours.get(tourid).getEntrepotId()),this.tours.get(tourid),TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),htmlFile);
 			controller.getLogger().write("Tour "+ tours.get(tourid)+ " : Instructions in HTML done");
 		}
@@ -227,15 +227,13 @@ public class Model extends IModel {
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
-		
-		/*
 		try {
 			Desktop.getDesktop().browse(htmlFile.toURI());
 			controller.getLogger().write("HTML print");
 		} catch (IOException e) {
 			controller.error("Print HTML : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 		
 		}
-		*/
+		
 	}
 
 	@Override
