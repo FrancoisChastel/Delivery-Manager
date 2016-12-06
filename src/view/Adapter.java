@@ -190,7 +190,7 @@ public class Adapter {
 	public TreeTour getTreeTour(Tour t)
 	{
 		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId(), icons.get(Icons.TOUR));
-		res.add(new TreeDefaultIconNode(t.getDistance()+"km", icons.get(Icons.DISTANCE)));
+		res.add(new TreeDefaultIconNode( (new Double(t.getDistance()) /10000)+"km", icons.get(Icons.DISTANCE)));
 		return res;
 	}
 	
