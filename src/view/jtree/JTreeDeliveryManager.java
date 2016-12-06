@@ -42,10 +42,8 @@ public class JTreeDeliveryManager extends JTree {
 	 */	
 	public void displayTourInTree(Tour tour)
 	{		
-		Adapter adapter = mainFrame.getAdapter();
-		
+		Adapter adapter = mainFrame.getAdapter();		
 		TreeTour tourInTree = adapter.getTreeTour(tour);
-		System.out.println("Displaying t"+tourInTree.getId());
 		
 		for(int i =0; i<tour.getDeliveryPoints().size()-1;i++)
 		{
@@ -58,6 +56,9 @@ public class JTreeDeliveryManager extends JTree {
 		// Add the last deliveryPoint
 		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
 				
+		//Add the warehouse
+		tourInTree.add(adapter.getWarehouseView(tour.getEntrepotId()) );
+		
 		// If the tour already exists we add it here
 		TreeTour existingTreeTour = getTourIfAlreadyExists(tour.getId());
 		
