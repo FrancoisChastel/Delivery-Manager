@@ -156,7 +156,6 @@ public class Tour {
 				currentDeliveryPoint++;
 			}
 		}
-		
 		this.getDeliveryPoints().remove(currentDeliveryPoint);
 	}
 	
