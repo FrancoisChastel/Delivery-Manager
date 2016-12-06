@@ -179,8 +179,32 @@ public class Tour {
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */
-	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint){	
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager graphManager){	
+		int deliveryPointId = this.getDeliveryPoints().get(index).getMapNodeId();
+		int currentDeliveryPoint = 0;
+		
+		Pair<Integer,Integer> association = null;
+		
+
+		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
+			Section section = this.getSections().get(sectionIndex);
+			if (this.isDeliveryPoint(section.getIdOrigin()) && this.getDeliveryPoints().get(currentDeliveryPoint).getMapNodeId() == section.getIdOrigin()) 
+			{	
+				if (section.getIdOrigin() == deliveryPointId)
+				{
+					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
+					this.deletePath(sectionIndex, association.getSecond());
+					this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
+					break;
+				}
+				currentDeliveryPoint++;
+			}
+		}
 		this.deliveryPoints.add(index, deliveryPoint);
+		
+		this.updateSection(association.getFirst(), index-1, index, graphManager);
+		this.updateSection(association.getFirst(), index, index+1, graphManager);
+
 	}
 	
 	private Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		

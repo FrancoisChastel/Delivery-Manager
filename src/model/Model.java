@@ -242,7 +242,7 @@ public class Model extends IModel {
 	@Override
 	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint());
+		this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Date(), new Delivery()), this.getGraphDeliveryManager());
 		
 	}
 		
