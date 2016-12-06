@@ -5,7 +5,6 @@
  Copyright            : (C) 2016 by FACANT
  *************************************************************************/
 package controller.commands;
-
 /**
  * Command interface that is undoable 
  * @author FACANT

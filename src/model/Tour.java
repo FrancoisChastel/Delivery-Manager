@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import model.deliverymanager.Delivery;
@@ -154,60 +155,96 @@ public class Tour {
 	 * @param deliveryPointsId that will be deleted
 	 */
 	public void deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
-		for (int cursor=0; cursor<this.getSections().size(); cursor++)
-			if (this.getSections().get(cursor).getIdOrigin() == deliveryPointId)
-			{
-				Pair<Integer,Integer> association = getNearestDeliveryPointId(cursor);
-				deletePath(association.getFirst(), association.getSecond());
-				//this.updateSection(cursor, association.getFirst(), graphManager);	
-				System.out.println(this.getSections().toString());
-				
-				cursor-=association.getSecond()-association.getFirst();
+		int currentDeliveryPoint = 0;
+		
+		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
+			Section section = this.getSections().get(sectionIndex);
+			if (this.isDeliveryPoint(section.getIdOrigin()) && this.getDeliveryPoints().get(currentDeliveryPoint).getMapNodeId() == section.getIdOrigin()) 
+			{	
+				if (section.getIdOrigin() == deliveryPointId)
+				{
+					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
+					this.deletePath(association.getFirst(), association.getSecond());
+					this.updateSection(sectionIndex, currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
+					break;
+				}
+				currentDeliveryPoint++;
 			}
+		}
+		
+		this.getDeliveryPoints().remove(currentDeliveryPoint);
 	}
 	
 	/**
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */
-	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint){	
+	public void addDeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager graphManager){	
+		int deliveryPointId = this.getDeliveryPoints().get(index).getMapNodeId();
+		int currentDeliveryPoint = 0;
+		
+		Pair<Integer,Integer> association = null;
+		
+
+		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
+			Section section = this.getSections().get(sectionIndex);
+			if (this.isDeliveryPoint(section.getIdOrigin()) && this.getDeliveryPoints().get(currentDeliveryPoint).getMapNodeId() == section.getIdOrigin()) 
+			{	
+				if (section.getIdOrigin() == deliveryPointId)
+				{
+					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
+					this.deletePath(sectionIndex, association.getSecond());
+					this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
+					break;
+				}
+				currentDeliveryPoint++;
+			}
+		}
 		this.deliveryPoints.add(index, deliveryPoint);
+		
+		this.updateSection(association.getFirst(), index-1, index, graphManager);
+		this.updateSection(association.getFirst(), index, index+1, graphManager);
+
 	}
 	
-	private Pair<Integer,Integer> getNearestDeliveryPointId(int deliveryPointId){
-		int beginning=0;
-		int ending=0;
+	private Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
+		int precedent = -1;
+		int next = -1;
 		
-		for (int cursor=deliveryPointId; cursor>=-1; cursor--)
-			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdOrigin()) || cursor ==-1){
-				beginning = cursor;
+		for (int cursor=sectionIndex-1; cursor>=0; cursor--){
+			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdOrigin()))
+			{
+				precedent = cursor;
 				break;
 			}
+		}
 		
-		for (int cursor=deliveryPointId; cursor<this.getSections().size(); cursor++)
-			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination())){
-				ending = cursor;
+		for (int cursor=sectionIndex; cursor<this.getSections().size(); cursor++){
+			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination()))
+			{
+				next = cursor;
 				break;
 			}
-		
-		return new Pair<>(beginning,ending);	
+			
+		}
+		return new Pair<Integer, Integer>(precedent, next);
 	}
 	
 	private void deletePath(int beginningId, int endingId)
 	{
 		for (int cursor=beginningId; cursor<=endingId; cursor++)
-			this.getSections().remove(beginningId);
+			this.getSections().remove(beginningId);		
 	}
 	
-	private void updateSection(int sectionIndex, int originDelivery, GraphDeliveryManager graphManager)
+	private void updateSection(int sectionIndex, int deliveryPointA, int deliveryPointB, GraphDeliveryManager graphManager)
 	{
 		ArrayList<MapNode> solution = LowerCosts.dijkstra(graphManager, 
-				this.deliveryPoints.get(originDelivery).getDelivery().getAdress(),
-				this.deliveryPoints.get(originDelivery+2).getDelivery().getAdress()).getFirst();
+				this.deliveryPoints.get(deliveryPointA).getDelivery().getAdress(),
+				this.deliveryPoints.get(deliveryPointB).getDelivery().getAdress()).getFirst();
 		
 		for(int cursor = 0; cursor<solution.size()-1; cursor++)
 		{
-			this.sections.add(sectionIndex++, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
+			this.sections.add(sectionIndex, graphManager.getSection(solution.get(cursor), solution.get(cursor+1)));
 		}
 	}
 }
