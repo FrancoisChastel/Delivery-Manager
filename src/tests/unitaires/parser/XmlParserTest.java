@@ -64,7 +64,7 @@ public class XmlParserTest {
 	 * 
 	 */
 	@Test
-	public void DeliveriesParserTest() throws Exception {
+	public void DeliveriesParserTest1() throws Exception {
 		//Load map in order to load deliveries after
 		File currentFile = new File("XMLs/plan10x10.xml");
 		XmlParser.xmlMapParser(model.getGraphDeliveryManager().getGraph(),
@@ -75,6 +75,7 @@ public class XmlParserTest {
 		DeliveryOrder delOrder = XmlParser.xmlDeliveriesParser(model.getGraphDeliveryManager().getGraph(),currentFile);
 		//Number of deliveries + warehouse
 		assertEquals(delOrder.getDeliveryList().size()+1,5);
+		assertEquals(delOrder.getStoreAdress().getidNode(),32);
 	}
 	/**
 	 * @throws Exception 
@@ -92,5 +93,6 @@ public class XmlParserTest {
 		DeliveryOrder delOrder = XmlParser.xmlDeliveriesParser(model.getGraphDeliveryManager().getGraph(),currentFile);
 		//Number of deliveries + warehouse
 		assertEquals(delOrder.getDeliveryList().size()+1,20);
+		assertEquals(delOrder.getStoreAdress().getidNode(),523);
 	}
 }
