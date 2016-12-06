@@ -1,0 +1,83 @@
+package view.jtree;
+
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
+
+import model.Tour;
+import view.Adapter;
+import view.MainFrame;
+
+/**
+ * 
+ * @author antoine
+ *
+ */
+public class JTreeDeliveryManager extends JTree {
+	
+	private MainFrame mainFrame;
+	private TreeDefaultIconNode root;
+	
+	/**
+	 * Normal Constructor
+	 */
+	public JTreeDeliveryManager(TreeDefaultIconNode root, MainFrame mainFrame)
+	{
+		super(root);
+		this.mainFrame = mainFrame;
+		this.root = root;
+		setCellRenderer(new JTreeRenderer());
+
+		// Manage listener
+		TreeListener treeListener = new TreeListener(mainFrame);
+		addTreeSelectionListener(treeListener);
+		addMouseListener(treeListener);
+	}
+	
+	/**
+	 * This method add a tour into the Tree.
+	 * @param tour
+	 */	
+	public void addTourTree(Tour tour)
+	{		
+		Adapter adapter = mainFrame.getAdapter();
+		
+		TreeTour tourInTree = adapter.getTreeTour(tour);
+		System.out.println("Displaying t"+tourInTree.getId());
+		
+		for(int i =0; i<tour.getDeliveryPoints().size()-1;i++)
+		{
+			// Add the DeliveryPointNode
+			tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(i)));
+			// Add the waiting Time node
+			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour,i));
+		}
+		
+		// Add the last deliveryPoint
+		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
+		
+		root.add(tourInTree);	
+		setSelectionRow(root.getChildCount()-1);
+
+		refreshTree();
+	}
+
+	/**
+	 * This method refresh the tree display with the good content.
+	 */
+	public void refreshTree()
+	{
+		DefaultTreeModel model = (DefaultTreeModel) getModel();
+		model.reload();
+	}
+	
+	/** 
+	 * This method clears the tree.
+	 */
+	public void resetDeliveriesOnTree() {
+		// TODO Auto-generated method stub
+		root.removeAllChildren();
+		
+		//refresh tree (empty)
+		refreshTree();
+	}
+}
