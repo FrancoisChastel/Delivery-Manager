@@ -342,4 +342,6 @@ public class Tour {
 	}
 	
 	public static void resetFactory() { factoryId=0; }
+	
+	public int getDistance() { return distance; }
 }
