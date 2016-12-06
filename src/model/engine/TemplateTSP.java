@@ -15,7 +15,7 @@ public abstract class TemplateTSP implements TSP {
 	//used for the distance TSP
 	private Integer[] meilleureSolutionDistance;
 	private int meilleureDistance;
-	private Date[] datesLivraisonsDistance;
+	private  Date[] datesLivraisonsDistance;
 	
 	private Boolean tempsLimiteAtteint;
 	private Date[] datesLivraisons;
@@ -57,9 +57,9 @@ public abstract class TemplateTSP implements TSP {
 		meilleureDistance = Integer.MAX_VALUE;
 		meilleureSolutionTime = new Integer[nbSommets];
 		meilleureSolutionDistance = new Integer[nbSommets];
-		datesLivraisonsDistance = new Date[nbSommets];
-		datesLivraisonsTime = new Date[nbSommets];
 		datesLivraisons = new Date[nbSommets];
+		datesLivraisonsDistance =  new Date[nbSommets];
+		datesLivraisonsTime = new Date[nbSommets];
 		ArrayList<Integer> nonVus = new ArrayList<Integer>();
 		for (int i=1; i<nbSommets; i++) nonVus.add(i);
 		ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
@@ -108,7 +108,7 @@ public abstract class TemplateTSP implements TSP {
 	 */	
 	 void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int[][] cout,int[][]distances, int[] duree,ArrayList<Pair<Date,Date>> window, long tpsDebut, int tpsLimite,Date actualDate,int actualDistance){
 		 Date nextDate;
-		 
+
 		 /*
 		 if (System.currentTimeMillis() - tpsDebut > tpsLimite)
 		 {
@@ -123,13 +123,13 @@ public abstract class TemplateTSP implements TSP {
 	    		vus.toArray(meilleureSolutionTime);
 	    		meilleureDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
-	    		datesLivraisonsTime = datesLivraisons;
+	    		for(int i=0;i<datesLivraisons.length;i++) datesLivraisonsTime[i]=(Date)datesLivraisons[i].clone();
 	    	}
 	    	else if(actualDistance<meilleureDistance){ // on a trouve une solution meilleure en distance
 	    		vus.toArray(meilleureSolutionDistance);
 	    		meilleureDistance = actualDistance;
 	    		datesLivraisons[sommetCrt]= actualDate;
-	    		datesLivraisonsDistance = datesLivraisons;
+	    		for(int i=0;i<datesLivraisons.length;i++) datesLivraisonsDistance[i]=(Date)datesLivraisons[i].clone();
 	    	}
 	    		
 		 } else if (checkWindow(window,nonVus,sommetCrt) && ((actualDate.getTime()/1000 + bound(sommetCrt, nonVus, cout, duree) < meilleureDate.getTime()/1000) || ( (actualDistance + bound(sommetCrt, nonVus, distances, new int[duree.length])<meilleureDistance) ))){

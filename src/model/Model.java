@@ -375,7 +375,7 @@ public class Model extends IModel {
 			// get the corresponding delivery in model
 			Delivery delivery = model.selected.getDeliveryById(idNode);
 			// Create the right deliveryPoint
-			DeliveryPoint dp  = new DeliveryPoint(delivery, datesLivraisons[in]);
+			DeliveryPoint dp  = new DeliveryPoint(delivery, datesLivraisons[bestSolution[in]]);
 			
 			deliveryPoints.add(dp);
 		}
