@@ -38,7 +38,7 @@ public class ModelTest {
 	 * 
 	 */
 	@Test
-	public void ResetTest() {
+	public void ResetTest1() {
 		model.resetModel();
 		GraphDeliveryManager graphDelMan = model.getGraphDeliveryManager();
 		int newSizes[] = new int[2];

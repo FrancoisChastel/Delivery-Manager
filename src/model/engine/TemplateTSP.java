@@ -12,6 +12,7 @@ public abstract class TemplateTSP implements TSP {
 	private Integer[] meilleureSolutionTime;
 	private Date meilleureDate;
 	private Date[] datesLivraisonsTime;
+	private int distance;
 	//used for the distance TSP
 	private Integer[] meilleureSolutionDistance;
 	private int meilleureDistance;
@@ -47,6 +48,16 @@ public abstract class TemplateTSP implements TSP {
 
 	public Date[] getDatesLivraisonsDistance() {
 		return datesLivraisonsDistance;
+	}
+	
+	public int getDistanceTime()
+	{
+		return distance;
+	}
+	
+	public int getDistanceDistance()
+	{
+		return meilleureDistance;
 	}
 
 
@@ -119,13 +130,15 @@ public abstract class TemplateTSP implements TSP {
 		 */
 		 if (nonVus.size() == 0){ // tous les sommets ont ete visites
 	    	datesLivraisons[0] = new Date(actualDate.getTime() + (cout[sommetCrt][0])*1000);
+	    	actualDistance = actualDistance + distances[sommetCrt][0];
 	    	if (actualDate.before(meilleureDate)){ // on a trouve une solution meilleure en temps
 	    		vus.toArray(meilleureSolutionTime);
 	    		meilleureDate = actualDate;
 	    		datesLivraisons[sommetCrt]= actualDate;
+	    		distance = actualDistance;
 	    		for(int i=0;i<datesLivraisons.length;i++) datesLivraisonsTime[i]=(Date)datesLivraisons[i].clone();
 	    	}
-	    	else if(actualDistance<meilleureDistance){ // on a trouve une solution meilleure en distance
+	    	if(actualDistance<meilleureDistance){ // on a trouve une solution meilleure en distance
 	    		vus.toArray(meilleureSolutionDistance);
 	    		meilleureDistance = actualDistance;
 	    		datesLivraisons[sommetCrt]= actualDate;

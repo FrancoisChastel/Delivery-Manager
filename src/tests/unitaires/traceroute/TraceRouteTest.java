@@ -23,7 +23,7 @@ public class TraceRouteTest {
 
 	
 	@Test
-	public void generateInstructionsTest() {
+	public void generateInstructionsTest1() {
 		
 		MapNode node0 = new MapNode(0,0,0);
 		MapNode node1 = new MapNode(1,0,-1);
@@ -70,7 +70,7 @@ public class TraceRouteTest {
 		
 		
 		
-		Tour tour = new Tour(sections, deliveryPoints, 0);
+		Tour tour = new Tour(sections, deliveryPoints, 0,1);
 		
 		List<Instruction> instructions = TraceRoute.generateInstructions(tour,graph);
 		Instruction instruction0 = new Instruction(Direction.STRAIGHT,1,10,1,false,"01",true,true);
@@ -88,7 +88,7 @@ public class TraceRouteTest {
 	}
 	
 	@Test
-	public void generateInstructionsTestWithoutSection() {
+	public void generateInstructionsTestWithoutSection1() {
 		
 		MapNode node0 = new MapNode(0,0,0);
 		Graph<MapNode, Section> graph = new Graph<MapNode, Section>();
@@ -96,7 +96,7 @@ public class TraceRouteTest {
 		ArrayList<Section> sections = new ArrayList<Section>();
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
 		
-		Tour tour = new Tour(sections, deliveryPoints, 0);
+		Tour tour = new Tour(sections, deliveryPoints, 0,1);
 		assertEquals(TraceRoute.generateInstructions(tour,graph).isEmpty(),true);
 		
 	}

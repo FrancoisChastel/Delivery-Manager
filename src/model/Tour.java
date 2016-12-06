@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -21,17 +22,19 @@ public class Tour {
 	private int id;
 	private static int factoryId = 0;
 	private int entrepotId;
+	private int distance;
 	
 	/**
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId)
+	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId,int distance)
 	{
 		this.entrepotId=entrepotId;
 		this.sections = sections;
 		this.deliveryPoints = deliveryPoints;
 		this.id=factoryId;
+		this.distance = distance;
 		factoryId++;
 	}
 	
@@ -228,10 +231,16 @@ public class Tour {
 		ArrayList<DeliveryPoint> newDelPoint = new ArrayList<>();
 		newDelPoint.addAll(deliveryPoints.subList(0, index+1));
 		newDelPoint.add(deliveryPoint);
-		newDelPoint.addAll(deliveryPoints.subList(index+2, deliveryPoints.size()));
-		// Overwrite del points
-		
+		newDelPoint.addAll(deliveryPoints.subList(index+1, deliveryPoints.size()));
+		// Overwrite del points		
 		deliveryPoints = newDelPoint;		
+		//------------------------------------------------------
+		
+		// set the correct date of a point
+		System.out.println(prevToNew.getSecond());
+		
+		long arrivingTimeCurr = previous.getLeavingDate().getTime() + (prevToNew.getSecond()*1000);		
+		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));
 	}
 	
 	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
