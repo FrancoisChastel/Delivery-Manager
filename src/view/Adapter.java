@@ -1,5 +1,6 @@
 package view;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -191,6 +192,9 @@ public class Adapter {
 	{
 		TreeTour res = new TreeTour("Tour "+t.getId(), t.getId(), icons.get(Icons.TOUR));
 		res.add(new TreeDefaultIconNode( (new Double(t.getDistance()) /10000)+"km", icons.get(Icons.DISTANCE)));
+		
+		long time = t.getBackToWareHouseDate().getTime()-t.getDepartFromWarehouse().getTime();
+		res.add(new TreeDefaultIconNode( View.formatDateFromSecond(time/1000), icons.get(Icons.SCHEDULES)));
 		return res;
 	}
 	
@@ -232,10 +236,16 @@ public class Adapter {
 		icons.put(Icons.DISTANCE, new ImageIcon("icone/distance.png"));
 	}
 	
-	public TreeDefaultIconNode getWarehouseView(int nodeId)
+	/**
+	 * This method return a view in the Tree for the warehouse
+	 * @param nodeId
+	 * @return
+	 */
+	public TreeDefaultIconNode getWarehouseView(int nodeId, Date date)
 	{
 		TreeDefaultIconNode warehouse = new TreeDefaultIconNode("Warehouse", icons.get(Icons.WAREHOUSE));
 		warehouse.add(new TreeDefaultIconNode("Point "+nodeId, icons.get(Icons.ADDRESS)));
+		warehouse.add(new TreeDefaultIconNode(View.getDate(date), icons.get(Icons.DELIVERY_ARRIVING)));
 		return warehouse;
 	}
 }

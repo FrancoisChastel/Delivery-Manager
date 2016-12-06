@@ -23,6 +23,8 @@ public class Tour {
 	private static int factoryId = 0;
 	private int entrepotId;
 	private int distance;
+	private Date backToWarehouse;
+	private Date departFromWarehouse;
 	
 	/**
 	 * Normal constructor
@@ -288,6 +290,14 @@ public class Tour {
 	}
 	
 	public static void resetFactory() { factoryId=0; }
-	
+	public Date getBackToWareHouseDate() {return backToWarehouse; }
+	public void setDateBackToWarehouse(Date backToWarehouse) {this.backToWarehouse= backToWarehouse; }
+	public Date getDepartFromWarehouse() {return departFromWarehouse; }
+
 	public int getDistance() { return distance; }
+
+	public void setDateDepartFromWarehouse(Date startingTime) {
+		departFromWarehouse=startingTime;
+		
+	}
 }

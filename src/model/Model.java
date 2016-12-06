@@ -489,8 +489,10 @@ public class Model extends IModel {
 		if(model.selected.getStoreAdress().getidNode() !=storeId)
 			View.displayMessage("Error", "The entrepot out of the TSP is not the same as the selected tour", null);
 		Tour tour = new Tour(sections,deliveryPoints,storeId,bestDistance);	
+		tour.setDateBackToWarehouse(datesLivraisons[0]);		
+		tour.setDateDepartFromWarehouse(model.selected.getStartingTime());
 		model.setTour(tour);
-	}
+	}	
 }
 
 
