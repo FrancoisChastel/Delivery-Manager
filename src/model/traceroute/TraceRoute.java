@@ -36,13 +36,12 @@ public abstract class TraceRoute {
 		
 		oldX = map.getNodeById(tour.getEntrepotId()).getX();
 		oldY = map.getNodeById(tour.getEntrepotId()).getY();
-			
 		for(Section section : tour.getSections())
 		{
 			nextNode        = map.getNodeById(section.getIdDestination());
 			allDestinations = map.getDestinations(map.getNodeById(section.getIdOrigin()));
 			boolean uniqueOutgoingDestination = false;
-			if(allDestinations.size() == 2)
+			if(allDestinations.size() == 2 || allDestinations.size() == 1)
 			{
 				uniqueOutgoingDestination = true;
 			}
@@ -91,11 +90,11 @@ public abstract class TraceRoute {
 		boolean uniqueOutgoingDestinationInItsArea = false;
 		if(Math.abs(angle) < 10)
 		{
-			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
+			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,true);
 		}
 		else if(Math.abs(angle) == 180)
 		{
-			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,uniqueOutgoingDestinationInItsArea);
+			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,true);
 		}
 		else if(angle < 0)
 		{

@@ -47,6 +47,11 @@ public class ViewTour {
 			colorUnselected();
 	}
 	
+	public boolean isSelected()
+	{
+		return selected;
+	}
+	
 	/**
 	 * This is the behaviour of a selected tour. It colorates edges of all lines following the gradient system. And it colorates points in orange.
 	 */
