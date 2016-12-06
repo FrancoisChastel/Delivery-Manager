@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -198,7 +199,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		{
 			JFileChooser fc = new JFileChooser();	
             int returnVal = fc.showOpenDialog(MainFrame.this);
-            
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             	File currentFile = fc.getSelectedFile();
             	hamecon.getController().reset();
