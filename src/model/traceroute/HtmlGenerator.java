@@ -23,7 +23,7 @@ public abstract class HtmlGenerator {
 	private final static DateFormat df = new SimpleDateFormat("HH:mm");
 	
 	/**
-	 * This method write all instructions in a well-formed file passed in parameters
+	 * This method write all instructions in a well-formed html file passed in parameters
 	 * @param entrepot : MapNode of entrepot to get X,Y,ID
 	 * @param tour : To get List of Delivery Point 
 	 * @param instructions : Instructions to print on HTML file
@@ -40,9 +40,9 @@ public abstract class HtmlGenerator {
 		BufferedWriter bufferedWriter = null;
 		try {
 			fileWriter = new FileWriter(fileHtml);
-			//
 			bufferedWriter = new BufferedWriter(fileWriter);
 
+			// Print Header and the beginning of body
 			String htmlPage = "<!DOCTYPE html >\n" + "<html>" + "<head>"
 					+ "<link href='http://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
 					+ "<link type='text/css' rel='stylesheet' href='css/materialize.min.css'  media='screen,projection'/>"
@@ -51,6 +51,7 @@ public abstract class HtmlGenerator {
 					+ "<h1>Feuille de Route</h1>" + "</div>" + "<div class='row'>" + "<ul class='collection'>";
 			bufferedWriter.write(htmlPage);
 		
+			// Create first LI with all informations about storeAddress
 			bufferedWriter.append("<li class='collection-item avatar'>"
 								+ 	"<img src='images/delivery-truck.png' class='circle green lighten-3'>"
 								+ 	"<span class='title'>Dirigez vous vers l'entrepot aux coordonnees GPS suivante : (" + entrepot.getX() + "," + entrepot.getY() + ")</span>"
@@ -113,16 +114,18 @@ public abstract class HtmlGenerator {
 				}
 				
 				
-				// Write bloc <li> Direction
+				// Write bloc <li> next direction with all informations 
 				bufferedWriter.append("<li class='collection-item avatar'>" + "<img src='" + image
 						+ "' class='circle green lighten-3'>" + "<span class='title'>" + direction + " sur " +instruction.getRoad() +"</span>"
 						+ "<p>Continuez pendant " + instruction.getLength() + " metres" + instruction.getIdDestination()+ "</p>" + "</li>");
 				
+				// Test if the destination is a DeliveryPoint, in this case add an other LI with informations about delivery 
 				if(instruction.isDestinationIsDeliveryPoint() && instruction.getIdDestination() != entrepot.getidNode())
 				{
-					// Write bloc <li> Delivery
+					
 					Date arrivingDate = null;
 					Date leavingDate = null;
+					
 					// Get DeliveryPoint ArrivingDate and LeavingDate
 					for(DeliveryPoint deliveryPoint: tour.getDeliveryPoints())
 					{
@@ -132,6 +135,7 @@ public abstract class HtmlGenerator {
 							leavingDate = deliveryPoint.getLeavingDate();
 						}		
 					}
+					// Write bloc <li> Delivery
 					bufferedWriter.append("<li class='collection-item avatar'>"
 							+ 	"<img src='images/box.png' class='circle green lighten-3'>"
 							+ 	"<span class='title'>Vous etes arrive au point de livraison "+ instruction.getIdDestination() +"</span>"
@@ -140,16 +144,16 @@ public abstract class HtmlGenerator {
 				}
 			}
 
-			// Write bloc <li> Delivery
+			// Write bloc <li> Finish Tour
 			bufferedWriter.append("<li class='collection-item avatar'>"
 					+ 	"<img src='images/racing-flag.png' class='circle green lighten-3'>"
 					+ 	"<span class='title'>Vous avez fini votre tournee</span>"
 					+ "</li>");
 			
-			// Bottom Html
+			// Add Bottom Html
 			bufferedWriter.append("</ul></div></div></body></html>");
 
-			System.out.println("Html Created");
+			// Flush Buffer and FileWriter
 			bufferedWriter.flush();
 			fileWriter.flush();
 
