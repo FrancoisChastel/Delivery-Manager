@@ -212,6 +212,85 @@ public class Tour {
 
 	}
 	
+	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	
+		DeliveryPoint previous = deliveryPoints.get(index);
+		DeliveryPoint next = deliveryPoints.get(index+1);
+		
+		// previous to new
+		Pair<ArrayList<MapNode>, Integer> prevToNew = LowerCosts.dijkstra(gdm, previous.getDelivery().getAdress(), deliveryPoint.getDelivery().getAdress());
+
+		// previous to new
+		Pair<ArrayList<MapNode>, Integer> newToNext = LowerCosts.dijkstra(gdm, deliveryPoint.getDelivery().getAdress(), next.getDelivery().getAdress());
+
+		
+		// Creating the new ArrayList of sections -----------------------------------------------------
+		ArrayList<Section> newSections = new ArrayList<>();
+		int deliveryPointIndex = 0; // current visiting point Index in the loop
+		int previousPointFirstSectionIndex =-1;
+		int nextPointFirstSectionIndex =-1;
+		int currIndex = 0;
+		
+		// get sectionIndex of the previous, and the last
+		for(Section section : sections)
+		{
+			int currOrigin = section.getIdOrigin();
+			
+			// when we reach a deliveryPoint, then we increment index.
+			if(deliveryPointIndex<deliveryPoints.size() && currOrigin == deliveryPoints.get(deliveryPointIndex).getMapNodeId())
+			{
+				// check if this point is our previous point
+				if(currOrigin == previous.getMapNodeId())
+					previousPointFirstSectionIndex = currIndex;
+				
+				// check if this point is our next point
+				if(currOrigin == next.getMapNodeId())
+				{
+					nextPointFirstSectionIndex = currIndex;
+					break;
+				}
+				
+				deliveryPointIndex++;
+			}	
+			currIndex++;			
+		}
+		
+		if(previousPointFirstSectionIndex == -1 || nextPointFirstSectionIndex ==-1)
+			throw new Exception("Tour could not find the previous and next point.");
+		
+		// Creating the new section arrayList --------------
+		// sections from begining to previous
+		for(int i =0; i<previousPointFirstSectionIndex; i++)
+			newSections.add(sections.get(i));
+
+		// sections from previous to new
+		for(int j = 0; j<prevToNew.getFirst().size()-1; j++)
+			newSections.add(gdm.getSection(prevToNew.getFirst().get(j),prevToNew.getFirst().get(j+1)));
+		//newSections.add(gdm.getSection( prevToNew.getFirst().get(prevToNew.getFirst().size()-1), deliveryPoint.getDelivery().getAdress() ) );
+		
+		
+		// sections from new to next
+		for(int j = 0; j<newToNext.getFirst().size()-1; j++)
+			newSections.add(gdm.getSection(newToNext.getFirst().get(j),newToNext.getFirst().get(j+1)));
+		//newSections.add(gdm.getSection( newToNext.getFirst().get(newToNext.getFirst().size()-1), next.getDelivery().getAdress() ) );
+
+		// adding the following of the list
+		for(int j = nextPointFirstSectionIndex; j<sections.size();j++)
+			newSections.add(sections.get(j));
+		
+		// Overwriting sections
+		sections = newSections;
+		//------------------------------------------------------
+		
+		// Creating the new points -----------------------------
+		ArrayList<DeliveryPoint> newDelPoint = new ArrayList<>();
+		newDelPoint.addAll(deliveryPoints.subList(0, index+1));
+		newDelPoint.add(deliveryPoint);
+		newDelPoint.addAll(deliveryPoints.subList(index+2, deliveryPoints.size()));
+		// Overwrite del points
+		
+		deliveryPoints = newDelPoint;		
+	}
+	
 	private Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
 		int precedent = -1;
 		int next = -1;
