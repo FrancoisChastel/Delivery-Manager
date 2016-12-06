@@ -108,7 +108,6 @@ public class View implements Observer, IView {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		HashMap<String,Object> params = (HashMap<String,Object>) arg1;
-		
 		String type = (String) params.get("type");
 		
 		if(type == "UPDATE_MAP")

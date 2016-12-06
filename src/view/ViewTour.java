@@ -103,4 +103,18 @@ public class ViewTour {
 	// Accessors
 	public void setSelected(boolean value) { selected = value ; }
 	public int getId() { return id; }
+
+	/**
+	 * This method put all concerned points and section to default value for a tour
+	 */
+	public void undrawTour() {
+		System.out.println("Undrawing a tour");
+		// Clean the concerned edges
+		for(Entry<Integer, ViewEdge> entry : concernedEdge.entrySet())
+			entry.getValue().clearSection(entry.getKey());
+	
+		// Clean the concerned points
+		for(ViewPoint point : concernedPoints)
+			point.clearPoint();
+	}
 }
