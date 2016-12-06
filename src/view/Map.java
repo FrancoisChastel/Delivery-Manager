@@ -87,6 +87,9 @@ public class Map extends JPanel {
 	 		}
 	 	}
 	
+ 	/**
+ 	 * this method removes all on the map.
+ 	 */
 	public void resetMap()
 	{
 		points.clear();
@@ -316,6 +319,32 @@ public class Map extends JPanel {
 		return -1;
 	}
 	
+	/**
+	 * this method reset all the color and weights of element on the map.
+	 */
+	private void clearDisplaySectionAndPoints()
+	{
+		// Iterate over all section
+		for(Entry<Integer, ViewEdge> entry : edges.entrySet())
+		{
+			entry.getValue().clearSection(entry.getKey());
+		}
+		
+		// Iterate over all 
+		for(ViewPoint point : points)
+		{
+			point.clearPoint();
+		}
+	}
+	
+	/** 
+	 * This method reset all deliveries on the map. It clears the tours map and it display default aspects of all the points.
+	 */
+	public void resetDeliveriesOnMap() {
+		tours.clear();
+		clearDisplaySectionAndPoints();
+		repaint();
+	}
+	
 	public MainFrame getMainFrame() { return mainFrame; }
-
 }

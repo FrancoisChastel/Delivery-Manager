@@ -116,6 +116,14 @@ public class Model extends IModel {
 		deliveryManager = new DeliveryManager();
 	}
 	
+	public void updateResetDeliveries()
+	{
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "RESET_DELIVERIES");
+		notifyObservers(map);
+	}
+	
 	public void updateMap()
 	{
 		setChanged();
@@ -242,7 +250,7 @@ public class Model extends IModel {
 	@Override
 	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Date(), new Delivery()), this.getGraphDeliveryManager());
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Delivery(), new Date()), this.getGraphDeliveryManager());
 		
 	}
 		

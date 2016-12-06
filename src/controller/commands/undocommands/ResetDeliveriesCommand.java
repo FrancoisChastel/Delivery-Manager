@@ -29,7 +29,7 @@ public class ResetDeliveriesCommand extends Observable implements IUndoableComma
 	@Override
 	public void execute() throws Throwable {
 		model.resetDeliveries();
-		model.updateMap();
+		model.updateResetDeliveries();
 	}
 
 	@Override

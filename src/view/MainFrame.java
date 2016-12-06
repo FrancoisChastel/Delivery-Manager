@@ -25,6 +25,7 @@ import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 import model.graph.Section;
+import view.jtree.JTreeDeliveryManager;
 import view.jtree.JTreeRenderer;
 import view.jtree.TreeDefaultIconNode;
 import view.jtree.TreeListener;
@@ -61,8 +62,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem mntmUndo;
 	private JMenuItem mntmRedo;
 	private JMenuItem mntmReset;
-	private JTree tourTree;
-	private TreeDefaultIconNode root;
+	private JTreeDeliveryManager tourTree;
 	private JPanel rightSidePanel;
 	private AddDeliveryFrame addDeliveryFrame;
 	
@@ -132,14 +132,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		// Initialization of the JTree -----------
 		//create the root node
-        root = new TreeDefaultIconNode("Deliveries",null);        
-		tourTree = new JTree(root);	
-		tourTree.setCellRenderer(new JTreeRenderer());
-
-		// Manage listener
-		TreeListener treeListener = new TreeListener(this);
-		tourTree.addTreeSelectionListener(treeListener);
-		tourTree.addMouseListener(treeListener);
+		
+		tourTree = new JTreeDeliveryManager(new TreeDefaultIconNode("Deliveries",null), this);        
 		
 		// Add to right pane
         JScrollPane treeView = new JScrollPane(tourTree);     
@@ -168,36 +162,23 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void displayTour(Tour tour)
 	{
 		map.displayTour(tour);
-		addTourTree(tour);		
+		tourTree.addTourTree(tour);		
 	}
 	
 	/**
-	 * This method add a tour into the Tree.
-	 * @param tour
-	 */	
-	public void addTourTree(Tour tour)
-	{		
-
-		TreeTour tourInTree = adapter.getTreeTour(tour);
-		System.out.println("Displaying t"+tourInTree.getId());
+	 * Called by update.
+	 */
+	public void resetDeliveriesView()
+	{	
+		tourTree.resetDeliveriesOnTree();
 		
-		for(int i =0; i<tour.getDeliveryPoints().size()-1;i++)
-		{
-			// Add the DeliveryPointNode
-			tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(i)));
-			// Add the waiting Time node
-			tourInTree.add(adapter.getTreeWaitingTime(tour.getDeliveryPoints().get(i), tour.getDeliveryPoints().get(i+1), tour,i));
-		}
+		//repaint empty map
+		mntmRedo.setEnabled(false);
 		
-		// Add the last deliveryPoint
-		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
-		
-		root.add(tourInTree);	
-		this.tourTree.setSelectionRow(root.getChildCount()-1);
-		DefaultTreeModel model = (DefaultTreeModel) tourTree.getModel();
-		model.reload();
+		// Reset the map
+		map.resetDeliveriesOnMap();
 	}
-
+	
 	/**
 	 * Action listener of the frame
 	 */
@@ -214,36 +195,19 @@ public class MainFrame extends JFrame implements ActionListener {
             	File currentFile = fc.getSelectedFile();
             	hamecon.getController().reset();
             	hamecon.getController().parseMapFile(currentFile);
-            	root.removeAllChildren();
+            	// TODO Clear JTree
             }
             mntmRedo.setEnabled(false);
 		}
 		else if(arg0.getSource()==mntmReset)
 		{
-
-			root.removeAllChildren();
-			
-			// Initialization of the JTree -----------
-			//create the root node
-	        root = new TreeDefaultIconNode("Deliveries",null);        
-			tourTree = new JTree(root);	
-			
-
-			// Manage listener
-			TreeListener treeListener = new TreeListener(this);
-			tourTree.addTreeSelectionListener(treeListener);
-			tourTree.addMouseListener(treeListener);
-
 			try {
+				// The model will notify observers when it will be reset. The corresponding callback is resetDeliveries On map
 				hamecon.getController().resetDeliveries();
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//refresh tree (empty)
-			//repaint empty map
-			mntmRedo.setEnabled(false);
-
 		}
 		else if(arg0.getSource()==mntmLoadDeliveryfile)
 		{
@@ -298,8 +262,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	public JTree getJtree() { return tourTree; }
 	public View getView() { return hamecon; }
 	public Map getMap() {	return map;	}
-
-
+	public Adapter getAdapter() {return adapter;}
 
 	public void setPickedPointAddDelivery(ViewPoint point) {
 		// TODO Auto-generated method stub

@@ -192,7 +192,12 @@ public class Tour {
 			{	
 				if (section.getIdOrigin() == deliveryPointId)
 				{
-					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
+					try {
+						association = getNearestDeliveryPointId(sectionIndex);
+					} catch (Throwable e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					this.deletePath(sectionIndex, association.getSecond());
 					this.updateSection(sectionIndex, currentDeliveryPoint, currentDeliveryPoint+1, graphManager);
 					break;
