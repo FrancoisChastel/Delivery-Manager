@@ -61,6 +61,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JMenuItem mntmUndo;
 	private JMenuItem mntmRedo;
 	private JMenuItem mntmReset;
+	private JMenuItem mntmPrint;
 	private JTree tourTree;
 	private TreeDefaultIconNode root;
 	private JPanel rightSidePanel;
@@ -87,6 +88,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		mnFile.add(mntmNewMap);
 		mntmNewMap.addActionListener(this);
 		
+		mntmPrint = new JMenuItem("Print");
+		mnFile.add(mntmPrint);
+		mntmPrint.addActionListener(this);
 		
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -269,6 +273,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		else if(arg0.getSource()==mntmRedo)
 		{
 			hamecon.getController().redoCommand(CommandContext.MAIN, 1);
+		}
+		else if(arg0.getSource()==mntmPrint)
+		{
+			hamecon.getController().generateTraceRoute(this.getMap().getSelectedTour());
+			
 		}
 		
 	}
