@@ -64,7 +64,7 @@ public class DijkstraTest {
 	 * Test dijkstra between two nodes
 	 */
 	@Test
-	public void dijkstra1() {
+	public void dijkstraTest1() {
 		MapNode origin = new MapNode(1,300,500);
 		MapNode target = new MapNode(4,100,400);
 		
@@ -88,7 +88,7 @@ public class DijkstraTest {
 	 * Test dijkstra between two new nodes
 	 */
 	@Test
-	public void dijkstra2() {
+	public void dijkstraTest2() {
 		MapNode origin = new MapNode(1,300,500);
 		MapNode target = new MapNode(4,100,400);
 		

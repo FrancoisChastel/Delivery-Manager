@@ -23,7 +23,7 @@ public class TraceRouteTest {
 
 	
 	@Test
-	public void generateInstructionsTest() {
+	public void generateInstructionsTest1() {
 		
 		MapNode node0 = new MapNode(0,0,0);
 		MapNode node1 = new MapNode(1,0,-1);
@@ -88,7 +88,7 @@ public class TraceRouteTest {
 	}
 	
 	@Test
-	public void generateInstructionsTestWithoutSection() {
+	public void generateInstructionsTestWithoutSection1() {
 		
 		MapNode node0 = new MapNode(0,0,0);
 		Graph<MapNode, Section> graph = new Graph<MapNode, Section>();
