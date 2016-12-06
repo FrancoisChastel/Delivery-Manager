@@ -73,5 +73,6 @@ public class ViewPoint implements IShape{
 		// TODO Auto-generated method stub
 		this.hooved = hooved;
 	}
+	public void clearPoint() { this.color = this.colorDefault; }
 
 }

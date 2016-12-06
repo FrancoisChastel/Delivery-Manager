@@ -116,6 +116,14 @@ public class Model extends IModel {
 		deliveryManager = new DeliveryManager();
 	}
 	
+	public void updateResetDeliveries()
+	{
+		setChanged();
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("type", "RESET_DELIVERIES");
+		notifyObservers(map);
+	}
+	
 	public void updateMap()
 	{
 		setChanged();
@@ -209,9 +217,16 @@ public class Model extends IModel {
 	@Override
 	public void generateTraceRoute(int tourid)
 	{			
-		File htmlFile = new File("roadMap/index.html");
-		HtmlGenerator.generateHtml(this.getGraphDeliveryManager().getGraph().getNodeById(tours.get(tourid).getEntrepotId()),this.tours.get(tourid),TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),this.deliveryManager,htmlFile);
-		controller.getLogger().write("Tour "+ tours.get(tourid)+ " : Instructions in HTML done");
+		try{
+			File htmlFile = new File("roadMap/index.html");
+			HtmlGenerator.generateHtml(this.getGraphDeliveryManager().getGraph().getNodeById(tours.get(tourid).getEntrepotId()),this.tours.get(tourid),TraceRoute.generateInstructions(tours.get(tourid), this.getGraphDeliveryManager().getGraph()),htmlFile);
+			controller.getLogger().write("Tour "+ tours.get(tourid)+ " : Instructions in HTML done");
+		}
+		catch(IOException e)
+		{
+			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
+		}
+		
 		/*
 		try {
 			Desktop.getDesktop().browse(htmlFile.toURI());
@@ -242,7 +257,7 @@ public class Model extends IModel {
 	@Override
 	public void addDeliveryPoint(int tourId,  int index, int nodeId, int duration,
 			Date availabilityBeginning, Date availabilityEnd) {
-		this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Date(), new Delivery()), this.getGraphDeliveryManager());
+		//this.tours.get(tourId).addDeliveryPoint(index, new DeliveryPoint(new Delivery(), new Date()), this.getGraphDeliveryManager());
 		
 	}
 		

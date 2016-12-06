@@ -168,6 +168,6 @@ public class ViewEdge implements IShape {
 	public ViewPoint getOrigin() {return pointOrigin;}
 	public ViewPoint getTarget() {return pointTarget;}
 	public void setBigWeight(boolean value) {bigWeight=value; }
-	public void clearSection(int id) {sections.put(id, defaultColor); }
+	public void clearSection(int id) {sections.put(id, defaultColor); bigWeight=false; }
 	public void setAlreadyPassed(boolean value){ this.alreadyPassed = value; }
 }

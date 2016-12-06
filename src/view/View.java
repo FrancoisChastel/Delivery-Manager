@@ -117,9 +117,13 @@ public class View implements Observer, IView {
 			displayFrame(Page.Main,true);
 		}
 		else if(type == "UPDATE_DELIVERY")
-		{
+		{			
 			Integer idTour = (Integer) params.get("tour");
 			((MainFrame) pages.get(Page.Main)).displayTour(controller.getModel().getTourById(idTour));
+		}
+		else if(type == "RESET_DELIVERIES")
+		{			
+			((MainFrame) pages.get(Page.Main)).resetDeliveriesView();
 		}
 	}
 	
