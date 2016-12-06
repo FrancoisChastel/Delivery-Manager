@@ -1,6 +1,9 @@
 package view.jtree;
 
+import java.util.Enumeration;
+
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import model.Tour;
@@ -37,7 +40,7 @@ public class JTreeDeliveryManager extends JTree {
 	 * This method add a tour into the Tree.
 	 * @param tour
 	 */	
-	public void addTourTree(Tour tour)
+	public void displayTourInTree(Tour tour)
 	{		
 		Adapter adapter = mainFrame.getAdapter();
 		
@@ -54,11 +57,42 @@ public class JTreeDeliveryManager extends JTree {
 		
 		// Add the last deliveryPoint
 		tourInTree.add(adapter.getTreeNode(tour.getDeliveryPoints().get(tour.getDeliveryPoints().size()-1)));
+				
+		// If the tour already exists we add it here
+		TreeTour existingTreeTour = getTourIfAlreadyExists(tour.getId());
 		
-		root.add(tourInTree);	
-		setSelectionRow(root.getChildCount()-1);
-
+		if(existingTreeTour !=null) // if there is an existing tree tour we modify it
+		{
+			System.out.println("Tour exists in tree");
+			// get back the index of existing tour
+			Integer indexOfExisting = existingTreeTour.getParent().getIndex(existingTreeTour);
+			root.remove(indexOfExisting);
+			root.insert(tourInTree, indexOfExisting);
+		}
+		else // If there is no existing treetour, we add it
+		{		
+			root.add(tourInTree);	
+			setSelectionRow(root.getChildCount()-1);
+		}
 		refreshTree();
+	}
+	
+	/**
+	 * This method return a TreeTour from an id if already exists in tree. Else it returns null
+	 * @return
+	 */
+	private TreeTour getTourIfAlreadyExists(int id)
+	{
+		Enumeration<DefaultMutableTreeNode> children = root.children();
+			
+		while (children.hasMoreElements())
+		{
+			TreeTour curTour = (TreeTour) children.nextElement();
+			// If we find the corresponding id, we return it
+			if(curTour.getId()==id)
+				return curTour;
+		}
+		return null;		
 	}
 
 	/**

@@ -113,11 +113,15 @@ public class Map extends JPanel {
 	
 	
 	/**
-	 * This method display a tour on the map. 
+	 * This method display a tour on the map. If the tour already exists and you just want to modify it, it undraw previous tour and redraw the up-to-date one.
 	 * @param tour
 	 */
 	public void displayTour(Tour tour)
 	{		
+	//	System.out.println("Displaying a tour "+tour.getId());
+		if(tours.containsKey(tour.getId())) // IF TOUR ALREADY EXIST THEN WE UNDRAW IT
+			tours.get(tour.getId()).undrawTour();
+		
 		// Getting a list of concerned points that will be used for the used tour
 		ArrayList<ViewPoint> concernedPoints = new ArrayList<>();
 		
@@ -151,6 +155,7 @@ public class Map extends JPanel {
 	}
 	
 	
+
 	public void toursColoring()
 	{
 		ViewTour selected=null;
@@ -245,7 +250,6 @@ public class Map extends JPanel {
 		return (ViewPoint) points.get(id);
 	}
 	
-	
 	private void addAlreadyPassedEdge(ViewEdge edge)
  	{
  		alreadyPassedEdges.add(edge);
@@ -298,7 +302,6 @@ public class Map extends JPanel {
 	public void removeAllLabels(){
 		labels.clear();
 	}
-
 
 	public HashMap<Integer, ViewEdge> getEdges() {
 		// TODO Auto-generated method stub
