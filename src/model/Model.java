@@ -320,7 +320,11 @@ public class Model extends IModel {
 		tspObject.bestSolutionDistance = tsp.getMeilleureSolutionDistance();
 		tspObject.datesLivraisonsTime = tsp.getDatesLivraisonsTime();
 		tspObject.datesLivraisonsDistance = tsp.getDatesLivraisonsDistance();
+		tspObject.bestDistanceDistance = tsp.getDistanceDistance();
+		tspObject.bestDistanceTime = tsp.getDistanceTime();
 
+		System.out.println("distance time" + tspObject.bestDistanceTime);
+		System.out.println("distance distance" + tspObject.bestDistanceDistance);
 		// Print TSP Result
 	/*	String TSP = "TSP: ";
 			for(int i = 0; i< tspObject.bestSolution.length;i++)
@@ -332,8 +336,8 @@ public class Model extends IModel {
 		
 		// Constructing a Tour
 		try {
-		AdapterTSPModel(this, tspObject, paths,tspObject.bestSolutionTime,tspObject.datesLivraisonsTime);
-		AdapterTSPModel(this, tspObject, paths,tspObject.bestSolutionDistance,tspObject.datesLivraisonsDistance);
+		AdapterTSPModel(this, tspObject, paths,tspObject.bestSolutionTime,tspObject.datesLivraisonsTime,tspObject.bestDistanceTime);
+		AdapterTSPModel(this, tspObject, paths,tspObject.bestSolutionDistance,tspObject.datesLivraisonsDistance,tspObject.bestDistanceDistance);
 		}
 		catch (Exception e) {
 			controller.error("Impossible de calculer la tournée en respectant les conditions");
@@ -416,7 +420,7 @@ public class Model extends IModel {
 	 * @param model 
 	 * @param tspObject
 	 */
-	public static void AdapterTSPModel(Model model, TSPObject tspObject,HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths,Integer[] bestSolution,Date[] datesLivraisons)
+	public static void AdapterTSPModel(Model model, TSPObject tspObject,HashMap<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> paths,Integer[] bestSolution,Date[] datesLivraisons,int bestDistance)
 	{
 		ArrayList<Section> sections= new ArrayList<>();
 		int i;
@@ -484,7 +488,7 @@ public class Model extends IModel {
 
 		if(model.selected.getStoreAdress().getidNode() !=storeId)
 			View.displayMessage("Error", "The entrepot out of the TSP is not the same as the selected tour", null);
-		Tour tour = new Tour(sections,deliveryPoints,storeId);	
+		Tour tour = new Tour(sections,deliveryPoints,storeId,bestDistance);	
 		model.setTour(tour);
 	}
 }
@@ -508,6 +512,8 @@ class TSPObject
 	public Date [] datesLivraisonsTime;
 	public Integer[] bestSolutionDistance;
 	public Date [] datesLivraisonsDistance;
+	public int bestDistanceTime;
+	public int bestDistanceDistance;
 	
 	 
 	// Mapping between NodeId and index in matrix

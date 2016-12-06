@@ -22,17 +22,19 @@ public class Tour {
 	private int id;
 	private static int factoryId = 0;
 	private int entrepotId;
+	private int distance;
 	
 	/**
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId)
+	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId,int distance)
 	{
 		this.entrepotId=entrepotId;
 		this.sections = sections;
 		this.deliveryPoints = deliveryPoints;
 		this.id=factoryId;
+		this.distance = distance;
 		factoryId++;
 	}
 	

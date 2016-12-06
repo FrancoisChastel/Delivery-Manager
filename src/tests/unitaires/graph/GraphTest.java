@@ -29,7 +29,7 @@ public class GraphTest {
 	 * Test Add Method and getNodeById
 	 */
 	@Test
-	public void addTest() {
+	public void addTest1() {
 		MapNode startNodeToAdd = new MapNode(1,0,0);
 		graph.add(startNodeToAdd);
 		assertEquals(startNodeToAdd,graph.getNodeById(1));
@@ -39,7 +39,7 @@ public class GraphTest {
 	 * Test AddDestination Method and getEdge
 	 */
 	@Test
-	public void addDestination() {
+	public void addDestinationTest1() {
 		MapNode startNodeToAdd = new MapNode(1,0,0);
 		graph.add(startNodeToAdd);
 		startNodeToAdd = graph.getNodeById(1);

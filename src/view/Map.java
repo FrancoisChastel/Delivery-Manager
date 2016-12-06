@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import model.Tour;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.Section;
-import tests.unitaires.view.ViewTest;
 
 public class Map extends JPanel {
 
@@ -119,7 +118,6 @@ public class Map extends JPanel {
 	 */
 	public void displayTour(Tour tour)
 	{		
-		System.out.println("Displaying t"+tour.getId()+" ids:"+ViewTest.getIdStringFromTour(tour));
 		if(tours.containsKey(tour.getId())) // IF TOUR ALREADY EXIST THEN WE UNDRAW IT
 		{ System.out.println("Updating an existing tour");
 			tours.get(tour.getId()).undrawTour();
