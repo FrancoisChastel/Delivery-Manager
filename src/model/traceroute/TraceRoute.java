@@ -18,12 +18,14 @@ import model.vector.MathVector;
  *
  */
 public abstract class TraceRoute {
-	/**
-	 * Step 3 of the engine. Create RoadMap
-	 * This method create a Road Map with a Tour present in Model
-	 * @param model
-	 */
 	
+	/**
+	 * This method will translate a list of sections passed as parameter in list of instructions object including essential
+	 * information.
+	 * @param tour : To get all sections in a tour
+	 * @param map : To get MapNodes for each IdOrigin and IdDestination in a section
+	 * @return List of Instructions more easily understandable by a human and ready to be printed.
+	 */
 	public static List<Instruction> generateInstructions(Tour tour, Graph<MapNode, Section> map)
 	{
 		List<Instruction> instructions = new LinkedList<Instruction>();
@@ -51,7 +53,7 @@ public abstract class TraceRoute {
 			destination.redifineVector(oldX, oldY, nextNode.getX(),  nextNode.getY());
 					
 			instructions.add(instruction(origin, destination, 
-								section.getName(),section.getLength(),section.getIdOrigin(), section.getIdDestination(), 
+								section.getName(),section.getLength(), section.getIdDestination(), 
 								contains(tour.getDeliveryPoints(), section.getIdDestination()),uniqueOutgoingDestination,
 								allDestinations.keySet()));
 			/*
@@ -72,6 +74,12 @@ public abstract class TraceRoute {
 		return instructions;
 	}
 	
+	/**
+	 * See if a IdNode is present in a list of delivery Points
+	 * @param deliveryPoints : List of delivery Points where it's possible to know MapNodes that compose it
+	 * @param target IdNode to see if it is present
+	 * @return True if target is in deliveryPoints or false in the other case
+	 */
 	private static boolean contains(List<DeliveryPoint> deliveryPoints, Integer target)
 	{
 		for (DeliveryPoint deliveryPoint : deliveryPoints)
@@ -79,23 +87,36 @@ public abstract class TraceRoute {
 		return false;
 	}
 	
+	/** Converts two sections symbolized by a vector each to a unique instruction including essential information
+	 * @param origin : Vector Origin
+	 * @param destination : Vector Destination
+	 * @param roadName : To know the road name of the destination vector
+	 * @param length : To know the length of the destination vector
+	 * @param idDestination : To know the Id of MapNode of the destination vector
+	 * @param isDeliveryPoint : To know if the Destination MapNode is a delivery Point.
+	 * @param uniqueOutgoingDestination : To know if there is a unique vector destination a MapNode
+	 * @param nodesDestination : Set of MapNode reachable to create temporary Vector
+	 * @return Instruction object including essential information
+	 */
 	private static Instruction instruction(MathVector origin, MathVector destination, 
-			String roadName, Integer length,
-			int idOrigin, int idDestination,
+			String roadName, Integer length, int idDestination,
 			boolean isDeliveryPoint,boolean uniqueOutgoingDestination, Set<MapNode> nodesDestination)
 	{
 		double angle = origin.getAngle(destination);
-		int counter = 1;
-		int nodeInArea =0;
+		int counter = 1; // If counter = 1, Turn at the first direction, counter = second, Turn at the second direction....
+		int nodeInArea =0; // If at the end = 1, the vector is alone in its area
 		boolean uniqueOutgoingDestinationInItsArea = false;
+		// Go Straight
 		if(Math.abs(angle) < 10)
 		{
 			return new Instruction(Direction.STRAIGHT, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,true);
 		}
+		// Go Turnaroud
 		else if(Math.abs(angle) == 180)
 		{
 			return new Instruction(Direction.TURNAROUND, counter,length,idDestination,isDeliveryPoint, roadName,uniqueOutgoingDestination,true);
 		}
+		// Turn Left
 		else if(angle < 0)
 		{
 			MathVector tmp = new MathVector();
@@ -103,10 +124,12 @@ public abstract class TraceRoute {
 			{
 				tmp.redifineVector(destination.getX1(), destination.getY1(), node.getX(), node.getY());
 				double nodeAngle = origin.getAngle(tmp);
+				// To know if the left vector is alone in his area
 				if(nodeAngle < -10)
 				{
 					nodeInArea++;
 				}
+				// To increment the number of vector present before him in relation to the normal
 				if( nodeAngle < angle && !(tmp.getX2() == origin.getX1() && tmp.getY2() == origin.getY1()))
 				{
 					counter++;
@@ -125,10 +148,12 @@ public abstract class TraceRoute {
 			{
 				tmp.redifineVector(destination.getX1(), destination.getY1(), node.getX(), node.getY());
 				double nodeAngle = origin.getAngle(tmp);
+				// To know if the right vector is alone in his area
 				if(nodeAngle > 10)
 				{
 					nodeInArea++;
 				}
+				// To increment the number of vector present before him in relation to the normal
 				if( nodeAngle > angle && !(tmp.getX2() == origin.getX1() && tmp.getY2() == origin.getY1()))
 				{
 					counter++;

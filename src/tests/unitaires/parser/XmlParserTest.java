@@ -42,6 +42,7 @@ public class XmlParserTest {
 				model.getGraphDeliveryManager().getSectionList(), 
 				currentFile);
 		assertEquals(model.getGraphDeliveryManager().getNodeList().size(), 100);
+		assertEquals(model.getGraphDeliveryManager().getSectionList().size(), 276);
 	}
 	/**
 	 * @throws Exception 
@@ -55,6 +56,7 @@ public class XmlParserTest {
 				model.getGraphDeliveryManager().getSectionList(), 
 				currentFile);
 		assertEquals(model.getGraphDeliveryManager().getNodeList().size(), 625);
+		assertEquals(model.getGraphDeliveryManager().getSectionList().size(), 1834);
 	}	
 	
 	/**

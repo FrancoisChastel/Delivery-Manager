@@ -10,15 +10,27 @@ import java.util.Date;
 import java.util.List;
 
 import model.Tour;
-import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 
+/**
+ * 
+ * @author Christopher
+ *
+ */
 public abstract class HtmlGenerator {
 	
 	private final static DateFormat df = new SimpleDateFormat("HH:mm");
 	
-	public static void generateHtml(MapNode entrepot,Tour tour,List <Instruction> instructions,DeliveryManager deliveryManager,File fileHtml) 
+	/**
+	 * This method write all instructions in a well-formed file passed in parameters
+	 * @param entrepot : MapNode of entrepot to get X,Y,ID
+	 * @param tour : To get List of Delivery Point 
+	 * @param instructions : Instructions to print on HTML file
+	 * @param fileHtml : File to be written
+	 * @throws IOException : File isn't unreachable or is protected
+	 */
+	public static void generateHtml(MapNode entrepot,Tour tour,List <Instruction> instructions,File fileHtml) throws IOException 
 	{
 		if (fileHtml.exists()) {
 			System.out.println("Le fichier existe deja");
@@ -38,9 +50,6 @@ public abstract class HtmlGenerator {
 					+ "<body class='light-blue lighten-5'>" + "<div class='container'>" + "<div class='row'>"
 					+ "<h1>Feuille de Route</h1>" + "</div>" + "<div class='row'>" + "<ul class='collection'>";
 			bufferedWriter.write(htmlPage);
-			
-			//Update to next Version
-			//MapNode entrepot = deliveryManager.getDeliveryOrders().get(key)
 		
 			bufferedWriter.append("<li class='collection-item avatar'>"
 								+ 	"<img src='images/delivery-truck.png' class='circle green lighten-3'>"
@@ -146,7 +155,8 @@ public abstract class HtmlGenerator {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Send Exception to the model
+			throw e;
 		} finally {
 			try {
 
@@ -154,7 +164,8 @@ public abstract class HtmlGenerator {
 				fileWriter.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// Send Exception to the model
+				throw e;
 			}
 
 		}
