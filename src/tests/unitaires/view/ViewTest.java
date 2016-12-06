@@ -69,7 +69,7 @@ public class ViewTest {
 		dps.add(new DeliveryPoint(deliveries.get(1), new Date()));
 		
 		// Create the tour
-		Tour tour1 = new Tour(sectionsTour, dps, 3);
+		Tour tour1 = new Tour(sectionsTour, dps, 3, 0);
 		
 		// ------End Context ----------
 		
@@ -124,7 +124,7 @@ public class ViewTest {
 		dps.add(new DeliveryPoint( new Delivery(1,points.get(2),300), new Date()));
 		
 		// Create the tour
-		Tour tour1 = new Tour(sectionsTour, dps, 3);
+		Tour tour1 = new Tour(sectionsTour, dps, 3,0);
 		
 		// ------End Context ----------
 		int deliveryPointCount = tour1.getDeliveryPoints().size();
@@ -205,7 +205,7 @@ public class ViewTest {
 		dps.add(new DeliveryPoint(deliveries.get(1), new Date()));
 		
 		// Create the tour
-		Tour tour1 = new Tour(sectionsTour, dps, 3);
+		Tour tour1 = new Tour(sectionsTour, dps, 3, 10);
 		
 		// TOUR 2
 		// Deliveries
@@ -226,7 +226,7 @@ public class ViewTest {
 		dps2.add(new DeliveryPoint(deliveries2.get(1), new Date()));
 		
 		// Create the tour
-		Tour tour2 = new Tour(sectionsTour2, dps2, 3);
+		Tour tour2 = new Tour(sectionsTour2, dps2, 3, 10);
 		// ------End Context ----------
 		
 		MainFrame main = new MainFrame(null);			
