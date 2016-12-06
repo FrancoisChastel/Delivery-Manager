@@ -14,9 +14,9 @@ import model.deliverymanager.DeliveryPoint;
 import model.graph.MapNode;
 
 /**
- * 
  * @author Christopher
- *
+ * This class provides a service to generate a html file to be displayed for the deliverer.
+ * This service requires a turn and a list of instruction.
  */
 public abstract class HtmlGenerator {
 	

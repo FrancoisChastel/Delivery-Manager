@@ -13,9 +13,9 @@ import model.graph.Section;
 import model.vector.MathVector;
 
 /**
- * 
  * @author C.APARICIO && F.CHASTEL
- *
+ * This class provides a service for generate a list of instruction according to a Tour and a Graph of MapNode and Section
+ * All Instructions contain essential informations ready to be displayed for the deliverer.
  */
 public abstract class TraceRoute {
 	

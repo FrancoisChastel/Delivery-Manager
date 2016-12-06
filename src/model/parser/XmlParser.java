@@ -21,6 +21,11 @@ import model.graph.Section;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author Christopher
+ * This class provides two services for parsing XML.
+ * One allows to build a Graph of MapNode and Section due to XML File and the other to generates a list of deliveries with a starting and ending date
+ */
 public abstract class XmlParser {
 	
 	/**
@@ -89,7 +94,7 @@ public abstract class XmlParser {
 	/**
 	 * Method used to parse delivery File XML. It modifies the graph passed in parameter
 	 * @param currentFile file to parse
-	 * @param graph graph that will be modified in the method.
+	 * @param graph that will be modified in the method.
 	 */
 	public static DeliveryOrder xmlDeliveriesParser(Graph <MapNode, Section> graph,File currentFile) throws Exception
 	{
