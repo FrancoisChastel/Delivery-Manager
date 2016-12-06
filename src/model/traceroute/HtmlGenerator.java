@@ -117,7 +117,7 @@ public abstract class HtmlGenerator {
 				// Write bloc <li> next direction with all informations 
 				bufferedWriter.append("<li class='collection-item avatar'>" + "<img src='" + image
 						+ "' class='circle green lighten-3'>" + "<span class='title'>" + direction + " sur " +instruction.getRoad() +"</span>"
-						+ "<p>Continuez pendant " + instruction.getLength() + " metres" + instruction.getIdDestination()+ "</p>" + "</li>");
+						+ "<p>Continuez pendant " + instruction.getLength() + " metres </p>" + "</li>");
 				
 				// Test if the destination is a DeliveryPoint, in this case add an other LI with informations about delivery 
 				if(instruction.isDestinationIsDeliveryPoint() && instruction.getIdDestination() != entrepot.getidNode())
