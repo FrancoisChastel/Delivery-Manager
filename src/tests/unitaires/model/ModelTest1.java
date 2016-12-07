@@ -173,7 +173,7 @@ public class ModelTest1 {
 
 		//Set Up Tour
 		
-		Tour tour = new Tour(sections, deliveryPoints, 1);
+		Tour tour = new Tour(sections, deliveryPoints, 1,1);
 		
 		this.tour = tour;
 		this.graph1 = new GraphDeliveryManager(new Model(null));

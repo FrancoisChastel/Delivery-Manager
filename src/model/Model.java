@@ -193,10 +193,12 @@ public class Model extends IModel {
 			// step2.3 : call TSP
 			TSP(paths,pathsDistance);
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
+			
+			ArrayList<Integer> toursArray = getToursArray();
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", 0);
+			map.put("tour", toursArray.get(0));
 			
 			
 			notifyObservers(map);
@@ -204,7 +206,7 @@ public class Model extends IModel {
 			map = new HashMap<>();
 			
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", 1);
+			map.put("tour", toursArray.get(1));
 			
 			notifyObservers(map);
 		}
@@ -212,6 +214,16 @@ public class Model extends IModel {
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
+	}
+	
+	public ArrayList<Integer> getToursArray()
+	{
+		ArrayList<Integer> toursArray = new ArrayList<>();
+		for(Entry<Integer,Tour> entry : tours.entrySet())
+		{
+			toursArray.add(entry.getKey());
+		}
+		return toursArray;
 	}
 	
 	public void unloadDeliveriesFile()
@@ -323,8 +335,6 @@ public class Model extends IModel {
 		tspObject.bestDistanceDistance = tsp.getDistanceDistance();
 		tspObject.bestDistanceTime = tsp.getDistanceTime();
 
-		System.out.println("distance time" + tspObject.bestDistanceTime);
-		System.out.println("distance distance" + tspObject.bestDistanceDistance);
 		// Print TSP Result
 	/*	String TSP = "TSP: ";
 			for(int i = 0; i< tspObject.bestSolution.length;i++)
