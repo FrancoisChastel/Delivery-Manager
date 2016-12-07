@@ -70,7 +70,7 @@ public class TraceRouteTest {
 		
 		
 		
-		Tour tour = new Tour(sections, deliveryPoints, 0,1);
+		Tour tour = new Tour(sections, deliveryPoints, 0);
 		
 		List<Instruction> instructions = TraceRoute.generateInstructions(tour,graph);
 		Instruction instruction0 = new Instruction(Direction.STRAIGHT,1,10,1,false,"01",true,true);
@@ -96,7 +96,7 @@ public class TraceRouteTest {
 		ArrayList<Section> sections = new ArrayList<Section>();
 		ArrayList<DeliveryPoint> deliveryPoints = new ArrayList<DeliveryPoint>();
 		
-		Tour tour = new Tour(sections, deliveryPoints, 0,1);
+		Tour tour = new Tour(sections, deliveryPoints, 0);
 		assertEquals(TraceRoute.generateInstructions(tour,graph).isEmpty(),true);
 		
 	}

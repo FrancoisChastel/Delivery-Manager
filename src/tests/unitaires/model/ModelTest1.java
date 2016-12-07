@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Test;
 
-import javafx.util.Pair;
 
 public class ModelTest1 {
 	private Tour tour;
@@ -171,8 +170,7 @@ public class ModelTest1 {
 		sections.add(section67);
 		sections.add(section71);
 
-		//Set Up Tour
-		
+		//Set Up Tour		
 		Tour tour = new Tour(sections, deliveryPoints, 1);
 		
 		this.tour = tour;

@@ -30,7 +30,7 @@ public class Tour {
 	 * Normal constructor
 	 * @param sections
 	 */
-	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId,int distance)
+	public Tour(ArrayList<Section> sections, ArrayList<DeliveryPoint> deliveryPoints, int entrepotId)
 	{
 		this.entrepotId=entrepotId;
 		this.sections = sections;
@@ -62,7 +62,7 @@ public class Tour {
 		
 		return totalDuration;
 	}
-
+	
 	/**
 	 * OBtain the total length of the tour
 	 * @return length of the tour
@@ -293,9 +293,6 @@ public class Tour {
 	public Date getBackToWareHouseDate() {return backToWarehouse; }
 	public void setDateBackToWarehouse(Date backToWarehouse) {this.backToWarehouse= backToWarehouse; }
 	public Date getDepartFromWarehouse() {return departFromWarehouse; }
-
-	public int getDistance() { return distance; }
-
 	public void setDateDepartFromWarehouse(Date startingTime) {
 		departFromWarehouse=startingTime;
 		
