@@ -139,8 +139,9 @@ public class Tour {
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
 	 */
-	public void deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
+	public int deleteDeliveryPoint(int deliveryPointId, GraphDeliveryManager graphManager) throws Throwable{		
 		int currentDeliveryPoint = 0;
+		Pair<Integer,Integer> association = null;
 		
 		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
 			Section section = this.getSections().get(sectionIndex);
@@ -148,7 +149,7 @@ public class Tour {
 			{	
 				if (section.getIdOrigin() == deliveryPointId)
 				{
-					Pair<Integer,Integer> association = getNearestDeliveryPointId(sectionIndex);
+					association = getNearestDeliveryPointId(sectionIndex);
 					this.deletePath(association.getFirst(), association.getSecond());
 					this.updateSection(association.getFirst(), currentDeliveryPoint-1, currentDeliveryPoint+1, graphManager);
 					break;
@@ -156,8 +157,8 @@ public class Tour {
 				currentDeliveryPoint++;
 			}
 		}
-		
 		this.getDeliveryPoints().remove(currentDeliveryPoint);
+		return association.getFirst()+1; 
 	}
 	
 	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	
@@ -243,6 +244,22 @@ public class Tour {
 		
 		long arrivingTimeCurr = previous.getLeavingDate().getTime() + (prevToNew.getSecond()*1000);		
 		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));
+	}
+	
+	public DeliveryPoint getDeliveryPointById(int sectionId){
+		int currentDEliveryPoint = 0;
+		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
+			Section section = this.getSections().get(sectionIndex);
+			if (this.isDeliveryPoint(section.getIdOrigin())) 
+			{	
+				if (sectionId == sectionIndex)
+				{
+					return this.getDeliveryPoints().get(currentDEliveryPoint);
+				}
+				currentDEliveryPoint++;
+			}
+		}
+		return null;
 	}
 	
 	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		

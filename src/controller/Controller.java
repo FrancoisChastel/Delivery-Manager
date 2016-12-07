@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+
 import controller.commands.CommandContext;
 import controller.commands.Commander;
 import controller.commands.undocommands.LoadDeliveryCommand;
 import controller.commands.undocommands.ResetDeliveriesCommand;
+import controller.commands.undocommands.DeleteDeliveryPointCommand;
 import model.IModel;
 import model.Model;
 import view.View;
@@ -108,7 +110,12 @@ public class Controller implements IController{
 	 */
 	public void deletePoint(int tourID, int deliveryPointId)
 	{
-		model.deleteDeliveryPoint(tourID, deliveryPointId);
+		try {
+			this.commander.execute(CommandContext.MAIN, new DeleteDeliveryPointCommand(tourID, deliveryPointId, this.model));
+		} catch (Throwable e) {
+			this.logger.write("Error in delete point execution "+e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	/**
