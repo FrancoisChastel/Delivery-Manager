@@ -1,6 +1,7 @@
 package view.jtree;
 
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -32,7 +33,7 @@ public class JTreeRenderer extends DefaultTreeCellRenderer   {
 			boolean leaf, int row, boolean hasFocus) {
 		super.getTreeCellRendererComponent(tree, value,selected, expanded, leaf, row, hasFocus);
 		ITreeItem node = (ITreeItem) value;
-		
+		tree.setMinimumSize(new Dimension(200, tree.getHeight()));
 		// Set the icone of the leaf
 		if(node.getIcone() != null)
 			setIcon(node.getIcone());

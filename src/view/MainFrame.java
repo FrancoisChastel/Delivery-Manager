@@ -71,6 +71,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	private JPanel rightSidePanel;
 	private AddDeliveryFrame addDeliveryFrame;
+	private JScrollPane treeView;
 	
 	/**
 	 * Normal Construcor
@@ -145,9 +146,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		tourTree = new JTreeDeliveryManager(new TreeDefaultIconNode("Deliveries",null), this);        
 		
 		// Add to right pane
-        JScrollPane treeView = new JScrollPane(tourTree);     
+        treeView = new JScrollPane(tourTree);     
 		rightSidePanel.add(treeView);
-		
+		treeView.setMinimumSize(new Dimension(200, treeView.getHeight()));
+		tourTree.setMinimumSize(new Dimension(200, treeView.getHeight()));
 		repaint();
 		
 		addDeliveryFrame = new AddDeliveryFrame(this);
@@ -278,8 +280,12 @@ public class MainFrame extends JFrame implements ActionListener {
 	public Adapter getAdapter() {return adapter;}
 
 	public void setPickedPointAddDelivery(ViewPoint point) {
-		// TODO Auto-generated method stub
 		addDeliveryFrame.setPickedPointId(point.getId());
 	}
 
+	public void paint(Graphics g)
+	{
+		super.paint(g);
+		System.out.println("repaint");
+	}
 }

@@ -3,6 +3,8 @@ package view.jtree;
 import java.util.Enumeration;
 
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -34,6 +36,27 @@ public class JTreeDeliveryManager extends JTree {
 		TreeListener treeListener = new TreeListener(mainFrame);
 		addTreeSelectionListener(treeListener);
 		addMouseListener(treeListener);
+		JTree myTree = this;
+		this.addTreeExpansionListener(new TreeExpansionListener() {
+			
+			@Override
+			public void treeExpanded(TreeExpansionEvent event) {
+				// TODO Auto-generated method stub
+				myTree.invalidate();
+				myTree.validate();
+				mainFrame.resize(mainFrame.getWidth(), mainFrame.getHeight()+1);
+				mainFrame.repaint();
+			}
+			
+			@Override
+			public void treeCollapsed(TreeExpansionEvent event) {
+				// TODO Auto-generated method stub
+				myTree.invalidate();
+				myTree.validate();
+				mainFrame.resize(mainFrame.getWidth(), mainFrame.getHeight()+1);
+				mainFrame.repaint();
+			}
+		});
 	}
 	
 	/**
