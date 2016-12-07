@@ -76,29 +76,6 @@ public class ModelTest1 {
 		}
 	}
 	
-	@Test
-	public void deleteDeliveryPointTest()
-	{
-		System.out.println("Avant delete");
-		ArrayList<Section> a = tour.getSections();
-		for(int i = 0 ; i < a.size() ; i++)
-		{
-			System.out.println("id du troncon = "+a.get(i).getId());
-		}
-		try {
-			tour.deleteDeliveryPoint(1, graph1);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		System.out.println("Apres delete");
-		ArrayList<Section> sect = tour.getSections();
-		for(int i = 0 ; i < a.size() ; i++)
-		{
-			int id = sect.get(i).getId();
-			System.out.println("id du troncon = "+id);
-		}
-	}
-	
 	
 	@Before
 	public void setUp() {

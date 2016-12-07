@@ -266,7 +266,6 @@ public class MainFrame extends JFrame implements ActionListener {
 			View.displayMessage("Add delivery frame is already opened", "Error", null);
 			return;
 		}
-		System.out.println(availableTime+" --");
 		addDeliveryFrame.setVisible(true);
 		addDeliveryFrame.setAvailableTime(availableTime);
 		addDeliveryFrame.setIndex(index);
@@ -286,6 +285,5 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		System.out.println("repaint");
 	}
 }

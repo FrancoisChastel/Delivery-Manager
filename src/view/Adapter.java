@@ -178,8 +178,7 @@ public class Adapter {
 	 */
 	public TreeWaitingTime getTreeWaitingTime(DeliveryPoint p1, DeliveryPoint p2, Tour t, int positionInTour)
 	{
-		long waitingTime = t.getAvailableTimeBeweenTwoPoints(p1, p2);	
-		System.out.println("w:"+waitingTime);
+		long waitingTime = t.getAvailableTimeBeweenTwoPoints(p1, p2);
 		return new TreeWaitingTime("waiting : "+View.formatDateFromSecond(waitingTime), icons.get(Icons.WAITING), p1.getMapNodeId(),positionInTour,waitingTime);
 	}
 	

@@ -239,8 +239,6 @@ public class Tour {
 		deliveryPoints = newDelPoint;		
 		//------------------------------------------------------
 		
-		// set the correct date of a point
-		System.out.println(prevToNew.getSecond());
 		
 		long arrivingTimeCurr = previous.getLeavingDate().getTime() + (prevToNew.getSecond()*1000);		
 		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));

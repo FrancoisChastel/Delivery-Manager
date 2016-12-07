@@ -268,7 +268,6 @@ public class Model extends IModel {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Deleting a deliveryPoint t"+tourID+" d"+deliveryPointId);
 		setChanged();
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("type", "UPDATE_DELIVERY");
@@ -298,7 +297,6 @@ public class Model extends IModel {
 			View.displayMessage("Error while adding a point :"+e.getMessage(), "Error", null);
 		}
 		
-		System.out.println("Adding del point"+nodeId);
 		
 		setChanged();
 		HashMap<String,Object> map = new HashMap<>();
