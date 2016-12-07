@@ -99,19 +99,34 @@ public class Tour {
 	 */
 	public long travelTimeBetweenTwoPoints(DeliveryPoint d1, DeliveryPoint d2)
 	{
+		System.out.println("Time between "+d1.getMapNodeId()+" and "+d2.getMapNodeId());
 		long duration = 0;
 		boolean beginCount=false;
+		int deliveryPointIndex = 0;
 		
 		for(Section s : sections)
 		{
-			if(s.getIdOrigin() == d1.getMapNodeId()) // we begin the sum when we have found the origin d1
-				beginCount = true;
+			int currOrigin = s.getIdOrigin();
 			
-			if(beginCount) // if the sum has begun
+
+			// when we reach a deliveryPoint, then we increment index.
+			if(deliveryPointIndex<deliveryPoints.size() && currOrigin == deliveryPoints.get(deliveryPointIndex).getMapNodeId())
+			{
+				if(s.getIdOrigin() == d1.getMapNodeId()) // we begin the sum when we have found the origin d1
+					beginCount = true;
+				
+				deliveryPointIndex++;
+			}
+						
+			if(beginCount) // if the sum has begun4
+			{
 				duration+= s.getLength()/s.getSpeed();
+				System.out.println("Section <"+s.getIdOrigin()+","+s.getIdDestination()+"> "+duration);
+			}
 			
 			if(s.getIdDestination()==d2.getMapNodeId()) // we stop when we have found the second point
 				break;
+
 		}
 		
 		return duration;
@@ -128,13 +143,15 @@ public class Tour {
 		// Get the time travel between p1 and p2
 		long travelTimeSec = travelTimeBetweenTwoPoints(p1,p2);
 		
-		// Get the effective time between p1 and p2
+		// Get the effective time between p1 and p2 in seconds
 		long effectiveTime = (p2.getArrivingDate().getTime()/1000) - (p1.getLeavingDate().getTime()/1000);
-		
+		System.out.println("ef:"+effectiveTime);
+		// TODO FIX
 		long waitingTime = effectiveTime-travelTimeSec;
 			
 		return waitingTime;
 	}
+	
 	/**
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
@@ -161,6 +178,13 @@ public class Tour {
 		return currentDeliveryPoint; 
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @param deliveryPoint
+	 * @param gdm
+	 * @throws Exception
+	 */
 	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	
 		DeliveryPoint previous = deliveryPoints.get(index);
 		DeliveryPoint next = deliveryPoints.get(index+1);
@@ -244,6 +268,11 @@ public class Tour {
 		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));
 	}
 	
+	/**
+	 * 
+	 * @param nodeId
+	 * @return
+	 */
 	public DeliveryPoint getDeliveryPointById(int nodeId){
 		for(int i=0;i<this.getDeliveryPoints().size();i++)
 		{
@@ -256,6 +285,12 @@ public class Tour {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param sectionIndex
+	 * @return
+	 * @throws Throwable
+	 */
 	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
 		int precedent = 0;
 		int next = -1;
@@ -267,10 +302,7 @@ public class Tour {
 				break;
 			}
 		}	
-		
-	
-		
-		
+				
 		for (int cursor=sectionIndex; cursor<this.getSections().size(); cursor++){
 			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination()))
 			{
@@ -282,12 +314,24 @@ public class Tour {
 		return new Pair<Integer, Integer>(precedent, next);
 	}
 	
+	/**
+	 * 
+	 * @param beginningId
+	 * @param endingId
+	 */
 	private void deletePath(int beginningId, int endingId)
 	{
 		for (int cursor=beginningId; cursor<=endingId; cursor++)
 			this.getSections().remove(beginningId);		
 	}
 	
+	/**
+	 * 
+	 * @param sectionIndex
+	 * @param deliveryPointA
+	 * @param deliveryPointB
+	 * @param graphManager
+	 */
 	private void updateSection(int sectionIndex, int deliveryPointA, int deliveryPointB, GraphDeliveryManager graphManager)
 	{
 		ArrayList<MapNode> solution = LowerCosts.dijkstra(graphManager, 
@@ -306,6 +350,5 @@ public class Tour {
 	public Date getDepartFromWarehouse() {return departFromWarehouse; }
 	public void setDateDepartFromWarehouse(Date startingTime) {
 		departFromWarehouse=startingTime;
-		
 	}
 }
