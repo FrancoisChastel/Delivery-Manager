@@ -158,7 +158,7 @@ public class Tour {
 			}
 		}
 		this.getDeliveryPoints().remove(currentDeliveryPoint);
-		return association.getFirst()+1; 
+		return currentDeliveryPoint; 
 	}
 	
 	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	

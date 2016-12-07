@@ -275,6 +275,8 @@ public class Model extends IModel {
 		map.put("tour", tourID);
 
 		this.notifyObservers(map);
+		
+		
 		return index;
 	}
 
