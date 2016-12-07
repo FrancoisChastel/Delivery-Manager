@@ -245,13 +245,15 @@ public class Model extends IModel {
 	}
 
 	@Override
-	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
+	public int deleteDeliveryPoint(int tourID, int deliveryPointId) {
+		int index = -1;
 		try {
 			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
+			index = this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 			this.controller.getLogger().write("Deleted in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
+			e.printStackTrace();
 		}
 		
 		System.out.println("Deleting a deliveryPoint t"+tourID+" d"+deliveryPointId);
@@ -261,6 +263,7 @@ public class Model extends IModel {
 		map.put("tour", tourID);
 
 		this.notifyObservers(map);
+		return index;
 	}
 
 	@Override
@@ -291,6 +294,10 @@ public class Model extends IModel {
 		this.notifyObservers(map);
 	}
 		
+	@Override	
+	public DeliveryPoint getDeliveryPointById(int tourId, int index){
+		return this.getTourById(tourId).getDeliveryPointById(index);
+	}
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
