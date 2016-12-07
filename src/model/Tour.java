@@ -160,7 +160,7 @@ public class Tour {
 			}
 		}
 		this.getDeliveryPoints().remove(currentDeliveryPoint);
-		return association.getFirst()+1; 
+		return currentDeliveryPoint; 
 	}
 	
 	/**
