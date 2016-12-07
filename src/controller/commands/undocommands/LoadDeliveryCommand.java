@@ -41,7 +41,7 @@ public class LoadDeliveryCommand implements IUndoableCommand {
 		// TODO Auto-generated method stub
 		model.unloadDeliveriesFile();
 		model.updateMap();
-		model.updateDeliveries();
+		model.updateResetDeliveries();
 	}
 
 }

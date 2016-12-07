@@ -9,6 +9,7 @@ import java.util.Observable;
 import controller.Controller;
 import model.deliverymanager.DeliveryManager;
 import model.deliverymanager.DeliveryOrder;
+import model.deliverymanager.DeliveryPoint;
 import model.graph.GraphDeliveryManager;
 import model.graph.MapNode;
 import model.graph.Section;
@@ -82,7 +83,7 @@ public abstract class IModel extends Observable {
 	 * @param tourID of the delivery point
 	 * @param deliveryPointId that will deleted
 	 */
-	public abstract void deleteDeliveryPoint(int tourID, int deliveryPointId);
+	public abstract int deleteDeliveryPoint(int tourID, int deliveryPointId);
 	
 	/**
 	 * Create and add a delivery point to a specific tour.
@@ -94,4 +95,12 @@ public abstract class IModel extends Observable {
 	 * @param availabilityEnd of the delivery
 	 */
 	public abstract void addDeliveryPoint(int tourId, int index,int nodeId, int duration, Date availabilityBeginning, Date availabilityEnd);
+	
+	/**
+	 * Obtain a delivery point on a specific tour by his index in sections
+	 * @param tourId of the delivery point
+	 * @param index in the section
+	 * @return delivery point
+	 */
+	public abstract DeliveryPoint getDeliveryPointById(int tourId, int index);
 }

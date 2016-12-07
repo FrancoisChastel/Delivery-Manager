@@ -56,7 +56,7 @@ public class Commander implements ICommander{
 	public void undo(CommandContext context, int numberOfUndo) throws Throwable {
 		for (int counter=0; counter<numberOfUndo; counter++)
 		{
-			this.historics.get(context).get(0).undo();
+			this.historics.get(context).get(this.historics.get(context).size()-1).undo();
 			this.undoHistorics.get(context).add(historics.get(context).get(0));
 			this.historics.get(context).remove(0);
 		}
@@ -66,7 +66,7 @@ public class Commander implements ICommander{
 	public void redo(CommandContext context,	int numberOfUndo) throws Throwable {
 		for (int counter=0; counter<numberOfUndo; counter++)
 		{
-			this.undoHistorics.get(context).get(0).execute();
+			this.undoHistorics.get(context).get(this.undoHistorics.get(context).size()-1).execute();
 			this.historics.get(context).add(undoHistorics.get(context).get(0));
 			this.undoHistorics.get(context).remove(0);
 		}

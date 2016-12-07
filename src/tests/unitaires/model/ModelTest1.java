@@ -170,8 +170,14 @@ public class ModelTest1 {
 		sections.add(section67);
 		sections.add(section71);
 
+<<<<<<< HEAD
 		//Set Up Tour		
 		Tour tour = new Tour(sections, deliveryPoints, 1);
+=======
+		//Set Up Tour
+		
+		Tour tour = new Tour(sections, deliveryPoints, 1,1);
+>>>>>>> branch 'master' of https://github.com/FrancoisChastel/Delivery-Manager.git
 		
 		this.tour = tour;
 		this.graph1 = new GraphDeliveryManager(new Model(null));

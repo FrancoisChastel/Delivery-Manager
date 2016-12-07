@@ -49,6 +49,21 @@ public class GraphTest {
 		assertEquals(sectionToAdd,graph.getEdge(startNodeToAdd, destinationNodeToAdd));
 	}
 	
+	@Test
+	public void getEdge1() {
+		MapNode firstNode = new MapNode(1,0,0);
+		MapNode secondNode = new MapNode (2,0,0);
+		assertEquals(null,graph.getEdge(firstNode, secondNode));
+	}
+	
+	@Test
+	public void getDestination1() {
+		MapNode firstNode = new MapNode(1,0,0);
+		assertEquals(null,graph.getDestinations(firstNode));
+	}
+	
+	
+	
 	
 
 }

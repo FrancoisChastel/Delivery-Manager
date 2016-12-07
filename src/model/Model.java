@@ -193,10 +193,12 @@ public class Model extends IModel {
 			// step2.3 : call TSP
 			TSP(paths,pathsDistance);
 			controller.getLogger().write(currentFile.getName()+ " : TSP done");
+			
+			ArrayList<Integer> toursArray = getToursArray();
 			setChanged();
 			HashMap<String,Object> map = new HashMap<>();
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", 0);
+			map.put("tour", toursArray.get(0));
 			
 			
 			notifyObservers(map);
@@ -204,7 +206,7 @@ public class Model extends IModel {
 			map = new HashMap<>();
 			
 			map.put("type", "UPDATE_DELIVERY");
-			map.put("tour", 1);
+			map.put("tour", toursArray.get(1));
 			
 			notifyObservers(map);
 		}
@@ -212,6 +214,16 @@ public class Model extends IModel {
 		{
 			controller.error("Parser : " + e.getMessage()+"\n"+e.getClass().getName()+" @ line "+e.getStackTrace()[0].getLineNumber()); 
 		}
+	}
+	
+	public ArrayList<Integer> getToursArray()
+	{
+		ArrayList<Integer> toursArray = new ArrayList<>();
+		for(Entry<Integer,Tour> entry : tours.entrySet())
+		{
+			toursArray.add(entry.getKey());
+		}
+		return toursArray;
 	}
 	
 	public void unloadDeliveriesFile()
@@ -245,13 +257,15 @@ public class Model extends IModel {
 	}
 
 	@Override
-	public void deleteDeliveryPoint(int tourID, int deliveryPointId) {
+	public int deleteDeliveryPoint(int tourID, int deliveryPointId) {
+		int index = -1;
 		try {
 			this.controller.getLogger().write("Deleting in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
-			this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
+			index = this.tours.get(tourID).deleteDeliveryPoint(deliveryPointId, this.getGraphDeliveryManager());
 			this.controller.getLogger().write("Deleted in tour "+tourID+" the delivery point "+deliveryPointId+" there is "+this.tours.get(tourID).getTotalLength());
 		} catch (Throwable e) {
 			this.controller.getLogger().write("Stopping deletion, error in model : "+e.getMessage()+"");
+			e.printStackTrace();
 		}
 		
 		System.out.println("Deleting a deliveryPoint t"+tourID+" d"+deliveryPointId);
@@ -261,6 +275,7 @@ public class Model extends IModel {
 		map.put("tour", tourID);
 
 		this.notifyObservers(map);
+		return index;
 	}
 
 	@Override
@@ -291,6 +306,10 @@ public class Model extends IModel {
 		this.notifyObservers(map);
 	}
 		
+	@Override	
+	public DeliveryPoint getDeliveryPointById(int tourId, int index){
+		return this.getTourById(tourId).getDeliveryPointById(index);
+	}
 	/**
 	 * Step 1 of the engine. Calculates shortest way between all DeliveryPoint.
 	 */
@@ -323,8 +342,6 @@ public class Model extends IModel {
 		tspObject.bestDistanceDistance = tsp.getDistanceDistance();
 		tspObject.bestDistanceTime = tsp.getDistanceTime();
 
-		System.out.println("distance time" + tspObject.bestDistanceTime);
-		System.out.println("distance distance" + tspObject.bestDistanceDistance);
 		// Print TSP Result
 	/*	String TSP = "TSP: ";
 			for(int i = 0; i< tspObject.bestSolution.length;i++)

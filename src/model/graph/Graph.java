@@ -4,6 +4,13 @@ package model.graph;
 import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * An Object that represents a data structure generic. Each node can have a list of other nodes with an object that 
+ * represents the link between the two.
+ *
+ * @param <TVertex> : Represent the link between two nodes
+ * @param <TEdge> : Represent a node
+ */
 public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     private Map<TVertex, CoreVertex> nodes;
     private Map<Integer, TVertex> mappingIdNodes;
@@ -28,10 +35,6 @@ public class Graph<TVertex,TEdge extends Comparable<TEdge>> {
     		TOrigin = nodes.get(origin);
     		TOrigin.add(destination, edge);
     	}
-        else
-        {
-        	System.out.println("Origin Undefined");;
-        }
     }
     public TEdge getEdge(TVertex o,TVertex d )
     {
