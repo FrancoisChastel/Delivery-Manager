@@ -246,17 +246,13 @@ public class Tour {
 		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));
 	}
 	
-	public DeliveryPoint getDeliveryPointById(int sectionId){
-		int currentDEliveryPoint = 0;
-		for (int sectionIndex=0; sectionIndex < this.getSections().size(); sectionIndex++){
-			Section section = this.getSections().get(sectionIndex);
-			if (this.isDeliveryPoint(section.getIdOrigin())) 
-			{	
-				if (sectionId == sectionIndex)
-				{
-					return this.getDeliveryPoints().get(currentDEliveryPoint);
-				}
-				currentDEliveryPoint++;
+	public DeliveryPoint getDeliveryPointById(int nodeId){
+		for(int i=0;i<this.getDeliveryPoints().size();i++)
+		{
+			int nodeAdress = this.getDeliveryPoints().get(i).getDelivery().getAdress().getidNode();
+			if(nodeAdress==nodeId)
+			{
+				return this.getDeliveryPoints().get(i);
 			}
 		}
 		return null;

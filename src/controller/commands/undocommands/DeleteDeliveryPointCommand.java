@@ -28,6 +28,12 @@ public class DeleteDeliveryPointCommand  implements IUndoableCommand{
 
 	@Override
 	public void undo() throws Throwable {
+		System.out.println(tourId);
+		System.out.println(this.positionInSection);
+		System.out.println(this.nodeId);
+		System.out.println(this.deliveryPoint.getDelivery().getDuration());
+		System.out.println(this.deliveryPoint.getDelivery().getBeginning());
+		System.out.println(this.deliveryPoint.getDelivery().getEnd());
 		this.model.addDeliveryPoint(this.tourId, this.positionInSection,this.nodeId,  (int) this.deliveryPoint.getDelivery().getDuration(), this.deliveryPoint.getDelivery().getBeginning(), this.deliveryPoint.getDelivery().getEnd());		
 	}
 	
