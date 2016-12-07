@@ -32,7 +32,7 @@ public class DeliveryPoint {
 	}
 	
 	public Date getLeavingDate(){
-		Long timeLeaving = arrivingDate.getTime()+delivery.getDuration();
+		Long timeLeaving = arrivingDate.getTime()+(delivery.getDuration()*1000);
 		
 		//System.out.println("dep"+arrivingDate+"  "+new Date(timeLeaving));
 		return new Date(timeLeaving);

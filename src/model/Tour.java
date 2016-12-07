@@ -128,13 +128,15 @@ public class Tour {
 		// Get the time travel between p1 and p2
 		long travelTimeSec = travelTimeBetweenTwoPoints(p1,p2);
 		
-		// Get the effective time between p1 and p2
+		// Get the effective time between p1 and p2 in seconds
 		long effectiveTime = (p2.getArrivingDate().getTime()/1000) - (p1.getLeavingDate().getTime()/1000);
 		
+		// TODO FIX
 		long waitingTime = effectiveTime-travelTimeSec;
 			
 		return waitingTime;
 	}
+	
 	/**
 	 * Delete a specific delivery point based on his id
 	 * @param deliveryPointsId that will be deleted
@@ -161,6 +163,13 @@ public class Tour {
 		return association.getFirst()+1; 
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @param deliveryPoint
+	 * @param gdm
+	 * @throws Exception
+	 */
 	public void add2DeliveryPoint(int index, DeliveryPoint deliveryPoint, GraphDeliveryManager gdm) throws Exception{	
 		DeliveryPoint previous = deliveryPoints.get(index);
 		DeliveryPoint next = deliveryPoints.get(index+1);
@@ -246,6 +255,11 @@ public class Tour {
 		deliveryPoint.setArrivingDate(new Date(arrivingTimeCurr));
 	}
 	
+	/**
+	 * 
+	 * @param nodeId
+	 * @return
+	 */
 	public DeliveryPoint getDeliveryPointById(int nodeId){
 		for(int i=0;i<this.getDeliveryPoints().size();i++)
 		{
@@ -258,6 +272,12 @@ public class Tour {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param sectionIndex
+	 * @return
+	 * @throws Throwable
+	 */
 	public Pair<Integer,Integer> getNearestDeliveryPointId(int sectionIndex) throws Throwable{		
 		int precedent = 0;
 		int next = -1;
@@ -269,10 +289,7 @@ public class Tour {
 				break;
 			}
 		}	
-		
-	
-		
-		
+				
 		for (int cursor=sectionIndex; cursor<this.getSections().size(); cursor++){
 			if (this.isDeliveryPoint(this.getSections().get(cursor).getIdDestination()))
 			{
@@ -284,12 +301,24 @@ public class Tour {
 		return new Pair<Integer, Integer>(precedent, next);
 	}
 	
+	/**
+	 * 
+	 * @param beginningId
+	 * @param endingId
+	 */
 	private void deletePath(int beginningId, int endingId)
 	{
 		for (int cursor=beginningId; cursor<=endingId; cursor++)
 			this.getSections().remove(beginningId);		
 	}
 	
+	/**
+	 * 
+	 * @param sectionIndex
+	 * @param deliveryPointA
+	 * @param deliveryPointB
+	 * @param graphManager
+	 */
 	private void updateSection(int sectionIndex, int deliveryPointA, int deliveryPointB, GraphDeliveryManager graphManager)
 	{
 		ArrayList<MapNode> solution = LowerCosts.dijkstra(graphManager, 
@@ -308,6 +337,5 @@ public class Tour {
 	public Date getDepartFromWarehouse() {return departFromWarehouse; }
 	public void setDateDepartFromWarehouse(Date startingTime) {
 		departFromWarehouse=startingTime;
-		
 	}
 }
