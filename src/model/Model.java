@@ -385,6 +385,11 @@ public class Model extends IModel {
 		
 		// adding delivery node first
 		out.getIByMapNode(model.selected.getStoreAdress());
+		//Setting mappingID
+		for(Delivery del : model.selected.getDeliveryList())
+		{
+			out.getIByMapNode(del.getAdress());
+		}
 		// For each nodes
 		for(Entry<MapNode,ArrayList<Pair<ArrayList<MapNode>,Integer>>> entry : paths.entrySet())
 		{			
