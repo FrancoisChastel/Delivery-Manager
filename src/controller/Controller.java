@@ -10,6 +10,7 @@ import controller.commands.CommandContext;
 import controller.commands.Commander;
 import controller.commands.undocommands.LoadDeliveryCommand;
 import controller.commands.undocommands.ResetDeliveriesCommand;
+import controller.commands.undocommands.ResetModelCommand;
 import controller.commands.undocommands.DeleteDeliveryPointCommand;
 import model.IModel;
 import model.Model;

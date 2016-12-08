@@ -33,8 +33,10 @@ public class ResetModelCommand implements IUndoableCommand {
 	public void execute() throws Throwable {
 		// TODO Auto-generated method stub
 		model.resetModel();
+		model.resetDeliveries();
 		model.updateMap();
 		model.updateDeliveries();
+		model.updateResetDeliveries();
 	}
 
 	@Override

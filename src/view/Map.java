@@ -155,7 +155,6 @@ public class Map extends JPanel {
 		// if there is only one tour, then we set it selected
 		setTourSelected(vTour.getId());
 		
-		System.out.println(vTour);
 		repaint();
 	}
 	
